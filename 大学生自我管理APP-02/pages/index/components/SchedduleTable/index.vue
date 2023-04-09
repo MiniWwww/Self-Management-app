@@ -41,6 +41,7 @@
   } from './scripts/hooks.js'
   import weekdays from '../../data/week.js'
   import Card from './Card.vue'
+  import db from '../../db/dbUtils.js'
 
   const [
     data,
@@ -50,11 +51,11 @@
   ] = useInitialData()
 
   onMounted(async () => {
+    if (!db.isOpen()) {
+      db.openSqlite();
+    }
+    console.log(db.isOpen());
     setInitialData(await getInitialData())
-  })
-
-  onUpdated(() => {
-    console.log(触发onUpdated)
   })
 
   let cardData = reactive({
