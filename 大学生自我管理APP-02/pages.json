@@ -9,7 +9,7 @@
     {
       "path": "pages/todolist/todolist",
       "style": {
-        "navigationBarTitleText": "",
+        "navigationBarTitleText": "ToDoList",
         "enablePullDownRefresh": false
       }
 
