@@ -1,11 +1,11 @@
 <template>
 	<view class="box">
 		<view class="todo_box">
-			<view  v-for="(item,index) in today_list" :key="item.title" > 	<!--可计时,计时结束时完成一次该运动-->
-				<view class="todo_item" :class="{'todo_finish':item.finish}" @click="finish_sport(index)">
+			<view  v-for="(item,index) in TodayList" :key="item.title" > 	<!--可计时,计时结束时完成一次该运动-->
+				<view :style="[{background:((item.intensity=='高')?'#ffa5ab':((item.intensity=='中')?'#ffd0b5':'#e8fdfd'))}]" class="todo_item" :class="{'todo_finish':item.finish}" @click="finish_sport(index)">
 					<view class="todo_item_left">
 						<view class="todo_checkbox">
-							<view v-if="item.times" style="color: #8c8c8c;">{{item.times}}</view>
+							<view v-if="!item.finish&&item.times" style="color: #8c8c8c;">{{item.times-item.finish_times}}</view>
 						</view>
 						<view class="todo_title"> {{item.title}}</view>
 					</view>
@@ -26,19 +26,78 @@
 </template>
 
 <script>
+	// import sendbus from '../eventbus.js';
+	// import { ref } from "vue";
 	export default {
 		name:"sport",
+		// components:{sendbus},
 		data() {
 			return {
+				week:["周日","周一","周二","周三","周四","周五","周六"],
+				change: false,		//是否到新的一天
 				activePopUp: false,
-				list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:'2', finish: false, cycle:'周一 周三 周五',}, 
-					{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:'', finish: false, cycle:''}],
-				today_list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:'2', finish: false, cycle:'周一 周三 周五',},
-					{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:'', finish: false, cycle:''}],
+				today:'',
+				today_weekday: '',
+				list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'低', times:3, finish: false, finish_times:0, finish_day:'', cycle:'周一 周二 周五',}, 
+					{title: '跑步',period_free: false, period:true, note:'', intensity:'中', times: '', finish: false, finish_times:0, finish_day:'', cycle:''}],
+				today_list:[//{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:2, finish: false, finish_times:0, cycle:'周一 周三 周五',},
+				// 	{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:1, finish: false, finish_times:0, cycle:''}
+				],
+				finish_list:[],
 			};
 		},
+		computed:{
+			TodayList(){
+				var that=this;
+				let list=[];
+				that.getNowTime();
+				that.list.forEach(v=>{
+					let flag=0;
+					if(v.cycle==''){
+						flag=1;
+					}
+					else{
+						let s=v.cycle.split(' ');
+						console.log(s);
+						s.forEach((u=>{
+							if(u==that.today_weekday){
+								flag=1;
+							}
+						}))
+					}
+					if(flag==1){
+						list.push(v);
+					}
+				})
+				console.log(list);
+				that.today_list=list;
+				return list;
+			}
+		},
 		methods:{
-			popUp(){
+			addTimes(m){return m<10?'0'+m:m },
+			getNowTime(){ //获取当前时间
+				var time=new Date(new Date().getTime());
+				let y=time.getFullYear();
+				let m=time.getMonth()+1;
+				let d=time.getDate();
+				let h=time.getHours();
+				let mi=time.getMinutes();
+				let day=time.getDay();
+				
+				let cc=y+'/'+this.addTimes(m)+'/'+this.addTimes(d);
+				if(this.today!=cc){
+					this.change=true;
+					this.today_weekday=this.week[day];
+					this.today=y+'/'+this.addTimes(m)+'/'+this.addTimes(d);
+				}
+				else{
+					this.change=false;
+				}
+				
+				console.log(this.today,this.today_weekday);
+			},
+			popUp(){//弹出
 				if(this.activePopUp){
 					this.activePopUp=false;
 				}
@@ -46,7 +105,7 @@
 					this.activePopUp=true;
 				}
 			},
-			to_add(){
+			to_add(){//添加新项目
 				var that=this;
 				uni.navigateTo({
 					url:'/pages/self-manage/sport/add_new_sport',
@@ -61,6 +120,8 @@
 								times: data.times,
 								cycle: data.cycle,
 								finish: false,
+								finish_times: 0,
+								finish_day: '',
 							}
 							that.list.push(obj);
 							that.today_list=that.list;
@@ -69,21 +130,35 @@
 				})
 				this.activePopUp=false;
 			},
-			to_analyse(){
-				uni.navigateTo({
-					url:'/pages/self-manage/sport/sport_analyse'
-				})
-				this.activePopUp=false;
-			},
-			finish_sport(index){
+			to_analyse(){//统计
 				var that=this;
-				if(this.today_list[index].times>1){
+				uni.navigateTo({
+					url:'/pages/self-manage/sport/sport_analyse',
+					success:function(res){
+						res.eventChannel.emit('toanalyse',that.finish_list);
+					}
+				})
+			},
+			finish_sport(index){  //完成项目
+				var that=this;
+				if(this.today_list[index].times>1&&this.today_list[index].finish_times<this.today_list[index].times-1){
 					uni.showModal({
 						title:'提示',
 						content: '是否完成一次'+that.today_list[index].title+'？',
 						success: function(res){
 							if(res.confirm){
-								that.today_list[index].times=that.list[index].times-1;
+								
+								that.today_list[index].finish_day=that.today;
+								var i=that.finish_list.find(item=>(item.title==that.today_list[index].title)&&(item.finish_day==that.today_list[index].finish_day));
+								if(i){
+									i.finish_times=i.finish_times+1;
+									console.log('完成项',i);
+								}
+								else{
+									that.today_list[index].finish_times=that.today_list[index].finish_times+1;
+									that.finish_list.push(that.today_list[index]);
+								}
+								console.log('完成表',that.finish_list);
 								uni.showToast({
 									title:'完成一次'+that.today_list[index].title+'！',
 									icon:'none',
@@ -100,6 +175,17 @@
 							success:function(res){
 								if(res.confirm){
 									that.today_list[index].finish=true;
+									that.today_list[index].finish_day=that.today;
+									var i=that.finish_list.find(item=>(item.title==that.today_list[index].title)&&(item.finish_day==that.today_list[index].finish_day));
+									if(i){
+										i.finish_times=i.finish_times+1;
+										console.log('完成项',i);
+									}
+									else{
+										that.today_list[index].finish_times=that.today_list[index].finish_times+1;
+										that.finish_list.push(that.today_list[index]);
+									}
+									console.log('完成表',that.finish_list);
 									uni.showToast({
 										title:'今天的'+that.today_list[index].title+'已完成！',
 										icon:'none',
@@ -130,7 +216,7 @@
 		margin: 15px;
 		border-radius: 10px;
 		height: 30px;
-		background: #e3fde4;
+		/* background: #e3fde4; */
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 		justify-content: space-between;
 	}
@@ -170,7 +256,7 @@
 		bottom: 0;
 		border-radius: 50%;
 		margin: auto;
-		background: #d1fde1;
+		background: #8c8c8c;
 		box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.2) inset;
 	}
 	.todo_finish .todo_title {
@@ -185,7 +271,7 @@
 		right: 10px;
 		height: 2px;
 		margin: auto 0;
-		background: #c3d8cf;
+		background: #8c8c8c;
 	}
 	.todo_finish.todo_item:after {
 		background: #ccc;
