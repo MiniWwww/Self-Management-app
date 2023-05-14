@@ -41,7 +41,7 @@
 		
 				<uni-section title="动态更新" type="line" padding>
 							<view class="grid-dynamic-box">
-								<uni-grid :column="3" :highlight="true" @change="change">
+								<uni-grid :column="3" :highlight="true" @change="change" >
 									<uni-grid-item v-for="(item, index) in dynamicList" :index="index" :key="index">
 										<view class="grid-item-box" :style="{'backgroundColor':item.color}">
 											<image :src="item.url" class="image" mode="aspectFill" />
@@ -50,10 +50,27 @@
 									</uni-grid-item>
 								</uni-grid>
 							</view>
-							<button type="primary" @click="add">点击添加新项目</button>
+							<button type="primary" @click="inputModalToggle"><text
+									class="button-text">添加新项目</text></button>
 							<button v-if="dynamicList.length !== 0" type="primary" style="margin-top: 15px;"
 								@click="del">点击删除新项目</button>
 								
+								<uni-popup ref="inputModal" type="dialog">
+									<uni-popup-dialog ref="inputClose"  mode="input" title="输入事件名称" value="烧烤"
+										placeholder="请输入内容" @confirm="dialogInputConfirm"></uni-popup-dialog>
+								</uni-popup>		
+							
+							<!-- 新增 -->
+				<!-- 
+								<text class="dialog-text">输入内容：{{ value }}</text>
+							<button type="primary" @click="inputDialogToggle"><text
+									class="button-text">输入对话框</text></button> -->
+									
+							<!-- 输入框示例 -->
+										<!-- <uni-popup ref="inputDialog" type="dialog">
+											<uni-popup-dialog ref="inputClose"  mode="input" title="输入内容" value="对话框预置提示内容!"
+												placeholder="请输入内容" @confirm="dialogInputConfirm"></uni-popup-dialog>
+										</uni-popup> -->
 									
 				</uni-section>
 				
@@ -68,6 +85,8 @@
 			components: {},
 			data() {
 				return {
+					// 新增
+					value:'',
 					dynamicList: [],
 					list: [{
 							url: '/static/Game.png',
@@ -175,6 +194,33 @@
 				}
 			},
 			methods: {
+				// 新增
+				inputModalToggle() {
+								this.$refs.inputModal.open()
+							},
+				inputDialogToggle() {
+								this.$refs.inputDialog.open()
+							},
+							dialogClose() {
+								console.log('点击关闭')
+							},
+							dialogInputConfirm(val) {
+								uni.showLoading({
+									title: '3秒后会关闭'
+								})
+				
+				
+								setTimeout(() => {
+									uni.hideLoading()
+									console.log(val)
+									//将输入内容val存到value				
+									this.value = val
+									this.add(),
+									// 关闭窗口后，恢复默认内容
+									this.$refs.inputDialog.close()
+									
+								}, 3000)
+							},
 				change(e) {
 					let {
 						index
@@ -201,8 +247,9 @@
 				add() {
 					if (this.dynamicList.length < 9) {
 						this.dynamicList.push({
-							url: `/static/c${this.dynamicList.length+1}.png`,
-							text: `项目 ${this.dynamicList.length+1}`,
+							url: `/static/${this.dynamicList.length+1}.png`,
+							text: this.value,
+							badge:'1',
 							color: this.dynamicList.length % 2 === 0 ? '#f5f5f5' : "#fff"
 						})
 					} else {

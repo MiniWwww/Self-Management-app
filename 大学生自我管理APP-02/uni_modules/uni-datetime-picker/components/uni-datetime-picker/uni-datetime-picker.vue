@@ -249,7 +249,7 @@
 				default: false
 			},
       defaultValue: {
-        type: String,
+        type: [String, Object, Array],
         default: ''
       }
 		},
@@ -450,6 +450,10 @@
 				right.setDate(this.$refs.right.nowDate.fullDate)
 			},
 			platform() {
+        if(typeof navigator !== "undefined"){
+          this.isPhone = navigator.userAgent.toLowerCase().indexOf('mobile') !== -1
+          return
+        }
 				const { windowWidth } = uni.getSystemInfoSync()
 				this.isPhone = windowWidth <= 500
 				this.windowWidth = windowWidth
@@ -460,7 +464,9 @@
 				}
 				this.platform()
 				if (this.isPhone) {
-					this.$refs.mobile.open()
+					setTimeout(() => {
+            this.$refs.mobile.open()
+          }, 0);
 					return
 				}
 				this.pickerPositionStyle = {
@@ -482,10 +488,10 @@
 						} = this.calendarRange
 						if (startDate && endDate) {
 							if (this.diffDate(startDate, endDate) < 30) {
-								this.$refs.right.next()
+								this.$refs.right.changeMonth('pre')
 							}
 						} else {
-							this.$refs.right.next()
+							this.$refs.right.changeMonth('next')
 							this.$refs.right.cale.lastHover = false
 						}
 					}
@@ -792,7 +798,7 @@
 					} else {
 						this.$refs.left && this.$refs.left.clearCalender()
 						this.$refs.right && this.$refs.right.clearCalender()
-						this.$refs.right && this.$refs.right.next()
+						this.$refs.right && this.$refs.right.changeMonth('next')
 					}
 					if (needEmit) {
 						this.$emit('change', [])
