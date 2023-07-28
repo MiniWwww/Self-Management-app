@@ -21,7 +21,7 @@
 				</view>
 			
 			
-       <view class="todo-content"style="z-index: 0" v-for="(item, index) in listData" :key="item.title">
+       <view class="todo-content" style="z-index: 0" v-for="(item, index) in listData" :key="item.title">
        	
 		 <view class="todo-list" :style="{ backgroundColor: item.color }" :class="{ 'todo--finish': item.select }" @click="childItem(item, index)">	
        		<view class="todo-list_checkbox"><view class="checkbox"></view>
@@ -50,13 +50,13 @@
     <!-- 字体图标 -->
     <view class="create-todo" @click="creat"><text class="iconfont iconhao1" :class="{ 'create-todo-active': tetxShow }"></text></view>
     <!-- 输入框 -->
-    <view class="create-content"style="z-index: 1" v-if="activeInput" :class="{ 'create-show': tetxShow }">
+    <view class="create-content" style="z-index: 1" v-if="activeInput" :class="{ 'create-show': tetxShow }">
       <view class="create-content-box">
         <view class="create-input"><input type="text" v-model="InputValue" placeholder="请输入你要创建的事项" /></view>
 	 <!-- 新增备注输入框 -->
 		    <view class="mark-input"><input type="text" v-model="remark" placeholder="请输入备注信息" /></view>
 		<!-- 类型选择器 -->
-		<picker v-model="eventTypeIndex" :range="eventTypeNames" mode="selector" @change="handleEventTypeChange">
+		<picker :value="eventTypeIndex" :range="eventTypeNames" mode="selector" @change="handleEventTypeChange">
 		  <view class="event-type-selector">
 		    <text>请选择类型:</text>
 		    <text>{{ eventTypeNames[eventTypeIndex] }}</text>
