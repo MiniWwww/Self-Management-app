@@ -167,7 +167,7 @@
 			const eventChannel = that.getOpenerEventChannel();
 			eventChannel.on('toanalyse',function(data){
 				that.list=data;
-				console.log(that.list);
+				console.log(data);
 			});
 			this.getTime();
 		},

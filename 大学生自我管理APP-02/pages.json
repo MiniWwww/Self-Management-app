@@ -175,16 +175,43 @@
 		        }
 		        
 		    }
-		  ,
-		  {
-		      "path" : "pages/self-manage/component/play/AddProject",
-		      "style" :                                                                                    
-		      {
-		          "navigationBarTitleText": "",
-		          "enablePullDownRefresh": false
-		      }
-		      
-		  }
+		  
+        ,{
+            "path" : "pages/self-manage/sport/to_detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/sport/award",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/component/circle-progress-bar/circle-progress-bar",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/sleep/sleep_award/sleep_award",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
