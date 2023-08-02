@@ -1,490 +1,490 @@
 <template>
-	<!--预计有什么功能：记录（图文）的发送和删除√，消息的发送时间√，数据的本地存取√，数据的云端存取（？），
-	用户给自己消息点赞√，系统发送每日总结，系统发出待办和自我管理计划的提醒，生日提醒（？）-->
-	<!--如何从云端读取用于总结的相关数据、比对时间……？？？？？？？？？-->
-	<view class="content">
+	<view id="moments">
+
+		<view class="home-pic">
+			<view class="home-pic-base">
+				<!-- “我”的用户名和用户头像 -->
+				<view class="top-pic">
+					<image class="header" :src="userhead"></image>
+				</view>
+				<view class="top-name">{{username}}</view>
+			</view>
+		</view>
 		
-		<!--消息内容区-->
-		<!--记得去搜索uniapp如何使用scroll-into-view！！！！！！！！！！！！！！！！！！！！-->
-		<scroll-view class="chat" scroll-y="true" scroll-with-animation="true" :scroll-into-view="scrollToView">
-			<view class="chat-main" :style="{paddingBottom:inputh+'px'}">
-				<view class="chat-ls" v-for="(item,index) in unshiftmsg" :key="index" :id="'msg'+ index">
-					<!--将一条消息的发送时间数据传到函数chatTime进行处理，然后显示-->
-					<view class="chat-time" v-if=" item.createTime != ''"> {{chatTime(item.createTime)}} </view>
-					
-					<!--系统消息-->
-					<view class="msg-m msg-left" v-if="item.sendName == '系统'" >
-						<image class="user-img" src="../../static/system-head.png"  @click="bindClick(index)"></image>
-						<!-- 文字 -->
-						<view class="message" v-if="item.TextType == 0">
-							<view class="msg-text">{{item.sendText}}</view>
-						</view>
-						<!-- 图像 -->
-						<view class="message" v-if="item.TextType == 1" @tap="previewImg(item.sendText)">
-							<image :src="item.sendText" class="msg-img" mode="widthFix"></image>
-						</view>
+		<!-- 记录数据posts -->
+		<view class="moments__post" v-for="(post,index) in posts" :key="index" :id="'post-'+index">
+			<view class="post-left">
+				<!-- 发布该条记录的用户头像 -->
+				<image class="post_header" :src="post.header_image" @click="bindClick(index)"></image>
+			</view>
+
+			<view class="post_right">
+				<!-- 用户名及文本内容 -->
+				<text class="post-username">{{post.username}}</text>
+				<view id="paragraph" class="paragraph">{{post.content.text}}</view>
+				<!-- 图片 -->
+				<view class="thumbnails">
+					<view :class="post.content.images.length === 1?'my-gallery':'thumbnail'" v-for="(image, index_images) in post.content.images" :key="index_images">
+						<image class="gallery_img" lazy-load mode="aspectFill" :src="image" :data-src="image" @tap="previewImage(post.content.images,index_images)"></image>
 					</view>
-					
-					<!--用户消息-->
-					<view class="msg-m msg-right" v-if="item.sendName != '系统'">
-						<image class="user-img" src="../../static/user-head.png" @click="bindClick(index)"></image>
-						<!-- 文字 -->
-						<view class="message" v-if="item.TextType == 0">
-							<view class="msg-text">{{item.sendText}}</view>
-						</view>
-						<!-- 图像 -->
-						<view class="message" v-if="item.TextType == 1" @tap="previewImg(item.sendText)">
-							<image :src="item.sendText" class="msg-img" mode="widthFix"></image>
-						</view>
-						<!--点赞小心心图标-->
-						<view class="like-heart" @tap="like(item)">
-							<image v-if="item.isLike == 0" src="../../static/like-heart-white.png" style="max-width: 100rpx;" mode="widthFix"></image>
-							<image v-if="item.isLike == 1" src="../../static/like-heart-red.png" style="max-width: 100rpx;" mode="widthFix"></image>
-						</view>
-						
+				</view>
+				<!-- 操作选项 -->
+				<view class="toolbar">
+					<view class="timestamp">{{post.timestamp}}</view>
+					<view class="like" @tap="like(index)">
+						<image :src="post.islike===0?'../../static/self-record/index/islike.png':'../../static/self-record/index/like.png'"></image>
+					</view>
+					<view class="comment" @tap="comment(index)">
+						<image src="../../static/self-record/index/comment.png"></image>
+					</view>
+				</view>
+				<!-- 点赞与评论 -->
+				<view class="post-footer">
+					<view class="footer_content">
+						<image class="liked" src="../../static/self-record/index/liked.png"></image>
+						<text class="nickname" v-for="(user,index_like) in post.like" :key="index_like">{{user.username}}</text>
+					</view>
+					<view class="footer_content" v-for="(comment,comment_index) in post.comments.comment" :key="comment_index" @tap="reply(index,comment_index)" @touchstart="del_comment(index,comment_index)" @touchmove="hand_move()" @touchend="del_end()">
+						<text class="comment-nickname">{{comment.username}}: <text class="comment-content">{{comment.content}}</text></text>
 					</view>
 				</view>
 			</view>
-		</scroll-view>
+		</view>
+		<!-- 结束posts -->
+
+		<view class="foot" v-show="showInput">
+			<chat-input @send-message="send_comment" @blur="blur" :focus="focus" :placeholder="input_placeholder"></chat-input>
+		</view>
 		
-		<!-- 输入栏 -->
-		<submit @inputs="inputs"></submit>
-		
+		<view class="uni-loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
+
 </template>
 
 <script>
-	
-	import dateTime from './dateTime.js'  //引用js文件
-	import submit from './component/submit/submit.vue'    //引用组件submit
+	import chatInput from './component/chatinput/chatinput.vue'; //评论区的input框
+	import sysMsg from '../../common/self-record/system-courage.js'; //系统发送的鼓励的话
+	import mytime from './mytime.js'; //得到所需的时间格式
 	
 	export default {
+		
+		components: {
+			chatInput
+		},
+		
 		data() {
 			return {
-				scrollToView:'',//定位消息界面所滚动到的元素是哪个
-				sendName:'',
-				receviceName:'',
-				sendText:'',
-				createTime:'',
-				TextType:'',
-				isLike:'',
 				
-				/*
-				msg:[
+				//每条记录数据，注意每发布一条新的就插入数组头部
+				posts:[
 					{
-						"sendName": "我",
-						"receviceName": "系统",
-						"sendText": "测试5",
-						"createTime": "2023-01-06 12:40:05",
-						"TextType": 0,
-						"isLike":0,
+						//"post_id": 1,
+						"uid": 1,
+						"username": "系统",
+						"header_image": "/static/self-record/system-head.png",
+						"content": {
+						"text": "",
+						"images": [
+								"/static/self-record/index/test/pig-01.jpg", 
+								"/static/self-record/index/test/pig-02.jpg",
+								"/static/self-record/index/test/pig-03.jpg", 
+								"/static/self-record/index/test/pig-04.jpg",
+								"/static/self-record/index/test/pig-05.jpg",
+								"/static/self-record/index/test/pig-06.jpg",
+								"/static/self-record/index/test/pig-07.jpg",
+								"/static/self-record/index/test/pig-08.jpg",
+								"/static/self-record/index/test/pig-09.jpg"
+							]
+						},
+						"islike": 0,
+						"like": [{
+								"uid": 1,
+								"username": "系统"
+							}
+						],
+						"comments": {
+							"total": 0,
+							"comment": [
+							]
+						},
+						"timestamp": "2023-01-01 12:40:20"
 					},
 					{
-						"sendName": "我",
-						"receviceName": "系统",
-						"sendText": "测试4",
-						"createTime": "2023-01-06 12:40:00",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "我",
-						"receviceName": "系统",
-						"sendText": "测试3",
-						"createTime": "2023-01-05 15:20:00",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "我",
-						"receviceName": "系统",
-						"sendText": "测试2",
-						"createTime": "2023-01-05 12:40:00",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "我",
-						"receviceName": "系统",
-						"sendText": "测试1",
-						"createTime": "2023-01-02 12:40:00",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "发消息试试吧",
-						"createTime": "2023-01-01 12:50:00",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "我",
-						"receviceName": "系统",
-						"sendText": "啦啦啦",
-						"createTime": "2023-01-01 12:45:20",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "../../static/logo.png",
-						"createTime": "2023-01-01 12:40:13",
-						"TextType": 1,
-						"isLike":0,
-					},
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "如果想删除一条消息，可以点击该消息对应的头像",
-						"createTime": "2023-01-01 12:40:12",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "系统将会为你提供每日总结和事项提醒服务~",
-						"createTime": "2023-01-01 12:40:11",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "欢迎使用本APP！",
-						"createTime": "2023-01-01 12:40:10",
-						"TextType": 0,  //0表示文字消息，1表示图片消息
-						"isLike":0,
+						//"post_id": 0,
+						"uid": 1,
+						"username": "系统",
+						"header_image": "/static/self-record/system-head.png",
+						"content": {
+							"text": "欢迎来到一个人的朋友圈！ \n你可以在这里记录你的美好时光和所思所想",
+							"images": ["/static/self-record/system-msg/欢迎.bmp"]
+						},
+						"islike": 0,
+						"like": [{
+								"uid": 1,
+								"username": "系统"
+							}
+						],
+						"comments": {
+							"total": 1,
+							"comment": [{
+									"uid": 1,
+									"username": '系统',
+									"content": "提示：想要删除一条记录，可以点击该记录头像处哦~"
+								},
+								{
+									"uid": 2,
+									"username": '系统',
+									"content": "提示：长按评论可删除"
+								}
+							]
+						},
+						"timestamp": "2023-01-01 12:40:10"
 					}
 				],
-				*/
+				last_sys_date: '', //上一次系统发出鼓励消息的日期
+				publish_msg: [],
 				
-				unshiftmsg:[
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "欢迎使用本APP！",
-						"createTime": "2023-01-01 12:40:10",
-						"TextType": 0,  //0表示文字消息，1表示图片消息
-						"isLike":0,
-					},
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "系统将会为你提供每日总结和事项提醒服务~",
-						"createTime": "2023-01-01 12:40:11",
-						"TextType": 0,
-						"isLike":0,
-					},
-					{
-						"sendName": "系统",
-						"receviceName": "我",
-						"sendText": "如果想删除一条消息，可以点击该消息对应的头像",
-						"createTime": "2023-01-01 12:40:12",
-						"TextType": 0,
-						"isLike":0,
+				user_id: 2,//“我”的用户id
+				username: '我',
+				userhead:'../../static/self-record/user-head.png',//用户头像，考虑与个人信息页面的关联？
+
+				index: '',
+				comment_index: '',
+
+				input_placeholder: '评论', //评论框占位内容
+				focus: false, //是否自动聚焦输入框
+				is_reply: false, //回复还是评论
+				showInput: false, //评论输入框
+				loop: 0, //定时器
+
+				screenHeight: '', //屏幕高度(系统)
+				platform: '',
+				windowHeight: '' ,//可用窗口高度(不计入软键盘)
+				
+				loadMoreText: "加载中...",
+				showLoadMore: false
+			}
+		},
+	   
+		onLoad() {
+			uni.getSystemInfo({ //获取设备信息
+				success: (res) => {
+					this.screenHeight = res.screenHeight;
+					this.platform = res.platform;
+				}
+			});
+			uni.startPullDownRefresh();
+		},
+		
+		onShow() {
+			uni.onWindowResize((res) => { //监听窗口尺寸变化,窗口尺寸不包括底部导航栏
+				if(this.platform === 'ios'){
+					this.windowHeight = res.size.windowHeight;
+					this.adjust();
+				}else{
+					if (this.screenHeight - res.size.windowHeight > 60 && this.windowHeight <= res.size.windowHeight) {
+						this.windowHeight = res.size.windowHeight;
+						this.adjust();
 					}
-				],
-				imgMsg:[],  //图片消息
-				
-				oldTime: new Date(),
-				inputh: '60',
-				
-				//need_system_send: 0,
-				birthday:'',
-				//用户的生日信息，记得要改为从其它地方获取得到！-----------如果韦航的用户信息页面有这项，再添加生日提醒功能……
+				}
+			});
+			
+			//获取本地存储的数据
+			let res1 = [];
+			res1 = uni.getStorageSync('self-record-posts');
+			if(res1.length) {this.posts = res1;} //以防本地存储为空，把固定的系统消息填进去
+			console.log('从本地存储读取记录数据',res1);
+			
+			let res2 = uni.getStorageSync('last-system-msg-date');
+			this.last_sys_date = res2;
+			console.log('从本地读取上一次系统鼓励消息的日期',res2);
+			
+			
+			//获取当前时间，看系统是否需要发送鼓励消息
+			let now = new Date();
+			//获取now具体时间
+			let now_Y = now.getFullYear();
+			let now_M = now.getMonth()+1;
+			let now_D = now.getDate();
+			//从本地存储取上一次系统消息的数据（记为old），以便将其日期与当前日期比较
+			let e = this.last_sys_date;
+			if(e == null || e === '') {e = '2023-01-01 00:01:01';} //以防该数据为空
+			let old = new Date(e);
+			let old_Y = old.getFullYear();
+			let old_M = old.getMonth() + 1;
+			let old_D = old.getDate();
+			//判断今天是否晚于上次系统消息日期，是则调用系统发消息函数
+			if( (old_Y<now_Y) || ((old_Y==now_Y)&&(old_M<now_M)) || ((old_Y==now_Y)&&(old_M==now_M)&&(old_D<now_D)) )
+			{
+				this.system_send(now.getTime());
+			}
+			
+			
+			//如果是从发布页面回来，获取用户发布的新记录数据，再重新保存所有数据
+			if(this.publish_msg.length){
+				this.posts.unshift(this.publish_msg[0]);
+				uni.setStorageSync('self-record-posts',this.posts);
+				console.log('发布新记录，保存到本地存储');
+				this.publish_msg = [];
 			}
 		},
 		
 		onHide() {
-			var that = this;
-			uni.setStorage({
-				key:'self-record-unshiftmsg',
-				data:that.unshiftmsg,
-				success() {
-					console.log('离开页面时，保存所有消息到本地存储',that.unshiftmsg);
-				}
-			})
-		},
-		/*
-		onShow() {
-			var that = this;
-			if(that.need_system_send == 1)
-			{
-				that.system_send(new Date().getTime());
-				that.need_system_send = 0;
-			}
-		},
-		*/
-		onLoad() {
-			var that = this;
-			uni.getStorage({
-				key:'self-record-unshiftmsg',
-				success:function(res){
-					that.unshiftmsg = res.data;
-					console.log('从本地存储读取消息',res.data);
-					
-					// 获取图片，为下面的预览做准备
-					for (var i = 0; i < that.unshiftmsg.length; i++) {
-						if (that.unshiftmsg[i].TextType == 1) {
-							that.imgMsg.push(that.unshiftmsg[i].sendText);
-						}
-					}
-					
-					//获取当前时间，看系统是否需要发送鼓励消息
-					let now = new Date();
-					//获取now具体时间
-					let now_Y = now.getFullYear();
-					let now_M = now.getMonth()+1;
-					let now_D = now.getDate();
-					
-					//实现本地存储后，先从本地取所有消息，再取最后一条消息的creatTime（记为old），将其日期与当前日期比较
-					var i = that.unshiftmsg.length - 1;
-					let e = that.unshiftmsg[i].createTime;
-					if(i<1) {e='2023-01-01 00:01:01';}  //以防消息列表为空的情况……
-					let old = new Date(e);
-					let old_Y = old.getFullYear();
-					let old_M = old.getMonth()+1;
-					let old_D = old.getDate();
-					console.log(old_Y + "/" + old_M + "/" + old_D);
-					
-					//判断现在打开此页面时是否是新的一天第一次打开，是的话，就调用系统发消息函数
-					if( (old_Y<now_Y) || ((old_Y==now_Y)&&(old_M<now_M)) || ((old_Y==now_Y)&&(old_M==now_M)&&(old_D<now_D)) )
-					{
-						that.system_send(now.getTime());
-						//that.need_system_send = 1;
-					}
-					
-					// 跳转到最后一条数据 与前面的:id进行对照
-					that.$nextTick(function(){
-						that.scrollToView = 'msg' + (that.unshiftmsg.length - 1);
-					})
-				}
-			})
+			uni.offWindowResize(() => { //取消监听窗口尺寸变化
+				console.log("offWindowResize");
+			});
 			
-			/*
-			// 跳转到最后一条数据 与前面的:id进行对照
-			this.$nextTick(function() {
-				this.scrollToView = 'msg' + (this.unshiftmsg.length - 1)
-			})
-			*/
+			var that = this;
+			uni.setStorageSync('self-record-posts',that.posts);
+			uni.setStorageSync('last-system-msg-date',that.last_sys_date);
+			console.log('离开页面时，保存数据到本地存储');
 			
+			uni.$off('publish'); //移除监听事件，避免重复监听
 		},
 		
-		components:{
-			submit
+		onUnload() {
+			this.max = 0,
+			this.data = [],
+			this.loadMoreText = "加载更多",
+			this.showLoadMore = false;
+		},
+		
+		onReachBottom() { //监听上拉触底事件
+			console.log('onReachBottom');
+			this.showLoadMore = true;
+			setTimeout(() => {
+				this.loadMoreText = "暂无更多";
+			}, 1000);
+		},
+		
+		onPullDownRefresh() { //监听下拉刷新动作
+			console.log('onPullDownRefresh');
+			// 这里获取数据
+			setTimeout(function() {
+				//初始化数据
+				uni.stopPullDownRefresh(); //停止下拉刷新
+			}, 1000);
+		},
+		
+		onNavigationBarButtonTap(e) {//监听标题栏点击事件
+			if (e.index == 0) {
+				this.navigateTo('./publish/publish')
+			}
+		},
+		
+		computed:{
+			
 		},
 		
 		methods: {
-			chatTime(date){
-				return dateTime.dateTime1(date);
-			},
 			
-			// 进行图片的预览
-			previewImg(e) {
-				let index = 0;
-				for (let i = 0; i < this.imgMsg.length; i++) {
-					if (this.imgMsg[i] == e) {
-						index = i;
-					}
-				}
-				console.log("index", index)
-				// 预览图片
-				uni.previewImage({
-					current: index,
-					urls: this.imgMsg,
+			//用于跳转页面的函数
+			navigateTo(url) {
+				uni.navigateTo({
+					url: url
 				});
-			},
-			
-			//接受输入内容
-			inputs(e) {
-				let data = {
-					"sendName": "我",
-					"receviceName": "系统",
-					"sendText": e.message,
-					"createTime": new Date(),
-					"TextType": e.type,
-					"isLike": 0,
-				};
 				
-				this.unshiftmsg.push(data);
-				// 跳转到最后一条数据 与前面的:id进行对照
-				this.$nextTick(function() {
-					this.scrollToView = 'msg' + (this.unshiftmsg.length - 1)
+				//监听用户是否发布了新记录（uni.$emit一旦发生，此处uni.$on即响应）
+				uni.$on('publish',(data)=>{
+					this.publish_msg = [];
+					this.publish_msg.unshift(data);
+					console.log("监听触发，将用户新发布的记录暂存到publish_msg",this.publish_msg);
 				})
-				if (e.type == 1) {
-					this.imgMsg.push(e.message);
+			},
+			
+			//进行评论
+			comment(index) {
+				this.showInput = true; //调起input框
+				this.focus = true;
+				this.index = index;
+			},
+			
+			adjust() { //当弹出软键盘发生评论动作时,调整页面位置pageScrollTo
+				return;
+				uni.createSelectorQuery().selectViewport().scrollOffset(res => {
+					var scrollTop = res.scrollTop;
+					let view = uni.createSelectorQuery().select("#post-" + this.index);
+					view.boundingClientRect(data => {
+						console.log("data:" + JSON.stringify(data));
+						console.log("手机屏幕高度:" + this.screenHeight);
+						console.log("竖直滚动位置" + scrollTop);
+						console.log("节点离页面顶部的距离为" + data.top);
+						console.log("节点高度为" + data.height);
+						console.log("窗口高度为" + this.windowHeight);
+
+						uni.pageScrollTo({
+							scrollTop: scrollTop - (this.windowHeight - (data.height + data.top + 45)), //一顿乱算
+							// scrollTop: 50, 
+							duration: 300
+						});
+					}).exec();
+				}).exec();
+			},
+			
+			//回复某一条评论
+			reply(index, comment_index) {
+				this.is_reply = true; //回复中
+				this.showInput = true; //调起input框
+				let replyTo = this.posts[index].comments.comment[comment_index].username;
+				this.input_placeholder = '回复' + replyTo;
+				this.index = index; //post索引
+				this.comment_index = comment_index; //评论索引
+				this.focus = true;
+			},
+			
+			blur: function() { //输入框失焦情况
+				this.init_input();
+			},
+			
+			//发出评论
+			send_comment: function(message) {
+
+				if (this.is_reply) {
+					var reply_username = this.posts[this.index].comments.comment[this.comment_index].username;
+					var comment_content = '回复' + reply_username + ':' + message.content;
+				} else {
+					var comment_content = message.content;
 				}
-				console.log(e);
-				console.log(data.createTime);
+				this.posts[this.index].comments.total += 1;
+				this.posts[this.index].comments.comment.push({
+					"uid": this.user_id,
+					"username": this.username,
+					"content": comment_content //直接获取input中的值
+				});
+				
+				uni.setStorageSync('self-record-posts',this.posts);
+				console.log('发出评论，保存到本地存储');
+				this.init_input();
 			},
 			
-			/*
-			//输入框高度
-			heights(e) {
-				console.log("高度:", e)
-				this.inputh = e;
-				this.goBottom();
-			},
-			
-			// 滚动到底部
-			goBottom() {
-				this.scrollToView = '';
-				this.$nextTick(function() {
-					this.scrollToView = 'msg' + (this.unshiftmsg.length - 1)
-				})
-			},
-			*/
-			
-			//删除某一条消息
-			bindClick(index) {
-				let unshiftmsg=this.unshiftmsg;
-				uni.showModal({
-					title:'提示',
-					content:'是否删除',
-					success:function(res){
-						if(res.confirm){
-							console.log('确认删除');
-							unshiftmsg.splice(index,1);
-						}else if(res.cancel){
-							console.log('取消');
+			//长按一条评论事件
+			del_comment(index,comment_index) { //长按删除评论
+				this.loop = setTimeout(()=>{
+					let posts=this.posts;
+					uni.showModal({
+						title:'提示',
+						content:'是否删除评论',
+						success:function(res){
+							if(res.confirm){
+								console.log('删除评论');
+								posts[index].comments.total -= 1;
+								posts[index].comments.comment.splice(comment_index,1);
+								uni.setStorageSync('self-record-posts',this.posts);
+								console.log('删除了评论，保存到本地存储');
+							}else if(res.cancel){
+								console.log('取消删除评论');
+							}
 						}
-					}
+					});
+				},500)
+				
+				return false;
+			},
+			hand_move() { //并非长按，只是手指滑动
+				clearTimeout(this.loop); //清除定时器
+				this.loop = 0;
+			},
+			del_end() { //删除评论完成
+				clearTimeout(this.loop); //清除定时器
+				return false;
+			},
+			
+			init_input() {  //关闭或取消评论的收尾操作
+				this.showInput = false;
+				this.focus = false;
+				this.input_placeholder = '评论';
+				this.is_reply = false;
+			},
+			
+			previewImage(imageList, image_index) { //查看图片
+				var current = imageList[image_index];
+				uni.previewImage({
+					current: current,
+					urls: imageList
 				});
 			},
 			
 			//点赞与取消
-			like(e){
-				if(e.isLike == 0){
-					e.isLike=1;
-					console.log("进行点赞")
+			like(index) {
+				if (this.posts[index].islike === 0) {
+					this.posts[index].islike = 1;
+					this.posts[index].like.push({
+						"uid": this.user_id,
+						"username": "," + this.username
+					});
+				} else {
+					this.posts[index].islike = 0;
+					this.posts[index].like.splice(this.posts[index].like.indexOf({
+						"uid": this.user_id,
+						"username": "," + this.username
+					}), 1);
 				}
-				else{
-					e.isLike=0;
-					console.log("取消点赞")
-				}
+				uni.setStorageSync('self-record-posts',this.posts);
+				console.log('更新点赞信息，保存到本地存储');
 			},
 			
-			//每天用户第一次打开页面时，系统发送一条鼓励消息
-			system_send(e){
+			//点击头像删除一条记录
+			bindClick(index) {
+				let posts=this.posts;
+				uni.showModal({
+					title:'提示',
+					content:'是否删除记录',
+					success:function(res){
+						if(res.confirm){
+							posts.splice(index,1);
+							console.log('删除记录');
+							uni.setStorageSync('self-record-posts',this.posts);
+							console.log('删除了记录，更新本地存储');
+						}else if(res.cancel){
+							console.log('取消删除记录');
+						}
+					}
+				});
+			},
+			
+			//新的一天第一次打开时，系统发送鼓励消息
+			system_send(e) {
+				//生成[0,10)的随机整数，取系统鼓励的话
+				var r = Math.floor(Math.random()*10);
+				let sys_msg = sysMsg[r];
+				
 				let sys_data = {
-					"sendName": "系统",
-					"receviceName": "我",
-					"sendText": "新的一天，要继续加油哦！",
-					"createTime": e,
-					"TextType": 0,
-					"isLike": 0,
+					//"post_id": 2,
+					"uid": 1,
+					"username": "系统",
+					"header_image": "/static/self-record/system-head.png",
+					"content": {
+						"text": sys_msg.text,
+						"images": sys_msg.images
+					},
+					"islike": 0,
+					"like": [{
+							"uid": 1,
+							"username": "系统"
+						}
+					],
+					"comments": {
+						"total": 0,
+						"comment": []
+					},
+					"timestamp": mytime.traversalTime(e)
 				};
 				
-				this.unshiftmsg.push(sys_data);
-				// 跳转到最后一条数据 与前面的:id进行对照
-				this.$nextTick(function() {
-					this.scrollToView = 'msg' + (this.unshiftmsg.length - 1)
-				})
-				console.log("系统发送鼓励消息");
-			},
-			
-			//以本页面使用的格式来表示一个时间，如"2023-01-01 12:40:10"
-			addTimes(m){return m<10?'0'+m:m},//对于一位数字的，前面加个'0'
-			traversalTime(timestamp) {
-				//timestamp(时间戳)是整数，否则要parseInt转换
-				let time = new Date(timestamp);
-				let y = time.getFullYear();
-				let m = time.getMonth() + 1;//注，对于getMonth，实际上第i月返回值是i-1,所以getmonth之后还要+1
-				let d = time.getDate();
-				let h = time.getHours();
-				let min = time.getMinutes();
-				let s = time.getSeconds();
-				return y+'-'+this.addTimes(m)+'-'+this.addTimes(d)+' '+this.addTimes(h)+':'+this.addTimes(min)+":"+this.addTimes(s);
+				var that = this;
+				that.posts.unshift(sys_data);
+				console.log("系统发送鼓励消息",that.posts[0]);
+				that.last_sys_date = sys_data.timestamp;
+				console.log('系统鼓励消息时间更新为',that.last_sys_date);
+				
+				uni.setStorageSync('self-record-posts',that.posts);
+				uni.setStorageSync('last-system-msg-date',that.last_sys_date);
+				console.log('系统发送了新消息，更新本地存储');
 			}
-			
 		}
 	}
 </script>
 
-<style lang="scss" scoped>//使一个样式内部还可以嵌套
-
-.content {
-	height: 100%;
-	background-color: #f4f4f4;
-}
-
-
-.chat{
-	height: 100%;
-	
-	.chat-main{
-		padding-left: 32rpx;//padding相关的设置元素内边距
-		padding-right: 32rpx;
-		padding-top: 20rpx;
-		display: flex;
-		flex-direction: column;//规定弹性项目的方向，column表示作为列垂直地显示弹性项目
-	}
-	
-	.chat-ls{
-		.chat-time{
-			font-size: 24rpx;//设置字体大小
-			color: rgba(39, 40, 50, 0.3);
-			line-height: 34rpx;//设置行高（行间距）
-			padding: 10rpx 0rpx;
-			text-align: center;//文本对齐方式
-		}
-		
-		.msg-m{
-			display: flex;
-			padding: 20rpx 0;
-			.user-img{
-				flex: none;
-				width: 80rpx;
-				height: 80rpx;
-				border-radius: 20rpx;
-			}
-			.message{
-				flex: none;
-				max-width: 480rpx;
-			}
-			.msg-text{
-				font-size: 32rpx;
-				color: rgba(39, 40, 50, 1);
-				line-height: 44rpx;
-				padding: 18rpx 24rpx;
-			}
-			.msg-img{
-				max-width: 400rpx;
-				border-radius: 20rpx;
-			}
-			.like-heart{//点赞小心心图标
-				margin-right: 5%;
-			}
-		}
-		
-		.msg-left{
-			flex-direction: row;
-			.msg-text{
-				margin-right: 16rpx;
-				background-color: #fff;
-				border-radius: 0rpx 20rpx 20rpx 20rpx;
-			}
-			.ms-img{
-				margin-right: 16rpx;
-			}
-		}
-		
-		.msg-right{
-			flex-direction: row-reverse;
-			.msg-text{
-				margin-left: 16rpx;
-				background-color: #95ec69;
-				border-radius: 20rpx 0rpx 20rpx 20rpx;
-			}
-			.ms-img{
-				margin-left: 16rpx;
-			}
-		}
-	}
-}
-
+<style scoped>
+	@import url("../../common/self-record/self-record.css");
+	@import url("../../common/uni.css");
 </style>

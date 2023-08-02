@@ -16,8 +16,23 @@
     }, {
       "path": "pages/self-record/self-record",
       "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
+        "navigationBarTitleText": "记录",
+        "enablePullDownRefresh": true,
+		"app-plus" : {
+		    "bounce" : "none",
+		    "titleNView" : {
+		        "type" : "transparent",
+		        "buttons" : [
+		            {
+		                "background" : "rgba(255,255,255,0.2)",
+		                "color" : "#696969",
+		                "type" : "none",
+		                "fontSrc" : "/static/fonts/iconfont.ttf",
+		                "text" : "+" //添加新记录
+		            }
+		        ]
+		    }
+		}
       }
 
     }, {
@@ -208,6 +223,24 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-record/component/chatinput/chatinput",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-record/publish/publish", //自我记录的新记录发布页
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "发布",
                 "enablePullDownRefresh": false
             }
             
