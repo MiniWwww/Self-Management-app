@@ -1,11 +1,19 @@
 <template>
 	<view class="box">
 		<view class="todo_box">
+<<<<<<< HEAD
 			<view  v-for="(item,index) in TodayList" :key="item.title" > 	<!--可计时,计时结束时完成一次该运动-->
 				<view :style="[{background:((item.intensity=='高')?'#ffa5ab':((item.intensity=='中')?'#ffd0b5':'#e8fdfd'))}]" class="todo_item" :class="{'todo_finish':item.finish}" @click="finish_sport(index)">
 					<view class="todo_item_left">
 						<view class="todo_checkbox">
 							<view v-if="!item.finish&&item.times" style="color: #8c8c8c;">{{item.times-item.finish_times}}</view>
+=======
+			<view  v-for="(item,index) in today_list" :key="item.title" > 	<!--可计时,计时结束时完成一次该运动-->
+				<view class="todo_item" :class="{'todo_finish':item.finish}" @click="finish_sport(index)">
+					<view class="todo_item_left">
+						<view class="todo_checkbox">
+							<view v-if="item.times" style="color: #8c8c8c;">{{item.times}}</view>
+>>>>>>> master
 						</view>
 						<view class="todo_title"> {{item.title}}</view>
 					</view>
@@ -26,6 +34,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 	// import sendbus from '../eventbus.js';
 	// import { ref } from "vue";
 	export default {
@@ -98,6 +107,21 @@
 				console.log(this.today,this.today_weekday);
 			},
 			popUp(){//弹出
+=======
+	export default {
+		name:"sport",
+		data() {
+			return {
+				activePopUp: false,
+				list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:'2', finish: false, cycle:'周一 周三 周五',}, 
+					{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:'', finish: false, cycle:''}],
+				today_list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:'2', finish: false, cycle:'周一 周三 周五',},
+					{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:'', finish: false, cycle:''}],
+			};
+		},
+		methods:{
+			popUp(){
+>>>>>>> master
 				if(this.activePopUp){
 					this.activePopUp=false;
 				}
@@ -105,7 +129,11 @@
 					this.activePopUp=true;
 				}
 			},
+<<<<<<< HEAD
 			to_add(){//添加新项目
+=======
+			to_add(){
+>>>>>>> master
 				var that=this;
 				uni.navigateTo({
 					url:'/pages/self-manage/sport/add_new_sport',
@@ -120,8 +148,11 @@
 								times: data.times,
 								cycle: data.cycle,
 								finish: false,
+<<<<<<< HEAD
 								finish_times: 0,
 								finish_day: '',
+=======
+>>>>>>> master
 							}
 							that.list.push(obj);
 							that.today_list=that.list;
@@ -129,6 +160,7 @@
 					}
 				})
 				this.activePopUp=false;
+<<<<<<< HEAD
 			},
 			to_analyse(){//统计
 				var that=this;
@@ -142,11 +174,25 @@
 			finish_sport(index){  //完成项目
 				var that=this;
 				if(this.today_list[index].times>1&&this.today_list[index].finish_times<this.today_list[index].times-1){
+=======
+				
+			},
+			to_analyse(){
+				uni.navigateTo({
+					url:'/pages/self-manage/sport/sport_analyse'
+				})
+				this.activePopUp=false;
+			},
+			finish_sport(index){
+				var that=this;
+				if(this.today_list[index].times>1){
+>>>>>>> master
 					uni.showModal({
 						title:'提示',
 						content: '是否完成一次'+that.today_list[index].title+'？',
 						success: function(res){
 							if(res.confirm){
+<<<<<<< HEAD
 								
 								that.today_list[index].finish_day=that.today;
 								var i=that.finish_list.find(item=>(item.title==that.today_list[index].title)&&(item.finish_day==that.today_list[index].finish_day));
@@ -159,6 +205,9 @@
 									that.finish_list.push(that.today_list[index]);
 								}
 								console.log('完成表',that.finish_list);
+=======
+								that.today_list[index].times=that.list[index].times-1;
+>>>>>>> master
 								uni.showToast({
 									title:'完成一次'+that.today_list[index].title+'！',
 									icon:'none',
@@ -175,6 +224,7 @@
 							success:function(res){
 								if(res.confirm){
 									that.today_list[index].finish=true;
+<<<<<<< HEAD
 									that.today_list[index].finish_day=that.today;
 									var i=that.finish_list.find(item=>(item.title==that.today_list[index].title)&&(item.finish_day==that.today_list[index].finish_day));
 									if(i){
@@ -186,6 +236,8 @@
 										that.finish_list.push(that.today_list[index]);
 									}
 									console.log('完成表',that.finish_list);
+=======
+>>>>>>> master
 									uni.showToast({
 										title:'今天的'+that.today_list[index].title+'已完成！',
 										icon:'none',
@@ -216,7 +268,11 @@
 		margin: 15px;
 		border-radius: 10px;
 		height: 30px;
+<<<<<<< HEAD
 		/* background: #e3fde4; */
+=======
+		background: #e3fde4;
+>>>>>>> master
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 		justify-content: space-between;
 	}
@@ -256,7 +312,11 @@
 		bottom: 0;
 		border-radius: 50%;
 		margin: auto;
+<<<<<<< HEAD
 		background: #8c8c8c;
+=======
+		background: #d1fde1;
+>>>>>>> master
 		box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.2) inset;
 	}
 	.todo_finish .todo_title {
@@ -271,7 +331,11 @@
 		right: 10px;
 		height: 2px;
 		margin: auto 0;
+<<<<<<< HEAD
 		background: #8c8c8c;
+=======
+		background: #c3d8cf;
+>>>>>>> master
 	}
 	.todo_finish.todo_item:after {
 		background: #ccc;

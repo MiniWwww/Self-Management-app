@@ -54,8 +54,13 @@
 					</uni-list>
 				</uni-collapse-item>
 			</uni-collapse>
+<<<<<<< HEAD
 			<uni-list-item class="list_item0" title="睡眠小tips" showArrow clickable @click="goto_tips"></uni-list-item>
 			<uni-list-item class="list_item0" title="睡眠报告" showArrow clickable @click="goto_analyse"></uni-list-item>
+=======
+			<uni-list-item class="list_item" title="睡眠小tips" showArrow clickable @click="goto_tips"></uni-list-item>
+			<uni-list-item class="list_item" title="睡眠报告" showArrow clickable @click="goto_analyse"></uni-list-item>
+>>>>>>> master
 		</uni-list>
 	</view>
 </template>
@@ -315,6 +320,7 @@
 		text-align: left;
 		height: 50px;
 	}
+<<<<<<< HEAD
 	.list_item0{
 		background: white;
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
@@ -323,4 +329,6 @@
 		height: 50px;
 		font-weight: bold;
 	}
+=======
+>>>>>>> master
 </style>

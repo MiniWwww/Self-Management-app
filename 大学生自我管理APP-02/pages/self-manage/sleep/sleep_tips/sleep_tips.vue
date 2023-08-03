@@ -1,5 +1,6 @@
 <template>
 	<view>
+<<<<<<< HEAD
 		<uni-list>
 			<uni-list-item show-arrow="true" link to="/pages/self-manage/sleep/harm-of-staying-up-late/harm-of-staying-up-late">
 				<template v-slot:header>
@@ -35,6 +36,13 @@
 			</uni-list-item>
 		</uni-list>
 		
+=======
+		<view class="tips_box">
+			<view class="tips_item">1熬夜的危害</view>
+			<view class="tips_item">2助眠小技巧</view>
+			<view class="tips_item">3</view>
+		</view>
+>>>>>>> master
 	</view>
 </template>
 
@@ -65,6 +73,7 @@
 		margin: 8px;
 		height: 50px;
 	}
+<<<<<<< HEAD
 	.img{
 		flex-shrink: 0;
 		margin-right: 10px;
@@ -79,4 +88,6 @@
 		flex-direction: row;
 		align-items: center;
 	}
+=======
+>>>>>>> master
 </style>

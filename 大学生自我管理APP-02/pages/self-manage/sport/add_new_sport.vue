@@ -28,10 +28,17 @@
 			</view>
 		</uni-card>
 		<uni-card title="强度">
+<<<<<<< HEAD
 			<radio-group class="intensity_group" @change="radioChange">
 				<radio color="#a8bda8" value="低">低</radio>
 				<radio color="#a8bda8" value="中">中</radio>
 				<radio color="#a8bda8" value="高">高</radio>
+=======
+			<radio-group class="intensity_group">
+				<radio color="#a8bda8">低</radio>
+				<radio color="#a8bda8">中</radio>
+				<radio color="#a8bda8">高</radio>
+>>>>>>> master
 			</radio-group>
 		</uni-card>
 		<view class="save_button" @click="save">√</view>
@@ -73,10 +80,13 @@
 				}
 				
 			},
+<<<<<<< HEAD
 			radioChange:function(e){
 				this.item.intensity=e.detail.value;
 				console.log(this.item.intensity);
 			},
+=======
+>>>>>>> master
 			save(){
 				if(this.item.title==''){
 					uni.showModal({

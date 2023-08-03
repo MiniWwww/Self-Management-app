@@ -118,13 +118,21 @@
 	export default {
 		data() {
 			return {
+<<<<<<< HEAD
 				daytimeArr:[],
+=======
+>>>>>>> master
 				week:true,
 				month:false,
 				year:'2023',
 				time:'2月5日-2月11日',
+<<<<<<< HEAD
 				//月数据
 				M:{total_duration_h:'8',		//总时长
+=======
+				
+				total_duration_h:'8',		//总时长
+>>>>>>> master
 				total_duration_m:'20',
 				total_times:'10',		//总次数
 				
@@ -139,6 +147,7 @@
 				low_duration_h:'3',	//低强度运动时长
 				low_duration_m:'30',
 				low_times:'3',	//低强度运动次数
+<<<<<<< HEAD
 				},
 				//周数据
 				W:{
@@ -207,6 +216,11 @@
 				this.daytimeArr=daytimeArr;
 				console.log(daytimeArr);
 			},
+=======
+			}
+		},
+		methods: {
+>>>>>>> master
 			goback(){
 				uni.navigateBack();
 			},
