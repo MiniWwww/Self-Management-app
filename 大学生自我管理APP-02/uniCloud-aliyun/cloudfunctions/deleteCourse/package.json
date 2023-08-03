@@ -1,0 +1,7 @@
+{
+  "name": "deleteCourse",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}
