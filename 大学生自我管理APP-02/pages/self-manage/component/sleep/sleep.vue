@@ -54,9 +54,13 @@
 					</uni-list>
 				</uni-collapse-item>
 			</uni-collapse>
-			<uni-list-item class="list_item" title="睡眠小tips" showArrow clickable @click="goto_tips"></uni-list-item>
-			<uni-list-item class="list_item" title="睡眠报告" showArrow clickable @click="goto_analyse"></uni-list-item>
+      
+			<uni-list-item class="list_item0" title="睡眠小tips" showArrow clickable @click="goto_tips"></uni-list-item>
+			<uni-list-item class="list_item0" title="睡眠报告" showArrow clickable @click="goto_analyse"></uni-list-item>
+			<uni-list-item class="list_item0" title="奖励" showArrow clickable @click="goto_award"></uni-list-item>
+			
 		</uni-list>
+		<view class="br"></view>
 	</view>
 </template>
 
@@ -78,6 +82,9 @@
 				sleep_success: false,
 				getup_like: false,
 				sleep_like:false,
+				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
+				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'}],
+				success_list:[{getup_goal:'7:00', getup_time:'6:30',sleep_goal:'23:00', sleep_time:'22:55', date:'2023年07月25日 星期二'}],
 			};
 		},
 		computed:{
@@ -126,6 +133,13 @@
 							var time_now=Date.parse('2023/01/01 '+that.getup_time+':00');
 							if(time_now<=time_goal){
 								that.getup_success=true;
+								let obj={
+									getup_goal:that.getup_goal,
+									getup_time:that.getup_time,
+									date:that.today,
+								}
+								that.getup_success_list.push(obj);
+								
 								uni.showToast({
 									title:'起床时间：'+that.getup_time+'\n起床目标达成，给自己点个赞吧！',
 									icon:'none',
@@ -155,6 +169,23 @@
 							var time_now=Date.parse('2023/01/01 '+that.sleep_time+':00');
 							if(time_now<=time_goal){
 								that.sleep_success=true;
+								let obj={
+									sleep_goal:that.sleep_goal,
+									sleep_time:that.sleep_time,
+									date:that.today,
+								}
+								that.sleep_success_list.push(obj);
+								var i=that.getup_success_list.find(item=>(item.date==obj.date));
+								if(i){
+									let obj={
+										getup_goal:that.getup_goal,
+										getup_time:that.getup_time,
+										sleep_goal:that.sleep_goal,
+										sleep_time:that.sleep_time,
+										date:that.today,
+									}
+									that.success_list.push(obj);
+								}
 								uni.showToast({
 									title:'就寝时间：'+that.sleep_time+'\n就寝目标达成，给自己点个赞吧！',
 									icon:'none',
@@ -206,6 +237,19 @@
 			goto_analyse(){
 				uni.navigateTo({
 					url:'/pages/self-manage/sleep/sleep_analyse/sleep_analyse'
+				})
+			},
+			goto_award(){
+				var that=this;
+				uni.navigateTo({
+					url:'/pages/self-manage/sleep/sleep_award/sleep_award',
+					success:function(res){
+						res.eventChannel.emit('sleepToAward',{
+							getup_success_list: that.getup_success_list,
+							sleep_success_list:that.sleep_success_list,
+							success_list:that.success_list,
+						});
+					}
 				})
 			}
 		}
@@ -314,5 +358,16 @@
 		margin: 8px; 
 		text-align: left;
 		height: 50px;
+	}
+	.list_item0{
+		background: white;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		margin: 8px; 
+		text-align: left;
+		height: 50px;
+		font-weight: bold;
+	}
+	.br{/*留空*/
+		height: 150px;
 	}
 </style>

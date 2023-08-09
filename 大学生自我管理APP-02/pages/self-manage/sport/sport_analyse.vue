@@ -140,6 +140,15 @@
 				low_times:'3',	//低强度运动次数
 			}
 		},
+		onLoad:function(option){
+			var that=this;
+			const eventChannel = that.getOpenerEventChannel();
+			eventChannel.on('toanalyse',function(data){
+				that.list=data;
+				console.log(data);
+			});
+			this.getTime();
+		},
 		methods: {
 			goback(){
 				uni.navigateBack();
