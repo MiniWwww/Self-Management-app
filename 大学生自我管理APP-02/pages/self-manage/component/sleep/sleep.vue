@@ -54,6 +54,7 @@
 					</uni-list>
 				</uni-collapse-item>
 			</uni-collapse>
+      
 			<uni-list-item class="list_item0" title="睡眠小tips" showArrow clickable @click="goto_tips"></uni-list-item>
 			<uni-list-item class="list_item0" title="睡眠报告" showArrow clickable @click="goto_analyse"></uni-list-item>
 			<uni-list-item class="list_item0" title="奖励" showArrow clickable @click="goto_award"></uni-list-item>

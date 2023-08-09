@@ -118,13 +118,12 @@
 	export default {
 		data() {
 			return {
-				daytimeArr:[],
 				week:true,
 				month:false,
 				year:'2023',
 				time:'2月5日-2月11日',
-				//月数据
-				M:{total_duration_h:'8',		//总时长
+				
+				total_duration_h:'8',		//总时长
 				total_duration_m:'20',
 				total_times:'10',		//总次数
 				
@@ -139,27 +138,6 @@
 				low_duration_h:'3',	//低强度运动时长
 				low_duration_m:'30',
 				low_times:'3',	//低强度运动次数
-				},
-				//周数据
-				W:{
-					total_duration_h:'8',		//总时长
-					total_duration_m:'20',
-					total_times:'10',		//总次数
-					
-					high_duration_h:'3',	//高强度运动时长
-					high_duration_m:'30',
-					high_times:'3',	//高强度运动次数
-					
-					medium_duration_h:'3',	//中强度运动时长
-					medium_duration_m:'30',
-					medium_times:'3',	//中强度运动次数
-					
-					low_duration_h:'3',	//低强度运动时长
-					low_duration_m:'30',
-					low_times:'3',	//低强度运动次数
-				},
-				
-				list:[],
 			}
 		},
 		onLoad:function(option){
@@ -172,41 +150,6 @@
 			this.getTime();
 		},
 		methods: {
-			// 获取7天
-			getWeekqq(dateString) {
-				var weekDay = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];  
-			var myDate = new Date(Date.parse(dateString));  
-			return weekDay[myDate.getDay()]
-			},
-			getTime() {
-				var date = new Date();
-				var base = Date.parse(date); // 转换为时间戳
-				var year = date.getFullYear(); //获取当前年份
-				var mon = date.getMonth() + 1; //获取当前月份
-				var day = date.getDate(); //获取当前日
-				var oneDay = 24 * 3600 * 1000
-				var daytime = `${year}-${mon >= 10 ? mon : '0' + mon}-${day >= 10 ? day : '0' + day}`; //今日时间
-				var daytimeArr = [
-					{
-						data: daytime,
-						week: this.getWeekqq(daytime),
-						day: `${mon}/${day}`
-					}
-				]
-				for (var i = 1; i < 7; i++) { //今天以及后6天
-					var now = new Date(base += oneDay);
-					var myear = now.getFullYear();
-					var month = now.getMonth() + 1;
-					var mday = now.getDate()
-					daytimeArr.push({
-						data: [myear, month >= 10 ? month : '0' + month, mday >= 10 ? mday : '0' + mday].join('-'),
-						week: this.getWeekqq([myear, month >= 10 ? month : '0' + month, mday >= 10 ? mday : '0' + mday].join('-')),
-						day: [month, mday].join('/')
-					})
-				}
-				this.daytimeArr=daytimeArr;
-				console.log(daytimeArr);
-			},
 			goback(){
 				uni.navigateBack();
 			},

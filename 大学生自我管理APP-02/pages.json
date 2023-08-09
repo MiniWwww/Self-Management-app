@@ -7,6 +7,8 @@
       }
     },
     {
+      "path": "pages/index/components/MessageBox/index"
+    }, {
       "path": "pages/todolist/todolist",
       "style": {
         "navigationBarTitleText": "ToDoList",
@@ -36,116 +38,36 @@
       }
 
     }, {
-      "path": "pages/self-manage/self-manage",
-      "style": {
-        "navigationBarTitleText": "",
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/sport/add_new_sport",
-      "style": {
-        "navigationBarTitleText": "添加运动项目",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/sport/sport_analyse",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-
-    }, {
-      "path": "pages/self-manage/sleep/baizaoyin/baizaoyin",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/sleep/shuiqianstory/shuiqianstory",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/sleep/piano/piano",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/sleep/other_music/other_music",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/sleep/sleep_tips/sleep_tips",
-      "style": {
-        "navigationBarTitleText": "睡个好觉",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/sleep/sleep_analyse/sleep_analyse",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-
-    }, {
-      "path": "pages/self-manage/component/sleep/sleep",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/component/sport/sport",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/component/play/play",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/play/play",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/component/PersonCenter/PersonCenter",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }, {
-      "path": "pages/self-manage/component/musicPlay/musicPlay",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-
-    }
-      ,{
-            "path" : "pages/self-manage/sleep/harm-of-staying-up-late/harm-of-staying-up-late",
+            "path" : "pages/self-manage/self-manage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+				"navigationStyle": "custom",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/sport/add_new_sport",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加运动项目",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/sport/sport_analyse",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/sleep/baizaoyin/baizaoyin",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -154,7 +76,7 @@
             
         }
         ,{
-            "path" : "pages/self-manage/sleep/save/save",
+            "path" : "pages/self-manage/sleep/shuiqianstory/shuiqianstory",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -163,7 +85,7 @@
             
         }
         ,{
-            "path" : "pages/self-manage/sleep/help/help",
+            "path" : "pages/self-manage/sleep/piano/piano",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -172,7 +94,7 @@
             
         }
         ,{
-            "path" : "pages/self-manage/sleep/tips-for-insomnia/tips-for-insomnia",
+            "path" : "pages/self-manage/sleep/other_music/other_music",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -180,9 +102,54 @@
             }
             
         }
-		,
-		  {
-		        "path" : "pages/self-manage/component/play/EventForm",
+        ,{
+            "path" : "pages/self-manage/sleep/sleep_tips/sleep_tips",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "睡个好觉",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/sleep/sleep_analyse/sleep_analyse",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/component/sleep/sleep",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/self-manage/component/sport/sport",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+		,{
+		      "path" : "pages/self-manage/component/play/play",
+		      "style" :                                                                                    
+		      {
+		          "navigationBarTitleText": "",
+		          "enablePullDownRefresh": false
+		      }
+		      
+		  }
+		  ,{
+		        "path" : "pages/self-manage/play/EventFormRecord",
 		        "style" :                                                                                    
 		        {
 		            "navigationBarTitleText": "",
@@ -190,6 +157,36 @@
 		        }
 		        
 		    }
+		  ,
+		  {
+		        "path" : "pages/self-manage/play/add_playGoal",
+		        "style" :                                                                                    
+		        {
+		            "navigationBarTitleText": "",
+		            "enablePullDownRefresh": false
+		        }
+		        
+		    }
+		  ,
+		  {
+		      "path" : "pages/self-manage/component/PersonCenter/PersonCenter",
+		      "style" :                                                                                    
+		      {
+		          "navigationBarTitleText": "",
+		          "enablePullDownRefresh": false
+		      }
+		      
+		  }
+		  ,{
+		        "path" : "pages/self-manage/component/musicPlay/musicPlay",
+		        "style" :                                                                                    
+		        {
+		            "navigationBarTitleText": "",
+		            "enablePullDownRefresh": false
+		        }
+		        
+		    }
+      
 		  
         ,{
             "path" : "pages/self-manage/sport/to_detail",

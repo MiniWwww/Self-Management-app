@@ -13,6 +13,12 @@
 			</view>
 		</view>
 		<view class="todo_box">
+			<view  v-for="(item,index) in today_list" :key="item.title" > 	<!--可计时,计时结束时完成一次该运动-->
+				<view class="todo_item" :class="{'todo_finish':item.finish}" @click="finish_sport(index)">
+					<view class="todo_item_left">
+						<view class="todo_checkbox">
+							<view v-if="item.times" style="color: #8c8c8c;">{{item.times}}</view>
+
 			<uni-swipe-action  v-for="(item,index) in ListData" :key="item.title" > <!--左滑完成、删除√，点击查看详情√，详情可修改-->	<!--可计时,计时结束时完成一次该运动-->
 				<uni-swipe-action-item :right-options="options" :show="right" :auto-close="false"  @click="bindClick($event,index)">
 					<view :style="[{background:((item.intensity=='高')?'#ffa5ab':((item.intensity=='中')?'#ffd0b5':'#e8fdfd'))}]" class="todo_item" :class="{'todo_finish':item.finish}" @click="to_detail(index)">  
@@ -21,6 +27,7 @@
 								<view v-if="!item.finish&&item.times" style="color: #8c8c8c;">{{item.times-item.finish_times}}</view>
 							</view>
 							<view class="todo_title"> {{item.title}}</view>
+
 						</view>
 						<view class="todo_item_right">
 							<view class="todo_tiem_cycle">{{item.cycle}}</view>
@@ -48,13 +55,19 @@
 </template>
 
 <script>
-	// import sendbus from '../eventbus.js';
-	// import { ref } from "vue";
 	export default {
 		name:"sport",
-		// components:{sendbus},
 		data() {
 			return {
+				activePopUp: false,
+				list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:'2', finish: false, cycle:'周一 周三 周五',}, 
+					{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:'', finish: false, cycle:''}],
+				today_list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:'2', finish: false, cycle:'周一 周三 周五',},
+					{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:'', finish: false, cycle:''}],
+			};
+		},
+		methods:{
+			popUp(){
 				options:[
 					{
 						text:'完成',
@@ -168,6 +181,7 @@
 				}
 			},
 			popUp(){//弹出
+
 				if(this.activePopUp){
 					this.activePopUp=false;
 				}
@@ -175,7 +189,7 @@
 					this.activePopUp=true;
 				}
 			},
-			to_add(){//添加新项目
+			to_add(){
 				var that=this;
 				uni.navigateTo({
 					url:'/pages/self-manage/sport/add_new_sport',
@@ -190,11 +204,13 @@
 								times: data.times,
 								cycle: data.cycle,
 								finish: false,
+
 								finish_times: 0,
 								all_finish_times: 0,
 								finish_day: '',
 								timesForAward:data.timesForAward,
 								award:data.award,
+
 							}
 							that.list.push(obj);
 							//that.now_list=that.list;
@@ -202,6 +218,7 @@
 					}
 				})
 				this.activePopUp=false;
+				
 			},
 			to_achieve(){
 				var that=this;
@@ -215,13 +232,11 @@
 			to_analyse(){//统计
 				var that=this;
 				uni.navigateTo({
-					url:'/pages/self-manage/sport/sport_analyse',
-					success:function(res){
-						res.eventChannel.emit('toanalyse',that.finish_list);
-					}
+					url:'/pages/self-manage/sport/sport_analyse'
 				})
+				this.activePopUp=false;
 			},
-			finish_sport(index){  //完成项目
+			finish_sport(index){
 				var that=this;
 				//console.log(index);
 				if(this.now_list[index].times>1&&this.now_list[index].finish_times<this.now_list[index].times-1){
@@ -244,6 +259,7 @@
 									that.finish_list.push(that.now_list[index]);
 								}
 								console.log('完成表',that.finish_list);
+
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
@@ -259,6 +275,7 @@
 							content:'是否完成'+that.now_list[index].title+'？',
 							success:function(res){
 								if(res.confirm){
+
 									that.now_list[index].finish=true;
 									that.now_list[index].finish_day=that.today;
 									var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
@@ -273,6 +290,7 @@
 										that.finish_list.push(that.now_list[index]);
 									}
 									console.log('完成表',that.finish_list);
+
 									uni.showToast({
 										title:'今天的'+that.now_list[index].title+'已完成！',
 										icon:'none',
@@ -375,7 +393,7 @@
 		margin: 15px;
 		border-radius: 10px;
 		height: 30px;
-		/* background: #e3fde4; */
+		background: #e3fde4;
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 		justify-content: space-between;
 	}
@@ -455,7 +473,7 @@
 		bottom: 0;
 		border-radius: 50%;
 		margin: auto;
-		background: #8c8c8c;
+		background: #d1fde1;
 		box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.2) inset;
 	}
 	.todo_finish .todo_title {
@@ -470,7 +488,7 @@
 		right: 10px;
 		height: 2px;
 		margin: auto 0;
-		background: #8c8c8c;
+		background: #c3d8cf;
 	}
 	.todo_finish.todo_item:after {
 		background: #ccc;
