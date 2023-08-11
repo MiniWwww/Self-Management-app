@@ -37,9 +37,7 @@
         <view class="delete-btn" @click.stop="deleteEvent(item, index)">x</view>
 		
       </view>
-
-      <button type="primary" @tap="addDate">添加事件</button>
-
+	  
     </view>
 	
     <SimpleDateTimePicker
@@ -92,34 +90,12 @@
        </view>
 		
 		<view class="creat-button" @click="submitInput">创建</view>
-
       </view>
     </view>
-    <view class="btn-group">
-      <button type="warn" @tap="allDel">清空数据</button>
-      <button type="warn" @tap="selectDel">批量删除</button>
-    </view>
-
-    <!-- 修改数据的弹窗 -->
-    <view v-if="show" class="popupWindow">
-      <text>时间:</text>
-      <input class="input" type="text" v-model="Update.time" placeholder="请输入时间" />
-      <text>地点:</text>
-      <input class="input" type="text" v-model="Update.place" placeholder="请输入地点" />
-      <text>事件:</text>
-      <input class="input" type="text" v-model="Update.event" placeholder="请输入事件" />
-      <button type="primary" @tap="confirm">确认</button>
-    </view>
   </view>
-
-
-
-
-
 </template>
 
 <script>
-
 	import SimpleDateTimePicker from "./buuug7-simple-datetime-picker.vue";
 
 const EVENT_TYPES = [
@@ -497,7 +473,7 @@ export default {
 };
 </script>
 <style>
-@import '/sigeludan/dxszwglapp/pull/15/icon.css';
+@import './icon.css';
 .todo-header {
 	display: flex;
 	align-items: center;
@@ -765,7 +741,7 @@ export default {
 		padding-top: 100px;
 	}
 
-.image-default {
+	.image-default {
 		display: flex;
 		justify-content: center;
 	}
@@ -773,6 +749,7 @@ export default {
 	.image-default image {
 		width: 100%;
 	}
+
 	.default-info {
 		text-align: center;
 		font-size: 14px;
