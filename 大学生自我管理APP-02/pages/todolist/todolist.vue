@@ -7,10 +7,18 @@
 				<text>{{ listData.length }}条</text>
 			</view>
 			<!-- 状态栏右侧 -->
-			<view class="todo-header_right" v-for="(item, index) in tabList" :key="index">
-				<view class="todo-header_right-item" :class="{ 'active-tab': tabIndex == index }" @click="tabClick(item, index)">{{ item }}</view>
+			<view class="todo-header_right">
+			  <view class="todo-header_right-item" @tap="toggleOptions">
+			    <text class="button-text">{{ buttonText1 }} <text class="button-icon">﹀</text></text>
+			  </view>
+			
+			  <!-- 选项列表 -->
+			  <view class="options" v-show="optionsVisible">
+			    <view class="option-item" v-for="(item, index) in tabList" :key="index" @click="selectOption(item,index)">{{ item }}</view>
+			 
+			  </view>
+			</view>	
 			</view>
-		</view>
 		<!-- 没有数据的状态 -->
 				<view v-if="listData.length === 0" class="default">
 					
@@ -37,7 +45,8 @@
         <view class="delete-btn" @click.stop="deleteEvent(item, index)">x</view>
 		
       </view>
-	  
+
+    
     </view>
 	
     <SimpleDateTimePicker
@@ -90,12 +99,31 @@
        </view>
 		
 		<view class="creat-button" @click="submitInput">创建</view>
+
       </view>
     </view>
+    
+
+    <!-- 修改数据的弹窗 -->
+    <view v-if="show" class="popupWindow">
+      <text>时间:</text>
+      <input class="input" type="text" v-model="Update.time" placeholder="请输入时间" />
+      <text>地点:</text>
+      <input class="input" type="text" v-model="Update.place" placeholder="请输入地点" />
+      <text>事件:</text>
+      <input class="input" type="text" v-model="Update.event" placeholder="请输入事件" />
+      <button type="primary" @tap="confirm">确认</button>
+    </view>
   </view>
+
+
+
+
+
 </template>
 
 <script>
+
 	import SimpleDateTimePicker from "./buuug7-simple-datetime-picker.vue";
 
 const EVENT_TYPES = [
@@ -133,7 +161,7 @@ export default {
   			activeInput: false,
   			tabIndex: 0,
   			tetxShow: false,
-  			text: '全部',
+  			text: "全部",
   			tabList: ['全部','今天', '作业', '考试','运动','娱乐','社会工作'],
   			list: [
   			  { title: '学习java',mark:'图书馆', select: true, color: '#FFB6C1',cycletime: '周一, 周三, 周五 20:30' },
@@ -193,6 +221,10 @@ export default {
 			eventTypeColors: EVENT_TYPES.map(item => item.color),
 			percent: 50,
 			isAlertShown: false, // 新的属性：弹窗是否已经弹出
+			 optionsVisible: false, // 选项列表的显示状态
+			 buttonText1: "全部",
+			 selectedOption:"全部",
+			     showOptions: false,  // 是否显示选项列表
   		};
   	},
 	
@@ -308,7 +340,28 @@ export default {
   			this.text = item;
   			this.tabIndex = index;
   		},
-  		
+  		toggleOptions() {
+  		       this.optionsVisible = !this.optionsVisible;
+  		   },
+  		    
+  					
+  					  
+  						     selectOption(item,index) {
+								this.text = item;
+  								 this.tabIndex = index;
+  								 this.optionsVisible= false;
+  						       this.selectedOption = this.tabList[index];
+  						       this.updateButtonName();
+  						     },
+  					
+  					  updateButtonName() {
+  					    if (this.selectedOption) {
+  					      this.buttonText1 = this.selectedOption;
+  					    } else {
+  					      this.buttonText1 = "全部";
+  					    }
+  					  },
+  					 
  // 切换选项卡
     switchOption(newOption) {
       if (this.option !== newOption) {
@@ -493,11 +546,60 @@ export default {
 	padding-right: 10px;
 }
 .todo-header_right {
-	display: flex;
-	flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 1;
 }
 .todo-header_right-item {
-	padding: 0 5px;
+  padding: 0 15px;
+  height: 100%;
+ 
+  border-radius: 4px;
+  
+   background:#ffffff;
+}
+
+
+.button-icon {
+  
+  margin-left: 5px; /* 可根据需要调整间距 */
+ 
+}
+
+.button-text {
+  font-size: 14px;
+  white-space: nowrap;
+  
+}
+
+.options {
+  position: absolute;
+  top: 40px;
+  right: 15px;
+  background: #fff;
+  box-shadow: 0px 0px 4px rgba(30, 30, 30, 0.1);
+  padding: 8px;
+  border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.option-item {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  text-align: center;
+  background-color: #c2efee;
+}
+
+.option-item:last-child {
+  margin-bottom: 0;
+}
+
+.option-item:hover {
+  background-color: #6dc4fe;
 }
 .active-tab {
 	color: #279abf;
@@ -741,7 +843,7 @@ export default {
 		padding-top: 100px;
 	}
 
-	.image-default {
+.image-default {
 		display: flex;
 		justify-content: center;
 	}
@@ -749,7 +851,6 @@ export default {
 	.image-default image {
 		width: 100%;
 	}
-
 	.default-info {
 		text-align: center;
 		font-size: 14px;
