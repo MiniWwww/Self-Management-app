@@ -53,26 +53,40 @@
 						</uni-grid-item>
 					</uni-grid>
 				</swiper-item>
-
+				
+				<!-- <swiper-item v-for="(item, index) in swiperitemList" :index="index" :key="index">
+					<uni-grid :column="3" :show-border="false" :square="false" @change="change3">
+						<uni-grid-item v-for="(itemgrid ,indexgrid) in item" :index="indexgrid" :key="indexgrid">
+							<view class="grid-item-box">
+								<image class="image" :src="itemgrid.url" mode="aspectFill" />
+								<text class="text">{{itemgrid.text}}</text>
+								<view v-if="itemgrid.badge" class="grid-dot">
+									<uni-badge :text="itemgrid.badge" :type="itemgrid.type" />
+								</view>
+							</view>
+						</uni-grid-item>
+					</uni-grid>
+				</swiper-item> -->
 			</swiper>
 
 		</uni-section>
 
 		<!-- 动态更新 -->
 		<!-- <uni-section title="动态更新"  type="line" padding> -->
+		
 <uni-card title="自定义事件" >
 		<view class="grid-dynamic-box">
-			<uni-grid :column="3" :highlight="true" :show-border="false" :square="false" @change="changeDynamic">
+			<uni-grid :column="3" :highlight="true" :show-border="false" :square="false" @longpress="del(index)" @change="changeDynamic">
 				<uni-grid-item v-for="(item, index) in dynamicList" :index="index" :key="index">
 					<view class="grid-item-box">
 						<image :src="item.url" class="image" mode="aspectFill" />
-						<text class="text">{{ item.text }}</text>
+						<text class="text" >{{ item.text }}</text>
 						<view class="grid-dot">
 							<uni-badge :text="item.badge" :type="item.type" />
 						</view>
-						<button type="primary" @click="del(index)" size="mini">
+						<!-- <button type="primary" @longpress="del(index)" size="mini">
 							删除
-						</button>
+						</button> -->
 					</view>
 				</uni-grid-item>
 			</uni-grid>
@@ -89,9 +103,13 @@
 						<view class="content-box">
 
 							<text class="content-text">{{ item.content }}</text>
-							<view class="content-time">
+							<view v-if="item.timetype0"  class="content-time">
 								<text>开始:{{ item.starttime }}</text>
 								<text>结束:{{ item.endttime }}</text>
+							</view>
+							<view v-if="item.timetype1" class="content-time-cycle">
+								<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex" :key="dayindex">{{ day }}</text>
+								
 							</view>
 							<view class="showDown" v-if="item.isdone">
 								<image :src="'/static/done1.png'" class="doneimage" mode="aspectFill" />
@@ -147,6 +165,9 @@
 		components: {},
 		data() {
 			return {
+				
+				
+				
 				// 2023-7-31新增
 				testList: [],
 				swipeList: [{
@@ -171,7 +192,10 @@
 						content: '例:去一次livehouse',
 						starttime: '2023-7-21',
 						endttime: '2023-7-22',
-						isdone: false
+						timetype0: true,
+						timetype1: false,
+						isdone: false,
+						checkbox2:[]
 					},
 					{
 						id: 1,
@@ -194,7 +218,10 @@
 						content: '例:散散步',
 						starttime: '2023-7-23',
 						endttime: '2023-7-25',
-						isdone: false
+						timetype0: false,
+						timetype1: true,
+						isdone: false,
+						checkbox2:["每周一","每周二"]
 					}
 				],
 
@@ -384,6 +411,8 @@
 
 					},
 				],
+				
+				
 
 			}
 
@@ -523,9 +552,9 @@
 					}
 				} else if (e.index == 1) {
 					uni.showModal({
-						title: '提示',
+						title: '目标说明',
 						// content: `您确认要${this.fabcontent[e.index].active ? '选中' : '取消'}${e.item.text}吗？`,
-						content: `您确认要${e.item.text}吗？`,
+						content: `忙碌的生活中是否给你带来了很大的压力呢？如果需要，不妨设定一个娱乐目标让自己放松一下吧~`,
 						success: function(res) {
 							if (res.confirm) {
 								console.log('用户点击确定设立目标')
@@ -559,9 +588,12 @@
 													}
 												],
 												content: data.title,
+												timetype0: data.timetype0,
+												timetype1: data.timetype1,
 												starttime: data.startDate,
-												endttime: data.endDate
-												
+												endttime: data.endDate,
+												checkbox2:data.checkbox2,
+												isdone:false
 												
 											}
 											that.swipeList.push(obj);
@@ -789,6 +821,7 @@
 			},
 
 			add() {
+				
 				this.dynamicList.push({
 
 					// url: `/static/c${this.dynamicList.length+1}.png`,
@@ -803,7 +836,12 @@
 					// color: this.dynamicList.length % 2 === 0 ? '#f5f5f5' : "#fff"
 
 				})
-
+				
+				// if(this.dynamicList.length>=9){
+				// 	this.swiperitemList.push(this.dynamicList);
+				// 	console.log("输出swiperitemList")
+				// 	console.log(this.swiperitemList)
+				// }
 			},
 			del(index) {
 				
@@ -970,7 +1008,13 @@
 		flex-direction: column;
 		font-size: 10px;
 	}
-
+	.content-time-cycle{
+		display: flex;
+		flex-direction: row;
+		font-size: 9px;
+		justify-content: space-between;
+		
+	}
 	.test {
 		// background-color: #18a0c2;
 	}
