@@ -191,6 +191,7 @@
 									icon:'none',
 									duration:2500,
 								})
+								console.log(that.sleep_success_list);
 							}
 							else{
 								uni.showToast({
