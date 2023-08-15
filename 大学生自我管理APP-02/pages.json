@@ -139,6 +139,44 @@
             }
             
         }
+		,
+		
+		  {
+		        "path" : "pages/self-manage/personalCenter/selectZone",
+		        "style" :                                                                                    
+		        {
+		            "navigationBarTitleText": "选择地区",
+		            "enablePullDownRefresh": false
+		        }
+		        
+		    },
+			{
+			      "path" : "pages/self-manage/personalCenter/editorDetail",
+			      "style" :                                                                                    
+			      {
+			          "navigationBarTitleText": "编辑个人信息",
+			          "enablePullDownRefresh": false,
+					  
+					   // "app-plus":{
+					   //                    "titleNView":{
+					   //                        "buttons":[
+
+					   //                            {
+					   //                                "text":"保存",
+					   //                                "type":"none",
+					   //                                "color":"#007AFF",
+					   //                                "background":"#000000",
+								// 					  "float":"right"
+					   //                                "fontSize":"16px"
+					   //                            }
+					   //                        ]
+					   //                    }
+					   //                }
+					 
+					  
+			      }
+			      
+			  }
 		,{
 		      "path" : "pages/self-manage/component/play/play",
 		      "style" :                                                                                    
@@ -172,7 +210,7 @@
 		      "path" : "pages/self-manage/component/PersonCenter/PersonCenter",
 		      "style" :                                                                                    
 		      {
-		          "navigationBarTitleText": "",
+		          "navigationBarTitleText": "个人中心"
 		          "enablePullDownRefresh": false
 		      }
 		      
