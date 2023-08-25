@@ -155,7 +155,7 @@
 			      "style" :                                                                                    
 			      {
 			          "navigationBarTitleText": "编辑个人信息",
-			          "enablePullDownRefresh": false,
+			          "enablePullDownRefresh": false
 					  
 					   // "app-plus":{
 					   //                    "titleNView":{
@@ -210,7 +210,7 @@
 		      "path" : "pages/self-manage/component/PersonCenter/PersonCenter",
 		      "style" :                                                                                    
 		      {
-		          "navigationBarTitleText": "个人中心"
+		          "navigationBarTitleText": "个人中心",
 		          "enablePullDownRefresh": false
 		      }
 		      
@@ -280,6 +280,42 @@
             }
             
         }
+		,{
+		      "path" : "pages/self-manage/sleep/harm-of-staying-up-late/harm-of-staying-up-late",
+		      "style" :                                                                                    
+		      {
+		          "navigationBarTitleText": "",
+		          "enablePullDownRefresh": false
+		      }
+		      
+		  }
+		  ,{
+		      "path" : "pages/self-manage/sleep/save/save",
+		      "style" :                                                                                    
+		      {
+		          "navigationBarTitleText": "",
+		          "enablePullDownRefresh": false
+		      }
+		      
+		  }
+		  ,{
+		      "path" : "pages/self-manage/sleep/help/help",
+		      "style" :                                                                                    
+		      {
+		          "navigationBarTitleText": "",
+		          "enablePullDownRefresh": false
+		      }
+		      
+		  }
+		  ,{
+		      "path" : "pages/self-manage/sleep/tips-for-insomnia/tips-for-insomnia",
+		      "style" :                                                                                    
+		      {
+		          "navigationBarTitleText": "",
+		          "enablePullDownRefresh": false
+		      }
+		      
+		  }
     ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
