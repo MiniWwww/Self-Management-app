@@ -28,10 +28,10 @@
 			</view>
 		</uni-card>
 		<uni-card title="强度">
-			<radio-group class="intensity_group" @change="radioChange">
-				<radio color="#a8bda8" value="低">低</radio>
-				<radio color="#a8bda8" value="中">中</radio>
-				<radio color="#a8bda8" value="高">高</radio>
+			<radio-group class="intensity_group">
+				<radio color="#a8bda8">低</radio>
+				<radio color="#a8bda8">中</radio>
+				<radio color="#a8bda8">高</radio>
 			</radio-group>
 		</uni-card>
 		<uni-card title="达成奖励次数:">
