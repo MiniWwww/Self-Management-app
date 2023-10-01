@@ -1,5 +1,21 @@
 {
+  "id": "sq-timetable",
+  "name": "SqTimetable课程表-好看简洁且支持自定义的课表插件",
+  "displayName": "SqTimetable课程表-好看简洁且支持自定义的课表插件",
+  "version": "1.1.0",
+  "description": "可自定义课程的颜色显示数组、每节课的上下课时间、背景图片，可设置显示非本周课程，可切换当前教学周数。",
+  "keywords": [
+    "课程表",
+    "作息表"
+  ],
+  "dcloudext": {
+    "category": [
+      "前端组件",
+      "通用组件"
+    ]
+  },
   "dependencies": {
-    "snowflake-id": "^1.1.0"
+    "snowflake-id": "^1.1.0",
+    "uuid": "^9.0.0"
   }
 }

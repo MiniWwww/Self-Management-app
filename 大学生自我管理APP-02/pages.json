@@ -3,7 +3,8 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationBarTitleText": "uni-app",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -18,21 +19,19 @@
       "style": {
         "navigationBarTitleText": "记录",
         "enablePullDownRefresh": true,
-		"app-plus" : {
-		    "bounce" : "none",
-		    "titleNView" : {
-		        "type" : "transparent",
-		        "buttons" : [
-		            {
-		                "background" : "rgba(255,255,255,0.2)",
-		                "color" : "#696969",
-		                "type" : "none",
-		                "fontSrc" : "/static/fonts/iconfont.ttf",
-		                "text" : "+" //添加新记录
-		            }
-		        ]
-		    }
-		}
+        "app-plus": {
+          "bounce": "none",
+          "titleNView": {
+            "type": "transparent",
+            "buttons": [{
+              "background": "rgba(255,255,255,0.2)",
+              "color": "#696969",
+              "type": "none",
+              "fontSrc": "/static/fonts/iconfont.ttf",
+              "text": "+" //添加新记录
+            }]
+          }
+        }
       }
 
     }, {
@@ -143,109 +142,88 @@
         "enablePullDownRefresh": false
       }
 
+    }, {
+      "path": "pages/self-manage/sleep/harm-of-staying-up-late/harm-of-staying-up-late",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-manage/sleep/save/save",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-manage/sleep/help/help",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-manage/sleep/tips-for-insomnia/tips-for-insomnia",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    },
+    {
+      "path": "pages/self-manage/component/play/EventForm",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
     }
-      ,{
-            "path" : "pages/self-manage/sleep/harm-of-staying-up-late/harm-of-staying-up-late",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/save/save",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/help/help",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/tips-for-insomnia/tips-for-insomnia",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-		,
-		  {
-		        "path" : "pages/self-manage/component/play/EventForm",
-		        "style" :                                                                                    
-		        {
-		            "navigationBarTitleText": "",
-		            "enablePullDownRefresh": false
-		        }
-		        
-		    }
-		  
-        ,{
-            "path" : "pages/self-manage/sport/to_detail",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sport/award",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/component/circle-progress-bar/circle-progress-bar",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/sleep_award/sleep_award",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-record/component/chatinput/chatinput",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-record/publish/publish", //自我记录的新记录发布页
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "发布",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+
+    , {
+      "path": "pages/self-manage/sport/to_detail",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-manage/sport/award",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-manage/component/circle-progress-bar/circle-progress-bar",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-manage/sleep/sleep_award/sleep_award",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-record/component/chatinput/chatinput",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/self-record/publish/publish", //自我记录的新记录发布页
+      "style": {
+        "navigationBarTitleText": "发布",
+        "enablePullDownRefresh": false
+      }
+
+    }
+  ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",

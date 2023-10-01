@@ -50,6 +50,7 @@
       return {
         weekdays: weekdays,
         tableName: "默认课表",
+        tableId: 0,
         value: 0,
         tableRange: [],
       }
@@ -66,7 +67,9 @@
         await db.createTable("courses",
           "id INTEGER PRIMARY KEY,course_table_id INTEGER NOT NULL,day_of_week INTEGER NOT NULL,time_period_id INTEGER NOT NULL, course_name TEXT NOT NULL,professor TEXT NOT NULL,location TEXT NOT NULL,credits REAL NOT NULL,FOREIGN KEY(course_table_id) REFERENCES course_tables(id),FOREIGN KEY(time_period_id) REFERENCES time_periods(id)"
         )
-        await db.createTable("time_periods", "id INTEGER PRIMARY KEY,start_time TEXT NOT NULL,end_time TEXT NOT NULL")
+        await db.createTable("time_periods",
+          "id INTEGER PRIMARY KEY, start_time INTEGER NOT NULL, end_time INTEGER NOT NULL");
+
       },
       async loadData() {
         this.tableRange = await db.selectTableData("course_tables")
@@ -103,6 +106,7 @@
     },
     mounted() {
       this.createDB()
+      db.dropTable("time_periods")
       this.createTables()
       this.loadData()
     }
