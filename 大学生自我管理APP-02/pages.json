@@ -1,357 +1,302 @@
 {
-  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-    {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "uni-app",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/index/components/MessageBox/index"
-    }, {
-      "path": "pages/todolist/todolist",
-      "style": {
-        "navigationBarTitleText": "ToDoList",
-        "enablePullDownRefresh": false
-      }
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/todolist/todolist",
+			"style": {
+				"navigationBarTitleText": "ToDoList",
+				"enablePullDownRefresh": false
+			}
 
-    }, {
-      "path": "pages/self-record/self-record",
-      "style": {
-        "navigationBarTitleText": "记录",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "bounce": "none",
-          "titleNView": {
-            "type": "transparent",
-            "buttons": [{
-              "background": "rgba(255,255,255,0.2)",
-              "color": "#696969",
-              "type": "none",
-              "fontSrc": "/static/fonts/iconfont.ttf",
-              "text": "+" //添加新记录
-            }]
-          }
-        }
-      }
+		}, {
+			"path": "pages/self-record/self-record",
+			"style": {
+				"navigationBarTitleText": "记录",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+							"background": "rgba(255,255,255,0.2)",
+							"color": "#696969",
+							"type": "none",
+							"fontSrc": "/static/fonts/iconfont.ttf",
+							"text": "+" //添加新记录
+						}]
+					}
+				}
+			}
 
-    }, {
-            "path" : "pages/self-manage/self-manage",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
+		}, {
+			"path": "pages/self-manage/self-manage",
+			"style": {
+				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sport/add_new_sport",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加运动项目",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sport/sport_analyse",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/baizaoyin/baizaoyin",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/shuiqianstory/shuiqianstory",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/piano/piano",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/other_music/other_music",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/sleep_tips/sleep_tips",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "睡个好觉",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/sleep_analyse/sleep_analyse",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/component/sleep/sleep",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/component/sport/sport",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-		,
-		
-		  {
-		        "path" : "pages/self-manage/personalCenter/selectZone",
-		        "style" :                                                                                    
-		        {
-		            "navigationBarTitleText": "选择地区",
-		            "enablePullDownRefresh": false
-		        }
-		        
-		    },
-			{
-			      "path" : "pages/self-manage/personalCenter/editorDetail",
-			      "style" :                                                                                    
-			      {
-			          "navigationBarTitleText": "编辑个人信息",
-			          "enablePullDownRefresh": false
-					  
-					   // "app-plus":{
-					   //                    "titleNView":{
-					   //                        "buttons":[
+				"enablePullDownRefresh": false
+			}
 
-					   //                            {
-					   //                                "text":"保存",
-					   //                                "type":"none",
-					   //                                "color":"#007AFF",
-					   //                                "background":"#000000",
-								// 					  "float":"right"
-					   //                                "fontSize":"16px"
-					   //                            }
-					   //                        ]
-					   //                    }
-					   //                }
-					 
-					  
-			      }
-			      
-			  }
-		,{
-		      "path" : "pages/self-manage/component/play/play",
-		      "style" :                                                                                    
-		      {
-		          "navigationBarTitleText": "",
-		          "enablePullDownRefresh": false
-		      }
-		      
-		  }
-		  ,{
-		        "path" : "pages/self-manage/play/EventFormRecord",
-		        "style" :                                                                                    
-		        {
-		            "navigationBarTitleText": "",
-		            "enablePullDownRefresh": false
-		        }
-		        
-		    }
-		  ,
-		  {
-		        "path" : "pages/self-manage/play/add_playGoal",
-		        "style" :                                                                                    
-		        {
-		            "navigationBarTitleText": "",
-		            "enablePullDownRefresh": false
-		        }
-		        
-		    }
-		  ,
-		  {
-		      "path" : "pages/self-manage/component/PersonCenter/PersonCenter",
-		      "style" :                                                                                    
-		      {
-		          "navigationBarTitleText": "个人中心",
-		          "enablePullDownRefresh": false
-		      }
-		      
-		  }
-		  ,{
-		        "path" : "pages/self-manage/component/musicPlay/musicPlay",
-		        "style" :                                                                                    
-		        {
-		            "navigationBarTitleText": "",
-		            "enablePullDownRefresh": false
-		        }
-		        
-		    }
-      
-		  
-        ,{
-            "path" : "pages/self-manage/sport/to_detail",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sport/award",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/component/circle-progress-bar/circle-progress-bar",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-manage/sleep/sleep_award/sleep_award",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-record/component/chatinput/chatinput",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/self-record/publish/publish", //自我记录的新记录发布页
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "发布",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-		,{
-		      "path" : "pages/self-manage/sleep/harm-of-staying-up-late/harm-of-staying-up-late",
-		      "style" :                                                                                    
-		      {
-		          "navigationBarTitleText": "",
-		          "enablePullDownRefresh": false
-		      }
-		      
-		  }
-		  ,{
-		      "path" : "pages/self-manage/sleep/save/save",
-		      "style" :                                                                                    
-		      {
-		          "navigationBarTitleText": "",
-		          "enablePullDownRefresh": false
-		      }
-		      
-		  }
-		  ,{
-		      "path" : "pages/self-manage/sleep/help/help",
-		      "style" :                                                                                    
-		      {
-		          "navigationBarTitleText": "",
-		          "enablePullDownRefresh": false
-		      }
-		      
-		  }
-		  ,{
-		      "path" : "pages/self-manage/sleep/tips-for-insomnia/tips-for-insomnia",
-		      "style" :                                                                                    
-		      {
-		          "navigationBarTitleText": "",
-		          "enablePullDownRefresh": false
-		      }
-		      
-		  }
-    ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
-  },
-  "tabBar": {
-    "color": "#7A7E83",
-    "selectedColor": "#3cc51f",
-    "borderStyle": "black",
-    "backgroundColor": "#ffffff",
-    "list": [{
-        "pagePath": "pages/index/index",
-        "iconPath": "static/schedule.png",
-        "selectedIconPath": "static/schedule.png",
-        "text": "课程表"
-      },
-      {
-        "pagePath": "pages/todolist/todolist",
-        "iconPath": "static/todolist.png",
-        "selectedIconPath": "static/todolist.png",
-        "text": "待办"
-      },
-      {
-        "pagePath": "pages/self-record/self-record",
-        "iconPath": "static/self-record.png",
-        "selectedIconPath": "static/self-record.png",
-        "text": "个人记录"
-      },
-      {
-        "pagePath": "pages/self-manage/self-manage",
-        "iconPath": "static/self-manage.png",
-        "selectedIconPath": "static/self-manage.png",
-        "text": "自我管理"
-      }
-    ]
-  },
-  "uniIdRouter": {}
+		}, {
+			"path": "pages/self-manage/sport/add_new_sport",
+			"style": {
+				"navigationBarTitleText": "添加运动项目",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sport/sport_analyse",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/baizaoyin/baizaoyin",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/shuiqianstory/shuiqianstory",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/piano/piano",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/other_music/other_music",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/sleep_tips/sleep_tips",
+			"style": {
+				"navigationBarTitleText": "睡个好觉",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/sleep_analyse/sleep_analyse",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/self-manage/component/sleep/sleep",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/component/sport/sport",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+
+		{
+			"path": "pages/self-manage/personalCenter/selectZone",
+			"style": {
+				"navigationBarTitleText": "选择地区",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/self-manage/personalCenter/editorDetail",
+			"style": {
+				"navigationBarTitleText": "编辑个人信息",
+				"enablePullDownRefresh": false
+
+				// "app-plus":{
+				//                    "titleNView":{
+				//                        "buttons":[
+
+				//                            {
+				//                                "text":"保存",
+				//                                "type":"none",
+				//                                "color":"#007AFF",
+				//                                "background":"#000000",
+				// 					  "float":"right"
+				//                                "fontSize":"16px"
+				//                            }
+				//                        ]
+				//                    }
+				//                }
+
+
+			}
+
+		}, {
+			"path": "pages/self-manage/component/play/play",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/play/EventFormRecord",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/self-manage/play/add_playGoal",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/self-manage/component/PersonCenter/PersonCenter",
+			"style": {
+				"navigationBarTitleText": "个人中心",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/component/musicPlay/musicPlay",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}
+
+
+		, {
+			"path": "pages/self-manage/sport/to_detail",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sport/award",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/component/circle-progress-bar/circle-progress-bar",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/sleep_award/sleep_award",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-record/component/chatinput/chatinput",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-record/publish/publish", //自我记录的新记录发布页
+			"style": {
+				"navigationBarTitleText": "发布",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/harm-of-staying-up-late/harm-of-staying-up-late",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/save/save",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/help/help",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/self-manage/sleep/tips-for-insomnia/tips-for-insomnia",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/schedule.png",
+				"selectedIconPath": "static/schedule.png",
+				"text": "课程表"
+			},
+			{
+				"pagePath": "pages/todolist/todolist",
+				"iconPath": "static/todolist.png",
+				"selectedIconPath": "static/todolist.png",
+				"text": "待办"
+			},
+			{
+				"pagePath": "pages/self-record/self-record",
+				"iconPath": "static/self-record.png",
+				"selectedIconPath": "static/self-record.png",
+				"text": "个人记录"
+			},
+			{
+				"pagePath": "pages/self-manage/self-manage",
+				"iconPath": "static/self-manage.png",
+				"selectedIconPath": "static/self-manage.png",
+				"text": "自我管理"
+			}
+		]
+	},
+	"uniIdRouter": {}
 }

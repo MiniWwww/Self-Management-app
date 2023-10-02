@@ -57,11 +57,12 @@
               <view style="margin-top: 2px;">{{ item.name }}</view>
               <view>{{ item.place }}</view>
               <view>{{ item.teacher }}</view>
-              <view>{{ (item.begin+1)+'-'+(item.end+1)+'节' }}</view>
+              <view>{{ (item.begin)+'-'+(item.end)+'节' }}</view>
               <view>
                 {{ item.week_begin!=item.week_end?(item.week_begin+'-'+item.week_end):item.week_begin }}周
               </view>
               <view v-if="!(nowWeek>=item.week_begin&&nowWeek<=item.week_end)">非本周</view>
+			  <view>{{ item.credit }}学分</view>
             </view>
           </view>
         </view>
@@ -75,8 +76,10 @@
     ref,
     onMounted,
     defineProps,
-    defineEmits
+    defineEmits,
+	watch
   } from 'vue';
+  import dao from '@/pages/index/dao/dao.js'
 
   const name = 'SqTimetable';
   const emit = defineEmits(['click']);
@@ -126,7 +129,21 @@
   const height = ref(uni.getSystemInfoSync().windowHeight);
   const statusBarHeight = ref(uni.getSystemInfoSync().statusBarHeight);
   const showWeeks = ref(false);
-  const nowWeek = ref(props.week);
+  const nowWeek = ref(1);
+  
+  const saveWeek = () => {
+  	dao.saveWeek(nowWeek.value)
+  }
+  const loadWeek = () => {
+  	dao.loadWeek().then(res => {
+		nowWeek.value = res
+	}).catch(err => {
+		console.error(err);
+	})
+  }
+  watch(nowWeek, () => {
+  	saveWeek()
+  })
 
   const getCourse = (item) => {
     emit('click', item);
@@ -142,7 +159,7 @@
   };
 
   onMounted(() => {
-    // console.log(props.courseList);
+    loadWeek()
   });
 </script>
 
