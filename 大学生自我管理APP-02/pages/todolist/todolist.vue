@@ -257,7 +257,9 @@
 			};
 		},
 
-		onLoad() {},
+		onLoad() {
+			this.getList()
+		},
 		computed: {
 			listData() {
 				let list = JSON.parse(JSON.stringify(this.list)); //拷贝对象
@@ -329,6 +331,16 @@
 
 		},
 		methods: {
+			async saveList() {
+				await uni.setStorage({
+					key: 'todolist',
+					data: this.list
+				})
+			},
+		    getList() {
+				let res = uni.getStorageSync('todolist')
+				this.list = res
+			},
 			//选择按钮
 			choice(index) {
 				//当再次被选中时，取消当前选中项
@@ -496,7 +508,8 @@
 					cycletime: `${this.selectId.join(', ')} ${this.time}`,
 					time: this.time,
 				});
-
+				
+				this.saveList()
 
 				this.list1[0].selected = false;
 				this.list1[1].selected = false;

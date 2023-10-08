@@ -24,7 +24,7 @@
 
 				<view class="my-data-box">
 					<text class="my-data-box-title">姓名</text>
-					<text class="my-data-box-title" >{{mydata.name}}</text>
+					<text class="my-data-box-title">{{mydata.name}}</text>
 					<!-- <input type="text"> -->
 				</view>
 
@@ -51,20 +51,17 @@
 				<!-- <uni-list-item title="个人资料" note="" showArrow
 					thumb="/static/编辑个人资料.png" thumb-size="lg"
 					rightText=""  link to="/pages/self-manage/personalCenter/editorPersonalData" />
-				 -->	
-				<uni-list-item title="昵称" note=""  :right-text="mydata.nickname"  clickable   @click="editordetail"
-				 showArrow/>
-				
+				 -->
+				<uni-list-item title="昵称" note="" :right-text="mydata.nickname" clickable @click="editordetail"
+					showArrow />
+
 				<!-- 如果只是 right-text=“”那么只能显示一个字符串，加上冒号才能动态赋值-->
-				<uni-list-item title="名字" note=""  :right-text="mydata.name" clickable   @click="editordetail"
-				 showArrow/>
-				
-				<uni-list-item title="性别" note=""  :right-text="mydata.gender" clickable   @click="editordetail"
-				 showArrow/>
-				<uni-list-item title="年龄" note=""  :right-text="mydata.age" clickable   @click="editordetail"
-				 showArrow/>
-				<uni-list-item title="地区" note=""  :right-text="mydata.zone"  clickable @click="selectzone"
-				 showArrow/>
+				<uni-list-item title="名字" note="" :right-text="mydata.name" clickable @click="editordetail" showArrow />
+
+				<uni-list-item title="性别" note="" :right-text="mydata.gender" clickable @click="editordetail"
+					showArrow />
+				<uni-list-item title="年龄" note="" :right-text="mydata.age" clickable @click="editordetail" showArrow />
+				<uni-list-item title="地区" note="" :right-text="mydata.zone" clickable @click="selectzone" showArrow />
 			</uni-list>
 		</view>
 	</view>
@@ -82,11 +79,11 @@
 				userpic: '../../../../static/night.png',
 				iconType: 'compose',
 				mydata: {
-					nickname:'我的昵称',
+					nickname: '我的昵称',
 					name: '张三',
 					gender: '女',
 					age: '17',
-					zone:'中国'
+					zone: '中国'
 
 				}
 
@@ -94,36 +91,46 @@
 
 		},
 		// 生命周期函数，监听页面显示
-		onShow(){
-			
-			var that=this;
-			uni.getStorage({     
-					key:'userInfo',
-					success(res) {
-						
-						console.log('获取基本信息成功',res.data);
-						that.mydata=res.data;
-					}
-				});
-				
+		onShow() {
+
+			var that = this;
 			uni.getStorage({
-					key:'userZone',
-					success(res) {
-						
-						console.log('获取地区成功',res.data);
-						that.mydata.zone=res.data.zone;
-					}
-				});
-				
-				
+				key: 'userInfo',
+				success(res) {
+
+					console.log('获取基本信息成功', res.data);
+					that.mydata = res.data;
+				}
+			});
+
+			uni.getStorage({
+				key: 'userZone',
+				success(res) {
+
+					console.log('获取地区成功', res.data);
+					that.mydata.zone = res.data.zone;
+				}
+			});
+			
+			this.getAvator()
+			this.getBackground()
 		},
-		
+
 		// components: {
 		// 	uniListItem
 		// },
 
 
 		methods: {
+			getAvator() {
+				let res = uni.getStorageSync('avator')
+				this.userpic = res
+				console.log(res);
+			},
+			getBackground() {
+				let res = uni.getStorageSync('background')
+				this.userbk = res
+			},
 			onuploadheaderphoto() {
 				uni.chooseImage({
 					count: 1,
@@ -132,8 +139,15 @@
 					success: (res) => {
 						console.log(res);
 						this.userpic = res.tempFilePaths[0];
-						
-						
+						// 保存头像路径
+						uni.setStorage({
+							key: 'avator',
+							data: res.tempFilePaths[0],
+							success: function() {
+								console.log('avator was saved successfully');
+							}
+						})
+
 					}
 				})
 			},
@@ -145,20 +159,28 @@
 					success: (res) => {
 						console.log(res);
 						this.userbk = res.tempFilePaths[0]
+						// 保存背景路径
+						uni.setStorage({
+							key: 'background',
+							data: res.tempFilePaths[0],
+							success: function() {
+								console.log('background was saved successfully');
+							}
+						})
 					}
 				})
 			},
-			editordetail(){
+			editordetail() {
 				var that = this;
 				uni.navigateTo({
 					url: '/pages/self-manage/personalCenter/editorDetail',
 					events: {
 						editPersonalData(data) {
-							that.mydata.nickname =data.nickname;
-							that.mydata.name =data.name;
-							that.mydata.gender =data.gender;
-							that.mydata.age =data.age;
-							
+							that.mydata.nickname = data.nickname;
+							that.mydata.name = data.name;
+							that.mydata.gender = data.gender;
+							that.mydata.age = data.age;
+
 							uni.setStorage({ //存入Storage
 								key: 'userInfo', //自己取个名字
 								data: { //存的数据可以是很多条
@@ -166,54 +188,54 @@
 									name: that.mydata.name,
 									gender: that.mydata.gender,
 									age: that.mydata.age,
-									
+
 								},
-								
+
 								success() {
 									console.log('userInfo储存成功');
 								}
 							});
-							
+
 							// 上一句不加分号的话下面这个就执行不了
 							console.log('查看数组：', that.mydata);
 							console.log('PersonalCenter页面成功接收到editorDetail的数据');
-				
+
 						},
-				
+
 					}
 				});
 			},
-			selectzone(){
+			selectzone() {
 				var that = this;
 				uni.navigateTo({
 					url: '/pages/self-manage/personalCenter/selectZone',
 					events: {
 						editZone(data) {
-							that.mydata.zone=data.zone
-							
+							that.mydata.zone = data.zone
+
 							uni.setStorage({ //存入Storage
 								key: 'userZone', //自己取个名字
 								data: { //存的数据可以是很多条
-									
-									zone:that.mydata.zone,
-									
+
+									zone: that.mydata.zone,
+
 								},
-								
+
 								success() {
 									console.log('userZone储存成功');
 								}
 							});
-							
+
 							// 上一句不加分号的话下面这个就执行不了
 							console.log('查看数组：', that.mydata.zone);
 							console.log('PersonalCenter页面成功接收到selectZone的数据');
-				
+
 						},
-				
+
 					}
 				});
 			}
-			
+
 
 
 		}
@@ -307,10 +329,10 @@
 		}
 
 	}
-	
-	.body{
-		
-		.list-item{
+
+	.body {
+
+		.list-item {
 			margin-top: 50px;
 		}
 	}
