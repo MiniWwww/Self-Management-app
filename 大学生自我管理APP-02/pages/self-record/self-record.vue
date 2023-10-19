@@ -5,7 +5,7 @@
 			<view class="home-pic-base">
 				<!-- “我”的用户名和用户头像 -->
 				<view class="top-pic">
-					<image class="header" :src="userhead"></image>
+					<image class="header" mode="aspectFill" :src="userhead"></image>
 				</view>
 				<view class="top-name">{{username}}</view>
 			</view>
@@ -15,7 +15,7 @@
 		<view class="moments__post" v-for="(post,index) in posts" :key="index" :id="'post-'+index">
 			<view class="post-left">
 				<!-- 发布该条记录的用户头像 -->
-				<image class="post_header" :src="post.header_image" @click="bindClick(index)"></image>
+				<image class="post_header" mode="aspectFill" :src="post.header_image" @click="bindClick(index)"></image>
 			</view>
 
 			<view class="post_right">
@@ -74,6 +74,7 @@
 		
 		data() {
 			return {
+				days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
 				
 				//每条记录数据，注意每发布一条新的就插入数组头部
 				posts:[
@@ -174,6 +175,12 @@
 				}
 			});
 			uni.startPullDownRefresh();
+			// 获取头像
+			let avator = uni.getStorageSync('avator')
+			let username = uni.getStorageSync('userInfo').nickname
+			this.username = username != '' ? username : '我'
+			console.log(avator);
+			this.userhead = avator
 		},
 		
 		onShow() {
@@ -226,6 +233,18 @@
 				uni.setStorageSync('self-record-posts',this.posts);
 				console.log('发布新记录，保存到本地存储');
 				this.publish_msg = [];
+			}
+			
+			// todoRemind一天只执行一次
+			const today = new Date().toISOString().split('T')[0]; // 获取当前日期，格式为"YYYY-MM-DD"
+			const lastExecuted = uni.getStorageSync('lastExecutedDate')
+			console.log(today + " " + lastExecuted);
+			if (lastExecuted !== today) {
+			        // 如果函数今天尚未执行，则执行它
+			        this.todoRemind();
+			
+			        // 更新localStorage中的记录
+			        uni.setStorageSync('lastExecutedDate', today) 
 			}
 		},
 		
@@ -479,6 +498,85 @@
 				uni.setStorageSync('self-record-posts',that.posts);
 				uni.setStorageSync('last-system-msg-date',that.last_sys_date);
 				console.log('系统发送了新消息，更新本地存储');
+			},
+			/**
+			 * 自定义系统提示
+			 * @param {Object} e
+			 * @param {Object} content
+			 */
+			system_remind(e, content) {
+				let sys_data = {
+					//"post_id": 2,
+					"uid": 1,
+					"username": "系统",
+					"header_image": "/static/self-record/system-head.png",
+					"content": {
+						"text": content,
+						"images": ''
+					},
+					"islike": 0,
+					"like": [{
+							"uid": 1,
+							"username": "系统"
+						}
+					],
+					"comments": {
+						"total": 0,
+						"comment": []
+					},
+					"timestamp": mytime.traversalTime(e)
+				};
+				
+				var that = this;
+				that.posts.unshift(sys_data);
+				console.log("系统发送鼓励消息",that.posts[0]);
+				that.last_sys_date = sys_data.timestamp;
+				console.log('系统鼓励消息时间更新为',that.last_sys_date);
+				
+				uni.setStorageSync('self-record-posts',that.posts);
+				uni.setStorageSync('last-system-msg-date',that.last_sys_date);
+				console.log('系统发送了新消息，更新本地存储');
+			},
+			// 计算两个日期对象相差的天数，date2要晚于date1
+			daysBetween(date1, date2) {
+			    // 每天的毫秒数
+			    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+			
+			    // 获取两个日期的时间戳
+			    const timestamp1 = date1.getTime();
+			    const timestamp2 = date2.getTime();
+			
+			    // 计算时间戳的差值并转换为天数
+			    const differenceInDays = (timestamp2 - timestamp1) / oneDayInMilliseconds
+			
+			    return Math.round(differenceInDays);
+			},
+			// todolist事件的提醒
+			todoRemind() {
+				// 读取todolist
+				let list = uni.getStorageSync('todolist')
+				console.log(list);
+				if (list.length != 0) {
+					list.forEach(event => {
+						if (event.cycles != null) {
+							let now = new Date()
+							let nowDay = now.getDay()
+							if (event.cycles[0] == '每日' || event.cycles.indexOf(this.days[nowDay]) > 0) {
+								let content = '今天也要' + event.title + ' ' + event.mark + '噢~'
+								this.system_remind(now.getTime(), content)
+							}
+						}
+						if (event.date != null) {
+							let ddl = new Date(event.date)
+							let now = new Date()
+							let days = this.daysBetween(now, ddl)
+							if (days == 7 || days == 5 || days == 3 || days == 0) {
+								let content = '待办提醒：' + event.title + ' ' + event.mark + ` 还有${days}天`
+								this.system_remind(now.getTime(), content)
+							}
+						}
+					})
+				}
 			}
 		}
 	}
