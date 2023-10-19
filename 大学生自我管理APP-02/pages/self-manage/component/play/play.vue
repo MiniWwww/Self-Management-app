@@ -156,7 +156,14 @@
 
 		</view>
 		<!-- </uni-section> -->
-
+		
+		<!-- 2023-9-10添加 -->
+		<view>
+					<!-- 提示信息弹窗 -->
+					<uni-popup ref="message" type="message">
+						<uni-popup-message :type="msgType" :message="messageText" :duration="2000"></uni-popup-message>
+					</uni-popup>
+		</view>
 	</view>
 </template>
 
@@ -441,6 +448,13 @@
 		},
 		// 2023-7-30添加结束
 		methods: {
+			//2023-9-10添加
+			messageToggle(type) {
+							this.msgType = type
+							this.messageText = `成功完成一个目标`
+							this.$refs.message.open()
+						},
+			// 2023-9-10添加结束
 			// 2023-7-31添加
 			inputStartTime(t) {
 				this.startTime = t;
@@ -460,6 +474,7 @@
 				let {
 					content
 				} = e;
+				
 
 				if (content.text === '删除') {
 					uni.showModal({
@@ -474,8 +489,11 @@
 						}
 					});
 				} else if (content.text === '完成') {
-
+					
 					this.swipeList[index].isdone = true;
+					// 成功弹窗
+					this.messageToggle("success");
+					
 
 				} else if (content.text === '置顶') {
 					uni.showModal({
