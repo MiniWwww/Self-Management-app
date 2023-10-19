@@ -130,10 +130,12 @@
 			},
 			
 			send(text,images) { //向self-record页面传递数据
+				let avator = uni.getStorageSync('avator')
+				let userInfo = uni.getStorageSync('userInfo')
 				let usr_data = {
 					"uid": 2,
-					"username": "我",
-					"header_image": "/static/self-record/user-head.png",
+					"username": userInfo.nickname,
+					"header_image": avator,
 					"content": {
 						"text": text,
 						"images": images
