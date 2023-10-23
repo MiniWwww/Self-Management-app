@@ -236,16 +236,26 @@
 			}
 			
 			// todoRemind一天只执行一次
+			
 			const today = new Date().toISOString().split('T')[0]; // 获取当前日期，格式为"YYYY-MM-DD"
 			const lastExecuted = uni.getStorageSync('lastExecutedDate')
 			console.log(today + " " + lastExecuted);
 			if (lastExecuted !== today) {
 			        // 如果函数今天尚未执行，则执行它
 			        this.todoRemind();
+					
 			
 			        // 更新localStorage中的记录
 			        uni.setStorageSync('lastExecutedDate', today) 
 			}
+			// 娱乐目标完成
+			this.playRemind();
+			// 完成一次运动
+			this.SportRemind();
+			// 睡眠目标完成
+			this.SleepRemind();
+			
+			
 		},
 		
 		onHide() {
@@ -576,6 +586,55 @@
 							}
 						}
 					})
+				}
+			},
+			
+			//娱乐成就达成时的系统提醒
+			playRemind(){
+				
+				let playContent = uni.getStorageSync('playGoalSuccess')
+				console.log(playContent);
+				if (playContent.content!=null)
+				{
+					let now = new Date()
+					let content = '恭喜你！目标： ' + playContent.content + ` 已完成`
+					
+				this.system_remind(now.getTime(), content);
+				// 清除，否则一直刷新一直发
+				uni.removeStorageSync('playGoalSuccess')
+				}
+			},
+			
+			//运动成就达成时的系统提醒
+			SportRemind(){
+				
+				let sportContent = uni.getStorageSync('sportGoalSuccess')
+				console.log(sportContent);
+				if (sportContent.content!=null)
+				{
+					let now = new Date()
+					let content = '恭喜你！完成一次' + sportContent.content 
+					
+				this.system_remind(now.getTime(), content);
+				// 清除，否则一直刷新一直发
+				uni.removeStorageSync('sportGoalSuccess')
+				}
+			},
+			
+			SleepRemind(){
+				
+				let sleepData = uni.getStorageSync('sleepGoalSuccess')
+				console.log(sleepData);
+				if (sleepData.sleep_time!=null)
+				{
+					let now = new Date()
+					let sleep_goal=sleepData.sleep_goal
+					let sleep_time=sleepData.sleep_time
+					let content = '恭喜你！完成今天的睡眠目标  目标：  ' + sleep_goal+'  今日睡眠时间： ' +sleep_time
+					
+				this.system_remind(now.getTime(), content);
+				// 清除，否则一直刷新一直发
+				uni.removeStorageSync('sleepGoalSuccess')
 				}
 			}
 		}

@@ -162,6 +162,18 @@
 				console.log(e);
 				if(e.content.text=="完成"){
 					that.finish_sport(index);
+					uni.setStorage({ //存入Storage
+						key: 'sportGoalSuccess', //自己取个名字
+						data: { //存的数据可以是很多条
+								
+								content:that.ListData[index].title,
+					
+						},
+					
+						success() {
+							console.log('sportGoalSuccess储存成功');
+						}
+					});
 				}
 				if(e.content.text=="删除"){
 					that.delete_sport(index);

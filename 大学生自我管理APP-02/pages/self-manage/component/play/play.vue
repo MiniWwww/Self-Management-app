@@ -5,96 +5,37 @@
 		</uni-card>
 
 		<!-- 基本项目 -->
-		<uni-section title="基础项目" type="line" padding>
+		<uni-section title="娱乐活动" type="line" padding>
 			<!--滑动换页-->
-			<swiper class="swiper" :indicator-dots="true">
 
-				<swiper-item>
-					<uni-grid :column="3" :show-border="false" :square="false" @change="change">
-						<uni-grid-item v-for="(item ,index) in list" :index="index" :key="index">
+			<swiper class="swiper" :indicator-dots="true">
+				<!-- 尝试把这三个放一起，行得通 -->
+				<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list">
+					<uni-grid :column="3" :show-border="false" :square="false">
+						<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index" @longpress="del(item.id,gridindex)"
+							@click="changeTwo_dimen(item.id,gridindex)" >
 							<view class="grid-item-box">
 								<!-- grid里的图片、标题、角标显示 -->
-								<image class="image" :src="item.url" mode="aspectFill" />
-								<text class="text">{{item.text}}</text>
-								<view v-if="item.badge" class="grid-dot">
+								<image class="image" :src="griditem.url" mode="aspectFill" />
+								<text class="text">{{griditem.text}}</text>
+								<view v-if="griditem.badge" class="grid-dot">
 									<!-- 角标 -->
-									<uni-badge :text="item.badge" :type="item.type" />
-								</view>
-
-							</view>
-						</uni-grid-item>
-					</uni-grid>
-				</swiper-item>
-
-				<swiper-item>
-					<uni-grid :column="3" :show-border="false" :square="false" @change="change2">
-						<uni-grid-item v-for="(item ,index) in list2" :index="index" :key="index">
-							<view class="grid-item-box">
-								<image class="image" :src="item.url" mode="aspectFill" />
-								<text class="text">{{item.text}}</text>
-								<view v-if="item.badge" class="grid-dot">
-									<uni-badge :text="item.badge" :type="item.type" />
+									<uni-badge :text="griditem.badge" :type="griditem.type" />
 								</view>
 							</view>
 						</uni-grid-item>
 					</uni-grid>
 				</swiper-item>
 
-				<swiper-item>
-					<uni-grid :column="3" :show-border="false" :square="false" @change="change3">
-						<uni-grid-item v-for="(item ,index) in list3" :index="index" :key="index">
-							<view class="grid-item-box">
-								<image class="image" :src="item.url" mode="aspectFill" />
-								<text class="text">{{item.text}}</text>
-								<view v-if="item.badge" class="grid-dot">
-									<uni-badge :text="item.badge" :type="item.type" />
-								</view>
-							</view>
-						</uni-grid-item>
-					</uni-grid>
-				</swiper-item>
 				
-				<!-- <swiper-item v-for="(item, index) in swiperitemList" :index="index" :key="index">
-					<uni-grid :column="3" :show-border="false" :square="false" @change="change3">
-						<uni-grid-item v-for="(itemgrid ,indexgrid) in item" :index="indexgrid" :key="indexgrid">
-							<view class="grid-item-box">
-								<image class="image" :src="itemgrid.url" mode="aspectFill" />
-								<text class="text">{{itemgrid.text}}</text>
-								<view v-if="itemgrid.badge" class="grid-dot">
-									<uni-badge :text="itemgrid.badge" :type="itemgrid.type" />
-								</view>
-							</view>
-						</uni-grid-item>
-					</uni-grid>
-				</swiper-item> -->
 			</swiper>
 
 		</uni-section>
 
-		<!-- 动态更新 -->
-		<!-- <uni-section title="动态更新"  type="line" padding> -->
 		
-<uni-card title="自定义事件" >
-		<view class="grid-dynamic-box">
-			<uni-grid :column="3" :highlight="true" :show-border="false" :square="false" @longpress="del(index)" @change="changeDynamic">
-				<uni-grid-item v-for="(item, index) in dynamicList" :index="index" :key="index">
-					<view class="grid-item-box">
-						<image :src="item.url" class="image" mode="aspectFill" />
-						<text class="text" >{{ item.text }}</text>
-						<view class="grid-dot">
-							<uni-badge :text="item.badge" :type="item.type" />
-						</view>
-						<!-- <button type="primary" @longpress="del(index)" size="mini">
-							删除
-						</button> -->
-					</view>
-				</uni-grid-item>
-			</uni-grid>
-		</view>
-</uni-card>
 
-<uni-card title="目标列表" sub-title="如有需要,可以给自己设定一个娱乐目标哦">
-		<!-- <uni-collapse> -->
+		<uni-card title="目标列表" sub-title="如有需要,可以给自己设定一个娱乐目标哦">
+			<!-- <uni-collapse> -->
 			<!-- <uni-collapse-item title="目标列表" :open="true"> -->
 			<view class="swipeBox">
 				<uni-swipe-action ref="swipeAction">
@@ -103,13 +44,14 @@
 						<view class="content-box">
 
 							<text class="content-text">{{ item.content }}</text>
-							<view v-if="item.timetype0"  class="content-time">
+							<view v-if="item.timetype0" class="content-time">
 								<text>开始:{{ item.starttime }}</text>
 								<text>结束:{{ item.endttime }}</text>
 							</view>
 							<view v-if="item.timetype1" class="content-time-cycle">
-								<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex" :key="dayindex">{{ day }}</text>
-								
+								<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
+									:key="dayindex">{{ day }}</text>
+
 							</view>
 							<view class="showDown" v-if="item.isdone">
 								<image :src="'/static/done1.png'" class="doneimage" mode="aspectFill" />
@@ -119,8 +61,8 @@
 				</uni-swipe-action>
 			</view>
 			<!-- </uni-collapse-item> -->
-		<!-- </uni-collapse> -->
-</uni-card>
+			<!-- </uni-collapse> -->
+		</uni-card>
 
 
 
@@ -137,7 +79,7 @@
 			</uni-popup-dialog>
 		</uni-popup>
 
-<!-- 设定目标的弹出框 ：目前弃用 -->
+		<!-- 设定目标的弹出框 ：目前弃用 -->
 		<uni-popup ref="inputPlayGoal" type="dialog">
 			<uni-popup-dialog ref="inputClose" mode="input" title="输入目标名称" value="游泳" placeholder="请输入内容"
 				@confirm="confirmAddNewPlayGoal">
@@ -156,13 +98,13 @@
 
 		</view>
 		<!-- </uni-section> -->
-		
+
 		<!-- 2023-9-10添加 -->
 		<view>
-					<!-- 提示信息弹窗 -->
-					<uni-popup ref="message" type="message">
-						<uni-popup-message :type="msgType" :message="messageText" :duration="2000"></uni-popup-message>
-					</uni-popup>
+			<!-- 提示信息弹窗 -->
+			<uni-popup ref="message" type="message">
+				<uni-popup-message :type="msgType" :message="messageText" :duration="2000"></uni-popup-message>
+			</uni-popup>
 		</view>
 	</view>
 </template>
@@ -172,9 +114,212 @@
 		components: {},
 		data() {
 			return {
+				// 2023-10-21新增
+				playGoalSuccessList: [],
+				playGoalSuccessListID: 0,
+				Current_Two_dimen_array_index: 0,
 				
-				
-				
+				Two_dimensional_array: [{
+						id: 0,
+						isfull:true,
+						list: [{
+								listindex: 0,
+								
+								url: '/static/Game.png',
+								text: '打游戏',
+								badge: '0',
+
+								type: "primary"
+							},
+							{
+								listindex: 1,
+								url: '/static/烧烤.png',
+								text: '露营烧烤',
+								badge: '0',
+								type: "success"
+							},
+							{
+								listindex: 2,
+								url: '/static/k歌.png',
+								text: 'k歌',
+								badge: '0',
+								type: "warning"
+							},
+							{
+								listindex: 3,
+								url: '/static/游乐园.png',
+								text: '游园',
+								badge: '0',
+								type: "error" //type是角标的类型，比如errors红色的
+							},
+							{
+								listindex: 4,
+								url: '/static/摄影.png',
+								text: '摄影',
+								badge: '0'
+							},
+							{
+								listindex: 5,
+								url: '/static/艺术品.png',
+								text: '看展',
+								badge: '0'
+							},
+							{
+								listindex: 6,
+								url: '/static/14-企业团建.png',
+								text: '团建',
+								badge: '0'
+							},
+							{
+								listindex: 7,
+								url: '/static/密室预订.png',
+								text: '密室逃脱',
+								badge: '0'
+							},
+							{
+								listindex: 8,
+								url: '/static/旅游.png',
+								text: '旅游',
+								badge: '0'
+							}
+						]
+					},
+
+					{
+						id: 1,
+						isfull:true,
+						list: [{
+								listindex: 0,
+								url: '/static/综合素质评价.png',
+								text: '素拓',
+								badge: '0',
+
+								type: "primary"
+							},
+							{
+								listindex: 1,
+								url: '/static/听歌.png',
+								text: '听歌',
+								badge: '0',
+								type: "success"
+							},
+							{
+								listindex: 2,
+								url: '/static/读小说.png',
+								text: '看小说',
+								badge: '0',
+								type: "warning"
+							},
+							{
+								listindex: 3,
+								url: '/static/电影.png',
+								text: '看电影',
+								badge: '0',
+								type: "error" //type是角标的类型，比如errors红色的
+							},
+							{
+								listindex: 4,
+								url: '/static/购物车空.png',
+								text: '购物',
+								badge: '0'
+							},
+							{
+								listindex: 5,
+								url: '/static/画画.png',
+								text: '画画',
+								badge: '0'
+							},
+							{
+								listindex: 6,
+								url: '/static/美食.png',
+								text: '品尝美食',
+								badge: '0'
+							},
+							{
+								listindex: 7,
+								url: '/static/跳舞.png',
+								text: '跳舞',
+								badge: '0'
+							},
+							{
+								listindex: 8,
+								url: '/static/桌球.png',
+								text: '桌球',
+								badge: '0'
+							}
+						],
+					},
+
+					{
+						id: 2,
+						isfull:true,
+						list: [{
+								listindex: 0,
+								url: '/static/爬山.png',
+								text: '爬山',
+								badge: '0',
+								type: "primary"
+							},
+							{
+								listindex: 1,
+								url: '/static/骑行.png',
+								text: '骑行',
+								badge: '0',
+								type: "success"
+							}, {
+								listindex: 2,
+								url: '/static/射击射箭.png',
+								text: '射击射箭',
+								badge: '0',
+								type: "warning"
+							},
+							{
+								listindex: 3,
+								url: '/static/弹钢琴.png',
+								text: '弹钢琴',
+								badge: '0',
+								type: "primary"
+							},
+							{
+								listindex: 4,
+								url: '/static/吉他.png',
+								text: '吉他',
+								badge: '0',
+								type: "success"
+							}, {
+								listindex: 5,
+								url: '/static/看话剧.png',
+								text: '看话剧',
+								badge: '0',
+								type: "warning"
+							},
+							{
+								listindex: 6,
+								url: '/static/DIY手工.png',
+								text: 'DIY手工',
+								badge: '0',
+
+							},
+							{
+								listindex: 7,
+								url: '/static/玩手机.png',
+								text: '玩手机',
+								badge: '0',
+
+							}, {
+								listindex: 8,
+								url: '/static/演出.png',
+								text: '演出',
+								badge: '0',
+
+							},
+						],
+					}
+
+				],
+				// 2023-10-21新增结束
+
+
 				// 2023-7-31新增
 				testList: [],
 				swipeList: [{
@@ -202,7 +347,7 @@
 						timetype0: true,
 						timetype1: false,
 						isdone: false,
-						checkbox2:[]
+						checkbox2: []
 					},
 					{
 						id: 1,
@@ -228,7 +373,7 @@
 						timetype0: false,
 						timetype1: true,
 						isdone: false,
-						checkbox2:["每周一","每周二"]
+						checkbox2: ["每周一", "每周二"]
 					}
 				],
 
@@ -262,164 +407,9 @@
 				endTime: '',
 				dynamicList: [],
 				ShowIcon: false,
-				list: [{
-						url: '/static/Game.png',
-						text: '打游戏',
-						badge: '0',
-
-						type: "primary"
-					},
-					{
-						url: '/static/烧烤.png',
-						text: '露营烧烤',
-						badge: '0',
-						type: "success"
-					},
-					{
-						url: '/static/k歌.png',
-						text: 'k歌',
-						badge: '0',
-						type: "warning"
-					},
-					{
-						url: '/static/游乐园.png',
-						text: '游园',
-						badge: '0',
-						type: "error" //type是角标的类型，比如errors红色的
-					},
-					{
-						url: '/static/摄影.png',
-						text: '摄影',
-						badge: '0'
-					},
-					{
-						url: '/static/艺术品.png',
-						text: '看展',
-						badge: '0'
-					},
-					{
-						url: '/static/14-企业团建.png',
-						text: '团建',
-						badge: '0'
-					},
-					{
-						url: '/static/密室预订.png',
-						text: '密室逃脱',
-						badge: '0'
-					},
-					{
-						url: '/static/旅游.png',
-						text: '旅游',
-						badge: '0'
-					}
-				],
-
-				list2: [{
-						url: '/static/综合素质评价.png',
-						text: '素拓',
-						badge: '0',
-
-						type: "primary"
-					},
-					{
-						url: '/static/听歌.png',
-						text: '听歌',
-						badge: '0',
-						type: "success"
-					},
-					{
-						url: '/static/读小说.png',
-						text: '看小说',
-						badge: '0',
-						type: "warning"
-					},
-					{
-						url: '/static/电影.png',
-						text: '看电影',
-						badge: '0',
-						type: "error" //type是角标的类型，比如errors红色的
-					},
-					{
-						url: '/static/购物车空.png',
-						text: '购物',
-						badge: '0'
-					},
-					{
-						url: '/static/画画.png',
-						text: '画画',
-						badge: '0'
-					},
-					{
-						url: '/static/美食.png',
-						text: '品尝美食',
-						badge: '0'
-					},
-					{
-						url: '/static/跳舞.png',
-						text: '跳舞',
-						badge: '0'
-					},
-					{
-						url: '/static/桌球.png',
-						text: '桌球',
-						badge: '0'
-					}
-				],
-
-				list3: [{
-						url: '/static/爬山.png',
-						text: '爬山',
-						badge: '0',
-						type: "primary"
-					},
-					{
-						url: '/static/骑行.png',
-						text: '骑行',
-						badge: '0',
-						type: "success"
-					}, {
-						url: '/static/射击射箭.png',
-						text: '射击射箭',
-						badge: '0',
-						type: "warning"
-					},
-					{
-						url: '/static/弹钢琴.png',
-						text: '弹钢琴',
-						badge: '0',
-						type: "primary"
-					},
-					{
-						url: '/static/吉他.png',
-						text: '吉他',
-						badge: '0',
-						type: "success"
-					}, {
-						url: '/static/看话剧.png',
-						text: '看话剧',
-						badge: '0',
-						type: "warning"
-					},
-					{
-						url: '/static/DIY手工.png',
-						text: 'DIY手工',
-						badge: '0',
-
-					},
-					{
-						url: '/static/玩手机.png',
-						text: '玩手机',
-						badge: '0',
-
-					}, {
-						url: '/static/演出.png',
-						text: '演出',
-						badge: '0',
-
-					},
-				],
 				
-				
+
+
 
 			}
 
@@ -450,10 +440,12 @@
 		methods: {
 			//2023-9-10添加
 			messageToggle(type) {
-							this.msgType = type
-							this.messageText = `成功完成一个目标`
-							this.$refs.message.open()
-						},
+				this.msgType = type
+				this.messageText = `成功完成一个目标`
+				this.$refs.message.open();
+
+
+			},
 			// 2023-9-10添加结束
 			// 2023-7-31添加
 			inputStartTime(t) {
@@ -474,7 +466,7 @@
 				let {
 					content
 				} = e;
-				
+
 
 				if (content.text === '删除') {
 					uni.showModal({
@@ -489,11 +481,35 @@
 						}
 					});
 				} else if (content.text === '完成') {
-					
+
 					this.swipeList[index].isdone = true;
 					// 成功弹窗
 					this.messageToggle("success");
-					
+
+					var that = this;
+					//2023-10-21添加
+					let obj = {
+						id: that.playGoalSuccessListID + 1,
+						content: that.swipeList[index].content,
+
+					}
+					console.log(obj);
+
+					that.playGoalSuccessList.push(obj);
+					uni.setStorage({ //存入Storage
+						key: 'playGoalSuccess', //自己取个名字
+						data: { //存的数据可以是很多条
+
+							content: that.swipeList[index].content,
+
+						},
+
+						success() {
+							console.log('playGoalSuccess储存成功');
+						}
+					});
+					//2023-10-21添加结束
+
 
 				} else if (content.text === '置顶') {
 					uni.showModal({
@@ -504,10 +520,10 @@
 								console.log(this.swipeList)
 								console.log(index);
 								this.swipeList.unshift(this.swipeList[index]); //把查找到的数据复制添加到数组的首位
-								console.log('置顶后删除前',this.swipeList)
+								console.log('置顶后删除前', this.swipeList)
 								console.log(index);
-								this.swipeList.splice(index+1,1);
-								console.log('置顶后删除后',this.swipeList)
+								this.swipeList.splice(index + 1, 1);
+								console.log('置顶后删除后', this.swipeList)
 							} else if (res.cancel) {
 								console.log('用户点击取消');
 							}
@@ -579,11 +595,11 @@
 								// uni.navigateTo({
 								// 	url: '/pages/self-manage/play/add_playGoal',
 								// });
-								
+
 								// 弹出输入框
 								// that.$refs.inputPlayGoal.open()
-								
-								
+
+
 								uni.navigateTo({
 									url: '/pages/self-manage/play/add_playGoal',
 									events: {
@@ -610,21 +626,21 @@
 												timetype1: data.timetype1,
 												starttime: data.startDate,
 												endttime: data.endDate,
-												checkbox2:data.checkbox2,
-												isdone:false
-												
+												checkbox2: data.checkbox2,
+												isdone: false
+
 											}
 											that.swipeList.push(obj);
 											console.log(obj);
 											// 上一句不加分号的话下面这个就执行不了
 											console.log('查看数组：', that.swipeList);
 											console.log('play页面成功接收到add_playgoal的数据');
-								
+
 										},
-								
+
 									}
 								});
-								
+
 							} else if (res.cancel) {
 								console.log('用户点击取消')
 							}
@@ -661,14 +677,9 @@
 					this.$refs.inputModal.close()
 
 			},
-			change(e) {
-
-				console.log(e);
-				console.log('点击了第', e.detail, '个宫格')
-				let {
-					index
-				} = e.detail
-
+			changeTwo_dimen(listID, listIndex) {
+				console.log(listID);
+				console.log('点击了第', listIndex, '个宫格');
 				var that = this;
 				uni.showModal({
 					title: '提示',
@@ -676,7 +687,10 @@
 					success: function(res) {
 						if (res.confirm) {
 							console.log('用户点击确定事件+1');
-							that.list[index].badge && that.list[index].badge++;
+							that.Two_dimensional_array[listID].list[listIndex].badge && that
+								.Two_dimensional_array[listID].list[listIndex].badge++;
+
+
 							uni.navigateTo({
 								url: '/pages/self-manage/play/EventFormRecord',
 								events: {
@@ -688,10 +702,13 @@
 										}
 										that.testList.push(obj);
 										// 改变后的名称覆盖过去
-										that.list[index].text=data.title;
+										that.Two_dimensional_array[listID].list[listIndex].text = data
+											.title;
+
 										console.log(obj);
 										// 上一句不加分号的话下面这个就执行不了
-										console.log('查看数组：', that.testList);
+										console.log('查看数组：', that.Two_dimensional_array[listID].list[
+											listIndex]);
 										console.log('play页面成功接收到EventFormRecord的数据');
 
 									},
@@ -705,180 +722,108 @@
 					},
 
 				})
-
-
-
-
 			},
-			change2(e) {
-				let {
-					index
-				} = e.detail
 
-				var that = this;
-				uni.showModal({
-					title: '提示',
-					content: `您确认要+1吗？`,
-					success: function(res) {
-						if (res.confirm) {
-							console.log('用户点击确定事件+1');
-							that.list2[index].badge && that.list2[index].badge++;
-							uni.navigateTo({
-								url: '/pages/self-manage/play/EventFormRecord',
-								events: {
-									aditorEvent(data) {
-										let obj = {
-											title: data.title,
-											Content_value: data.Content_value
-										}
-										that.testList.push(obj);
-										// 改变后的名称覆盖过去
-										that.list2[index].text=data.title;
-										console.log(obj);
-										// 上一句不加分号的话下面这个就执行不了
-										console.log('查看数组：', that.testList);
-										console.log('play页面成功接收到EventFormRecord的数据');
-
-									},
-
-								}
-							});
-
-						} else if (res.cancel) {
-							console.log('用户点击取消')
-						}
-					},
-
-				})
-
-			},
-			change3(e) {
-				let {
-					index
-				} = e.detail
-
-				var that = this;
-				uni.showModal({
-					title: '提示',
-					content: `您确认要+1吗？`,
-					success: function(res) {
-						if (res.confirm) {
-							console.log('用户点击确定事件+1');
-							that.list3[index].badge && that.list3[index].badge++;
-							uni.navigateTo({
-								url: '/pages/self-manage/play/EventFormRecord',
-								events: {
-									aditorEvent(data) {
-										let obj = {
-											title: data.title,
-											Content_value: data.Content_value
-										}
-										that.testList.push(obj);
-										// 改变后的名称覆盖过去
-										that.list3[index].text=data.title;
-										console.log(obj);
-										// 上一句不加分号的话下面这个就执行不了
-										console.log('查看数组：', that.testList);
-										console.log('play页面成功接收到EventFormRecord的数据');
-
-									},
-
-								}
-							});
-
-						} else if (res.cancel) {
-							console.log('用户点击取消')
-						}
-					},
-
-				})
-
-			},
 			
-			changeDynamic(e) {
-				let {
-					index
-				} = e.detail
-			
-				var that = this;
-				uni.showModal({
-					title: '提示',
-					content: `您确认要+1吗？`,
-					success: function(res) {
-						if (res.confirm) {
-							console.log('用户点击确定事件+1');
-							that.dynamicList[index].badge && that.dynamicList[index].badge++;
-							uni.navigateTo({
-								url: '/pages/self-manage/play/EventFormRecord',
-								events: {
-									aditorEvent(data) {
-										let obj = {
-											title: data.title,
-											Content_value: data.Content_value
-										}
-										that.testList.push(obj);
-										// 改变后的名称覆盖过去
-										that.dynamicList[index].text=data.title;
-										console.log(obj);
-										// 上一句不加分号的话下面这个就执行不了
-										console.log('查看数组：', that.testList);
-										console.log('play页面成功接收到EventFormRecord的数据');
-			
-									},
-			
-								}
-							});
-			
-						} else if (res.cancel) {
-							console.log('用户点击取消')
-						}
-					},
-			
-				})
-			
-			},
 
 			add() {
+				console.log('未添加前二维数组长度' + this.Two_dimensional_array.length);
+				var i=0;
+				for(;i<this.Two_dimensional_array.length;i++){
+					if(this.Two_dimensional_array[i].isfull==false){
+						break;
+					}
+					else{
+						console.log('当前的i'+i+'不是')
+					}
+				}
 				
-				this.dynamicList.push({
+				console.log('当前跳出时i='+i)
+				
+				let Length = this.Two_dimensional_array.length;
+				if (i==Length) {
+					this.Two_dimensional_array.push({
+						
+						id: Length,
+						isfull:false,
+						list: []
 
-					// url: `/static/c${this.dynamicList.length+1}.png`,
-					// url: `/static/c${(this.dynamicList.length)%12+1}.png`,
-					// 随机函数产生1-12之间的随机数Math.floor(Math.random() * (max - min + 1)) + min
-					url: `/static/c${Math.floor(Math.random() * (12 - 1 + 1)) + 1}.png`,
+
+					})
+				}
+				console.log('此时二维数组长度' + this.Two_dimensional_array.length);
+				let Two_dimensional_arrayLength=this.Two_dimensional_array.length;
+				console.log('未添加前最新二维数组的一维数组长度' + this.Two_dimensional_array[Two_dimensional_arrayLength - 1].list.length);
+				let ListLength = this.Two_dimensional_array[this.Two_dimensional_array.length - 1].list.length;
+				
+				for(var i2=0;i2<Two_dimensional_arrayLength;i2++){
+					let eachLength = this.Two_dimensional_array[i2].list.length;
+				if (eachLength < 9) {
+					// 找到第一个长度为9的数组
+					console.log('找到小于9的i：'+i2)
+					this.Two_dimensional_array[i2].list.push({
+
+						url: `/static/c${Math.floor(Math.random() * (12 - 1 + 1)) + 1}.png`,
+
+						// url: `/static/c6.png`,
+						text: this.value,
+						badge: '0',
+						type: "primary",
+
+
+					});
+					console.log('添加后最新二维数组的一维数组长度' + this.Two_dimensional_array[Two_dimensional_arrayLength - 1].list.length);
 					
-					// url: `/static/c6.png`,
-					text: this.value,
-					badge: '0',
-					type: "primary",
-					// color: this.dynamicList.length % 2 === 0 ? '#f5f5f5' : "#fff"
+					if(this.Two_dimensional_array[i2].list.length==9){
+						this.Two_dimensional_array[i2].isfull=true;
+					}
+					console.log('当前第'+i2+'个数组的isfull为：'+this.Two_dimensional_array[i2].isfull)
+					// 一旦找到一个数组了，那就跳出for循环
+					// i=Two_dimensional_arrayLength;
+					break;
+					
 
-				})
+					}
+					
+				}
 				
-				// if(this.dynamicList.length>=9){
-				// 	this.swiperitemList.push(this.dynamicList);
-				// 	console.log("输出swiperitemList")
-				// 	console.log(this.swiperitemList)
-				// }
+				// this.dynamicList.push({
+
+				// 	// url: `/static/c${this.dynamicList.length+1}.png`,
+				// 	// url: `/static/c${(this.dynamicList.length)%12+1}.png`,
+				// 	// 随机函数产生1-12之间的随机数Math.floor(Math.random() * (max - min + 1)) + min
+				// 	url: `/static/c${Math.floor(Math.random() * (12 - 1 + 1)) + 1}.png`,
+
+				// 	// url: `/static/c6.png`,
+				// 	text: this.value,
+				// 	badge: '0',
+				// 	type: "primary",
+				// 	// color: this.dynamicList.length % 2 === 0 ? '#f5f5f5' : "#fff"
+
+				// })
+
+				
 			},
-			del(index) {
-				
-				var that=this;
+			del(index,listindex) {
+				console.log('当前长按了第'+index+'个数组的第'+listindex+'个宫格')
+				var that = this;
 				uni.showModal({
 					title: '提示',
 					content: `您确认要删除吗？`,
 					success: function(res) {
 						if (res.confirm) {
-							
+
 							console.log("(下标从0开始)删除第" + index + "个")
-							that.dynamicList.splice(index, 1)
-							
-				
+							that.Two_dimensional_array[index].list.splice(listindex,1);
+							that.Two_dimensional_array[index].isfull=false
+							// that.dynamicList.splice(index, 1)
+
+
 						} else if (res.cancel) {
 							console.log('用户点击取消')
 						}
 					},
-				
+
 				})
 			},
 
@@ -957,9 +902,11 @@
 	.swiper {
 		height: 420px;
 	}
-	.swipeBox{
+
+	.swipeBox {
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 	}
+
 	// 2023-7-2新增
 	.icon-content {
 		display: flex;
@@ -1026,13 +973,15 @@
 		flex-direction: column;
 		font-size: 10px;
 	}
-	.content-time-cycle{
+
+	.content-time-cycle {
 		display: flex;
 		flex-direction: row;
 		font-size: 9px;
 		justify-content: space-between;
-		
+
 	}
+
 	.test {
 		// background-color: #18a0c2;
 	}

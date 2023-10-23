@@ -192,6 +192,20 @@
 									duration:2500,
 								})
 								console.log(that.sleep_success_list);
+								
+								uni.setStorage({ //存入Storage
+									key: 'sleepGoalSuccess', //自己取个名字
+									data: { //存的数据可以是很多条
+											
+											sleep_time:that.sleep_time,
+											sleep_goal:that.sleep_goal,
+								
+									},
+								
+									success() {
+										console.log('sleepGoalSuccess储存成功');
+									}
+								});
 							}
 							else{
 								uni.showToast({
