@@ -484,6 +484,7 @@
 					});
 					return;
 				}
+				
 				// 查找事件是否已经存在于数组中
 				const eventIndex = this.list.findIndex(event => event.title === this.InputValue);
 				if (eventIndex !== -1) {
