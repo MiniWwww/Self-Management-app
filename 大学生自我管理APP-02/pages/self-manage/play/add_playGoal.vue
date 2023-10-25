@@ -21,13 +21,24 @@
 					:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
 					:range="info.range" @confirm="confirm" @close="close" />
 			</view> -->
-			
 			<!-- 2023-10-24添加 -->
-			<uni-card title="选择时间范围">
-				<view class="example-body">
-					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" />
-				</view>
+			<uni-card v-if="item.timetype0" title="选择时间范围">
+				
+			
+			<view >
+				<uni-datetime-picker type="datetime"  v-model="item.startDate"  />
+			</view>
+			
+			<view >
+				<uni-datetime-picker type="datetime"  v-model="item.endDate" />
+			</view>
+			
 			</uni-card>
+			<!-- <uni-card v-if="item.timetype0" title="选择时间范围">
+				<view class="example-body">
+					<uni-datetime-picker   v-model="datetimeRange"  type="datetimerange" rangeSeparator="至" />
+				</view>
+			</uni-card> -->
 			
 			
 			<!-- 2023-10-24添加结束 -->
@@ -108,6 +119,7 @@
 					title: '',
 					startDate: '',
 					endDate: '',
+					daterange:'',
 					checkbox2: '',
 				},
 				info: {

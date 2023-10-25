@@ -22,10 +22,23 @@
 				</view> -->
 				
 				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
-				<uni-section :title="'选择时间范围：' " type="line"></uni-section>
-				<view class="example-body">
+				<!-- <uni-section :title="'选择时间范围：' " type="line"></uni-section> -->
+				<!-- <view class="example-body">
 					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" />
+				</view> -->
+				
+				<uni-card  title="选择时间范围">
+					
+				
+				<view >
+					<uni-datetime-picker type="datetime"    />
 				</view>
+				
+				<view >
+					<uni-datetime-picker type="datetime"   />
+				</view>
+				
+				</uni-card>
 				
 				<view class="uni-form-item-content">
 					<uni-section title="事件内容" subTitle="描述一下发生的趣事吧~" type="line" padding>

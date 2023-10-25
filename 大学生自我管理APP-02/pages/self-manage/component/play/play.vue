@@ -10,10 +10,10 @@
 
 			<swiper class="swiper" :indicator-dots="true">
 				<!-- 尝试把这三个放一起，行得通 -->
-				<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list" > 
-					<uni-grid :column="3" :show-border="false" :square="false" >
-						<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index" @longpress="del(item.id,gridindex)"
-							@click="changeTwo_dimen(item.id,gridindex)" >
+				<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list">
+					<uni-grid :column="3" :show-border="false" :square="false">
+						<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index"
+							@longpress="del(item.id,gridindex)" @click="changeTwo_dimen(item.id,gridindex)">
 							<view class="grid-item-box">
 								<!-- grid里的图片、标题、角标显示 -->
 								<image class="image" :src="griditem.url" mode="aspectFill" />
@@ -27,14 +27,14 @@
 					</uni-grid>
 				</swiper-item>
 
-				
+
 			</swiper>
 
 		</uni-section>
 
-		
 
-		<uni-card title="目标列表" sub-title="如有需要,可以给自己设定一个娱乐目标哦">
+
+		<uni-card title="目标列表" >
 			<!-- <uni-collapse> -->
 			<!-- <uni-collapse-item title="目标列表" :open="true"> -->
 			<view class="swipeBox">
@@ -91,12 +91,15 @@
 				@input="inputEndTime"></uni-easyinput>
 		</uni-popup>
 
+		
+
 		<!-- 悬浮按钮 -->
 		<view class="warp">
 			<uni-fab ref="fab" :pattern="fabpattern" :content="fabcontent" :horizontal="'right'" :vertical="'bottom'"
 				:direction="'horizontal'" @trigger="fabtrigger" @fabClick="fabClick" />
 
 		</view>
+
 		<!-- </uni-section> -->
 
 		<!-- 2023-9-10添加 -->
@@ -118,13 +121,13 @@
 				playGoalSuccessList: [],
 				playGoalSuccessListID: 0,
 				Current_Two_dimen_array_index: 0,
-				
+
 				Two_dimensional_array: [{
 						id: 0,
-						isfull:true,
+						isfull: true,
 						list: [{
 								listindex: 0,
-								
+
 								url: '/static/Game.png',
 								text: '打游戏',
 								badge: '0',
@@ -187,7 +190,7 @@
 
 					{
 						id: 1,
-						isfull:true,
+						isfull: true,
 						list: [{
 								listindex: 0,
 								url: '/static/综合素质评价.png',
@@ -252,7 +255,7 @@
 
 					{
 						id: 2,
-						isfull:true,
+						isfull: true,
 						list: [{
 								listindex: 0,
 								url: '/static/爬山.png',
@@ -407,7 +410,7 @@
 				endTime: '',
 				dynamicList: [],
 				ShowIcon: false,
-				
+
 
 
 
@@ -726,69 +729,69 @@
 				})
 			},
 
-			
+
 
 			add() {
 				console.log('未添加前二维数组长度' + this.Two_dimensional_array.length);
-				var i=0;
-				for(;i<this.Two_dimensional_array.length;i++){
-					if(this.Two_dimensional_array[i].isfull==false){
+				var i = 0;
+				for (; i < this.Two_dimensional_array.length; i++) {
+					if (this.Two_dimensional_array[i].isfull == false) {
 						break;
-					}
-					else{
-						console.log('当前的i'+i+'不是')
+					} else {
+						console.log('当前的i' + i + '不是')
 					}
 				}
-				
-				console.log('当前跳出时i='+i)
-				
+
+				console.log('当前跳出时i=' + i)
+
 				let Length = this.Two_dimensional_array.length;
-				if (i==Length) {
+				if (i == Length) {
 					this.Two_dimensional_array.push({
-						
+
 						id: Length,
-						isfull:false,
+						isfull: false,
 						list: []
 
 
 					})
 				}
 				console.log('此时二维数组长度' + this.Two_dimensional_array.length);
-				let Two_dimensional_arrayLength=this.Two_dimensional_array.length;
+				let Two_dimensional_arrayLength = this.Two_dimensional_array.length;
 				console.log('未添加前最新二维数组的一维数组长度' + this.Two_dimensional_array[Two_dimensional_arrayLength - 1].list.length);
 				let ListLength = this.Two_dimensional_array[this.Two_dimensional_array.length - 1].list.length;
-				
-				for(var i2=0;i2<Two_dimensional_arrayLength;i2++){
+
+				for (var i2 = 0; i2 < Two_dimensional_arrayLength; i2++) {
 					let eachLength = this.Two_dimensional_array[i2].list.length;
-				if (eachLength < 9) {
-					// 找到第一个长度为9的数组
-					console.log('找到小于9的i：'+i2)
-					this.Two_dimensional_array[i2].list.push({
+					if (eachLength < 9) {
+						// 找到第一个长度为9的数组
+						console.log('找到小于9的i：' + i2)
+						this.Two_dimensional_array[i2].list.push({
 
-						url: `/static/c${Math.floor(Math.random() * (12 - 1 + 1)) + 1}.png`,
+							url: `/static/c${Math.floor(Math.random() * (12 - 1 + 1)) + 1}.png`,
 
-						// url: `/static/c6.png`,
-						text: this.value,
-						badge: '0',
-						type: "primary",
+							// url: `/static/c6.png`,
+							text: this.value,
+							badge: '0',
+							type: "primary",
 
 
-					});
-					console.log('添加后最新二维数组的一维数组长度' + this.Two_dimensional_array[Two_dimensional_arrayLength - 1].list.length);
-					
-					if(this.Two_dimensional_array[i2].list.length==9){
-						this.Two_dimensional_array[i2].isfull=true;
+						});
+						console.log('添加后最新二维数组的一维数组长度' + this.Two_dimensional_array[Two_dimensional_arrayLength - 1].list
+							.length);
+
+						if (this.Two_dimensional_array[i2].list.length == 9) {
+							this.Two_dimensional_array[i2].isfull = true;
+						}
+						console.log('当前第' + i2 + '个数组的isfull为：' + this.Two_dimensional_array[i2].isfull)
+						// 一旦找到一个数组了，那就跳出for循环
+						// i=Two_dimensional_arrayLength;
+						break;
+
+
 					}
-					console.log('当前第'+i2+'个数组的isfull为：'+this.Two_dimensional_array[i2].isfull)
-					// 一旦找到一个数组了，那就跳出for循环
-					// i=Two_dimensional_arrayLength;
-					break;
-					
 
-					}
-					
 				}
-				
+
 				// this.dynamicList.push({
 
 				// 	// url: `/static/c${this.dynamicList.length+1}.png`,
@@ -804,10 +807,10 @@
 
 				// })
 
-				
+
 			},
-			del(index,listindex) {
-				console.log('当前长按了第'+index+'个数组的第'+listindex+'个宫格')
+			del(index, listindex) {
+				console.log('当前长按了第' + index + '个数组的第' + listindex + '个宫格')
 				var that = this;
 				uni.showModal({
 					title: '提示',
@@ -816,8 +819,8 @@
 						if (res.confirm) {
 
 							console.log("(下标从0开始)删除第" + index + "个")
-							that.Two_dimensional_array[index].list.splice(listindex,1);
-							that.Two_dimensional_array[index].isfull=false
+							that.Two_dimensional_array[index].list.splice(listindex, 1);
+							that.Two_dimensional_array[index].isfull = false
 							// that.dynamicList.splice(index, 1)
 
 
@@ -841,13 +844,13 @@
 	}
 
 	.doneimage {
-		width: 25px;
-		height: 25px;
+		width: 30px;
+		height: 30px;
 
-		margin: 20px auto;
+		margin: 10px auto;
 		/* 设置左右外边距为auto，实现水平居中 */
-		text-align: center;
-		/* 设置文本居中，以修复可能的对齐问题 */
+		// text-align: center;
+		// /* 设置文本居中，以修复可能的对齐问题 */
 
 
 	}
@@ -954,15 +957,16 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrapl;
-		// 行高
-		line-height: 30px;
+		// 固定高度
+		height: 55px;
 	}
 
 	.content-text {
 
 		display: flex;
 		// background-color: #18a0c2;
-		width: 150px;
+		width: 125px;
+		
 		text-align: center;
 		justify-content: center;
 		flex-direction: column;
@@ -979,7 +983,7 @@
 	.content-time-cycle {
 		display: flex;
 		flex-direction: row;
-		font-size: 9px;
+		font-size: 10px;
 		justify-content: space-between;
 
 	}
@@ -995,6 +999,7 @@
 		width: 50px;
 		// background-color:crimson;
 	}
+
 	// .custom-modal{
 	// 	//提示框圆角设计
 	// 	border-radius: 30px;
