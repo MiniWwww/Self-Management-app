@@ -70,13 +70,24 @@
 					success: function(res) {
 						if (res.confirm) {
 							console.log('用户点击确定')
+							
 							const eventChannel = that.getOpenerEventChannel();
-
+							
 							{
 								eventChannel.emit('editPersonalData', that.mydata);
 								console.log('editorDetail界面成功返回数据给PersonalCenter!', that.mydata);
 
 								uni.navigateBack();
+								uni.showToast({
+								         title: "已设置",
+								         icon: 'success',
+								         success: function (res) {
+								          
+								         },
+								         fail: function (res) {
+								           
+								         },
+								       });
 							}
 
 						} else if (res.cancel) {

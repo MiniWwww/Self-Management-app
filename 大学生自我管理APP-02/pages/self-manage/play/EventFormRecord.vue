@@ -14,13 +14,32 @@
 
 				
 
-				<view class="uni-form-item-date">
+				<!-- <view class="uni-form-item-date">
 					<button class="calendar-button" type="button" @click="opencalendar">日期选择</button>
 					<uni-calendar ref="calendar" class="uni-calendar-hook" :clear-date="true" :date="info.date"
 						:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
 						:range="info.range" @confirm="confirm" @close="close" />
+				</view> -->
+				
+				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
+				<!-- <uni-section :title="'选择时间范围：' " type="line"></uni-section> -->
+				<!-- <view class="example-body">
+					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" />
+				</view> -->
+				
+				<uni-card  title="选择时间范围">
+					
+				
+				<view >
+					<uni-datetime-picker type="datetime"    />
 				</view>
-
+				
+				<view >
+					<uni-datetime-picker type="datetime"   />
+				</view>
+				
+				</uni-card>
+				
 				<view class="uni-form-item-content">
 					<uni-section title="事件内容" subTitle="描述一下发生的趣事吧~" type="line" padding>
 						<uni-easyinput type="textarea" v-model="Content_value" placeholder="请输入内容"></uni-easyinput>
@@ -60,6 +79,10 @@
 	export default {
 		data() {
 			return {
+				// 2023-10-24添加
+				datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 * 3600000)],
+				// 2023-10-24添加结束
+				
 				
 				item: {
 					title: '',
@@ -78,8 +101,41 @@
 				}
 			}
 		},
+		// 2023-10-24添加
+		watch: {
+			
+			datetimeRange() {
+				console.log('日期时间范围选:', this.datetimeRange);
+			}
+		},
+		// 2023-10-24添加结束
 		methods: {
-
+			// 2023-10-24添加
+			addZero(num) {
+				if (num < 10) {
+					num = `0${num}`
+				}
+				return num
+			},
+			getDate(date){
+			  date = new Date(date)
+			  const year = date.getFullYear()
+			  const month = date.getMonth()+1
+			  const day = date.getDate()
+			  return `${year}-${this.addZero(month)}-${this.addZero(day)}`
+			},
+			getTime(date){
+			  date = new Date(date)
+			  const hour = date.getHours()
+			  const minute = date.getMinutes()
+			  const second = date.getSeconds()
+			  return this.hideSecond ? `${this.addZero(hour)}:${this.addZero(minute)}` : `${this.addZero(hour)}:${this.addZero(minute)}:${this.addZero(second)}`
+			},
+			getDateTime(date){
+			  return `${this.getDate(date)} ${this.getTime(date)}`
+			},
+			// 2023-10-24添加结束
+			
 			// 2023-7-30添加
 			SubmitEvent() {
 				var that = this;

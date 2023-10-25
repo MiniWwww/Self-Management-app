@@ -15,13 +15,34 @@
 				<uni-data-checkbox v-model="baseFormData.time" :localdata="time_type" @change="choosetimetype" />
 			</uni-card>
 
-			<view v-if="item.timetype0" class="uni-form-item-date">
+			<!-- <view v-if="item.timetype0" class="uni-form-item-date">
 				<button class="calendar-button" type="button" @click="opencalendar">时间段选择(同一天请点击两次)</button>
 				<uni-calendar ref="calendar" class="uni-calendar-hook" :clear-date="true" :date="info.date"
 					:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
 					:range="info.range" @confirm="confirm" @close="close" />
+			</view> -->
+			<!-- 2023-10-24添加 -->
+			<uni-card v-if="item.timetype0" title="选择时间范围">
+				
+			
+			<view >
+				<uni-datetime-picker type="datetime"  v-model="item.startDate"  />
 			</view>
-
+			
+			<view >
+				<uni-datetime-picker type="datetime"  v-model="item.endDate" />
+			</view>
+			
+			</uni-card>
+			<!-- <uni-card v-if="item.timetype0" title="选择时间范围">
+				<view class="example-body">
+					<uni-datetime-picker   v-model="datetimeRange"  type="datetimerange" rangeSeparator="至" />
+				</view>
+			</uni-card> -->
+			
+			
+			<!-- 2023-10-24添加结束 -->
+			
 			<view v-if="item.timetype1" class="uni-form-item-date">
 				<view class="uni-px-5 uni-pb-5">
 					<!-- <view class="text">多选选中：{{JSON.stringify(item.checkbox2)}}</view> -->
@@ -41,7 +62,9 @@
 	export default {
 		data() {
 			return {
-
+				// 2023-10-24添加
+				datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 * 3600000)],
+				// 2023-10-24添加结束
 
 				weeks: [{
 						text: '周一',
@@ -96,6 +119,7 @@
 					title: '',
 					startDate: '',
 					endDate: '',
+					daterange:'',
 					checkbox2: '',
 				},
 				info: {
@@ -106,7 +130,42 @@
 				}
 			}
 		},
+		// 2023-10-24添加
+		watch: {
+			
+			datetimeRange() {
+				console.log('日期时间范围选:', this.datetimeRange);
+			}
+		},
+		// 2023-10-24添加结束
 		methods: {
+			
+			// 2023-10-24添加
+			addZero(num) {
+				if (num < 10) {
+					num = `0${num}`
+				}
+				return num
+			},
+			getDate(date){
+			  date = new Date(date)
+			  const year = date.getFullYear()
+			  const month = date.getMonth()+1
+			  const day = date.getDate()
+			  return `${year}-${this.addZero(month)}-${this.addZero(day)}`
+			},
+			getTime(date){
+			  date = new Date(date)
+			  const hour = date.getHours()
+			  const minute = date.getMinutes()
+			  const second = date.getSeconds()
+			  return this.hideSecond ? `${this.addZero(hour)}:${this.addZero(minute)}` : `${this.addZero(hour)}:${this.addZero(minute)}:${this.addZero(second)}`
+			},
+			getDateTime(date){
+			  return `${this.getDate(date)} ${this.getTime(date)}`
+			},
+			// 2023-10-24添加结束
+			
 			choosetimetype() {
 
 				if (this.baseFormData.time == 0) {
