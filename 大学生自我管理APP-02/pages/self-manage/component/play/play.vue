@@ -10,8 +10,8 @@
 
 			<swiper class="swiper" :indicator-dots="true">
 				<!-- 尝试把这三个放一起，行得通 -->
-				<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list">
-					<uni-grid :column="3" :show-border="false" :square="false">
+				<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list" > 
+					<uni-grid :column="3" :show-border="false" :square="false" >
 						<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index" @longpress="del(item.id,gridindex)"
 							@click="changeTwo_dimen(item.id,gridindex)" >
 							<view class="grid-item-box">
@@ -684,6 +684,8 @@
 				uni.showModal({
 					title: '提示',
 					content: `您确认要+1吗？`,
+					// 提示框圆角设计
+					// customClass:'custom-modal',
 					success: function(res) {
 						if (res.confirm) {
 							console.log('用户点击确定事件+1');
@@ -993,4 +995,8 @@
 		width: 50px;
 		// background-color:crimson;
 	}
+	// .custom-modal{
+	// 	//提示框圆角设计
+	// 	border-radius: 30px;
+	// }
 </style>
