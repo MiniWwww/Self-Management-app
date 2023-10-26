@@ -3,6 +3,7 @@
 		<uni-card is-full :is-shadow="false">
 			<text class="uni-h6">今天玩了什么呢</text>
 		</uni-card>
+	
 
 		<!-- 基本项目 -->
 		<uni-section title="娱乐活动" type="line" padding>
@@ -34,7 +35,7 @@
 
 
 
-		<uni-card title="目标列表" >
+		<uni-card title="目标列表">
 			<!-- <uni-collapse> -->
 			<!-- <uni-collapse-item title="目标列表" :open="true"> -->
 			<view class="swipeBox">
@@ -42,16 +43,19 @@
 					<uni-swipe-action-item class="test" v-for="(item, index) in swipeList" :left-options="item.options"
 						:key="item.id" @change="swipeChange($event, index)" @click="swipeClick($event, index)">
 						<view class="content-box">
+							<view class="content-text-time">
+								<text class="content-text">{{ item.content }}</text>
+								<view v-if="item.timetype0" class="content-time">
+									<text>开始:{{ item.starttime }}</text>
+									<text>结束:{{ item.endttime }}</text>
+								</view>
 
-							<text class="content-text">{{ item.content }}</text>
-							<view v-if="item.timetype0" class="content-time">
-								<text>开始:{{ item.starttime }}</text>
-								<text>结束:{{ item.endttime }}</text>
-							</view>
-							<view v-if="item.timetype1" class="content-time-cycle">
-								<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
-									:key="dayindex">{{ day }}</text>
-
+								<view v-if="item.timetype1" class="content-time-cycle">
+									
+										<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
+											:key="dayindex">{{ day }}</text>
+									
+								</view>
 							</view>
 							<view class="showDown" v-if="item.isdone">
 								<image :src="'/static/done1.png'" class="doneimage" mode="aspectFill" />
@@ -91,7 +95,7 @@
 				@input="inputEndTime"></uni-easyinput>
 		</uni-popup>
 
-		
+
 
 		<!-- 悬浮按钮 -->
 		<view class="warp">
@@ -376,7 +380,7 @@
 						timetype0: false,
 						timetype1: true,
 						isdone: false,
-						checkbox2: ["每周一", "每周二"]
+						checkbox2: ["每周一", "每周二", "每周三"]
 					}
 				],
 
@@ -401,6 +405,12 @@
 						iconPath: '/static/addgoal.png',
 						selectedIconPath: '/static/addgoalSelected.png',
 						text: '设定目标',
+						active: false
+					},
+					{
+						iconPath: '/static/统计.png',
+						selectedIconPath: '/static/addgoalSelected.png',
+						text: '统计',
 						active: false
 					}
 				],
@@ -644,13 +654,24 @@
 									}
 								});
 
-							} else if (res.cancel) {
+							} 
+							
+							else if (res.cancel) {
 								console.log('用户点击取消')
 							}
 						},
 
 					})
 
+				}
+				
+				else if (e.index == 2){
+					
+					uni.navigateTo({
+						url:'/pages/self-manage/play/CountEventTimes'
+					})
+					
+					
 				}
 				// 关闭高亮显示
 				this.fabcontent[e.index].active = !e.item.active
@@ -683,6 +704,7 @@
 			changeTwo_dimen(listID, listIndex) {
 				console.log(listID);
 				console.log('点击了第', listIndex, '个宫格');
+				
 				var that = this;
 				uni.showModal({
 					title: '提示',
@@ -694,10 +716,23 @@
 							console.log('用户点击确定事件+1');
 							that.Two_dimensional_array[listID].list[listIndex].badge && that
 								.Two_dimensional_array[listID].list[listIndex].badge++;
-
+								
+								let Indexobj={
+									ListID:listID,
+									ListIndex:listIndex
+								};
+								
+								
+								
 
 							uni.navigateTo({
 								url: '/pages/self-manage/play/EventFormRecord',
+								success: (res) => {
+								      // 跳转成功后，触发事件'GridIndexEmit', 并可携带数据（即第一个参数是事件名，第二个参数是数据包）
+								      res.eventChannel.emit('GridIndexEmit', {
+								          data: Indexobj
+								        })
+								      },
 								events: {
 									aditorEvent(data) {
 										let obj = {
@@ -718,7 +753,9 @@
 
 									},
 
-								}
+								},
+								
+								  
 							});
 
 						} else if (res.cancel) {
@@ -847,7 +884,7 @@
 		width: 30px;
 		height: 30px;
 
-		margin: 10px auto;
+		margin: 30px auto;
 		/* 设置左右外边距为auto，实现水平居中 */
 		// text-align: center;
 		// /* 设置文本居中，以修复可能的对齐问题 */
@@ -910,6 +947,7 @@
 
 	.swipeBox {
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 20px;
 	}
 
 	// 2023-7-2新增
@@ -951,22 +989,34 @@
 	}
 
 	/* #endif */
-
+	
 	.content-box {
-
+		// background-color: antiquewhite;
+		// border-radius: 20px;
+		border: 10px solid salmon;
+		border-radius: 20px;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrapl;
 		// 固定高度
-		height: 55px;
+		height: 90px;
+
+	}
+
+	.content-text-time {
+		// background-color: rebeccapurple;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
 	}
 
 	.content-text {
 
 		display: flex;
+		flex-direction: row;
 		// background-color: #18a0c2;
-		width: 125px;
-		
+
+
 		text-align: center;
 		justify-content: center;
 		flex-direction: column;
@@ -975,18 +1025,29 @@
 	.content-time {
 		// 取消缩放的
 		// flex-shrink: 0;
+		border-radius: 10px;
+		background-color: rgb(227,239,205);
+		// 跟外边的间距上、左右、下
+		margin: 5rpx 30rpx 0rpx ;
 		display: flex;
 		flex-direction: column;
+		text-align: center;
 		font-size: 10px;
 	}
 
 	.content-time-cycle {
+		background-color: rgb(193,232,246);
+		border-radius: 10px;
 		display: flex;
 		flex-direction: row;
 		font-size: 10px;
+		margin: 5rpx 30rpx 0rpx; 
+		text-align: center;
 		justify-content: space-between;
 
 	}
+
+	
 
 	.test {
 		// background-color: #18a0c2;
@@ -999,7 +1060,7 @@
 		width: 50px;
 		// background-color:crimson;
 	}
-
+	
 	// .custom-modal{
 	// 	//提示框圆角设计
 	// 	border-radius: 30px;

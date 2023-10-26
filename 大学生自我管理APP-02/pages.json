@@ -173,6 +173,14 @@
 
 		},
 		{
+			"path": "pages/self-manage/play/CountEventTimes",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		
+		},
+		{
 			"path": "pages/self-manage/component/PersonCenter/PersonCenter",
 			"style": {
 				"navigationBarTitleText": "个人中心",

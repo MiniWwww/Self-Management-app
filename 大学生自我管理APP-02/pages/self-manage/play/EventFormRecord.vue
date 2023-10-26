@@ -7,12 +7,18 @@
 
 				<view class="uni-form-item-input">
 					<uni-section title="事件名称" subTitle="给我取一个更好听的名字吧~" type="line" padding>
-						<uni-easyinput errorMessage v-model="item.title" focus placeholder="例如:看电影"
-							@input="input"></uni-easyinput>
+						<view class="EventTitlebox">
+							<view class="EventTitle">
+
+								<textarea :maxlength="20" v-model="item.title" auto-height placeholder=""></textarea>
+							</view>
+						</view>
+
+
 					</uni-section>
 				</view>
 
-				
+
 
 				<!-- <view class="uni-form-item-date">
 					<button class="calendar-button" type="button" @click="opencalendar">日期选择</button>
@@ -20,48 +26,41 @@
 						:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
 						:range="info.range" @confirm="confirm" @close="close" />
 				</view> -->
-				
+
 				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
 				<!-- <uni-section :title="'选择时间范围：' " type="line"></uni-section> -->
 				<!-- <view class="example-body">
 					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" />
 				</view> -->
-				
-				<uni-card  title="选择时间范围">
-					
-				
-				<view >
-					<uni-datetime-picker type="datetime"    />
-				</view>
-				
-				<view >
-					<uni-datetime-picker type="datetime"   />
-				</view>
-				
+
+				<uni-card title="选择今日的时间范围">
+
+					<!-- <view>
+						<uni-datetime-picker type="date" v-model="item.Today" />
+					</view> -->
+					<view>
+						<uni-datetime-picker type="datetime" v-model="item.TodaystartTime" />
+					</view>
+
+					<view>
+						<uni-datetime-picker type="datetime" v-model="item.TodayendTime" />
+					</view>
+
 				</uni-card>
-				
+
 				<view class="uni-form-item-content">
 					<uni-section title="事件内容" subTitle="描述一下发生的趣事吧~" type="line" padding>
-						<uni-easyinput type="textarea" v-model="Content_value" placeholder="请输入内容"></uni-easyinput>
+						<uni-easyinput type="textarea" v-model="item.event_description"
+							placeholder="请输入内容"></uni-easyinput>
 					</uni-section>
 				</view>
 
 
 				<uni-section title="今天的心情指数" subTitle="给今天的心情评个分吧!" type="line" padding>
-					<uni-rate :max="10" :value="5" />
+					<uni-rate :max="10" :value="5" v-model="item.rank" />
 				</uni-section>
 
-				<!-- <view class="uni-form-item uni-column">
-					<view class="title">是否保存？</view>
-					<radio-group name="radio">
-						<label class="label-item">
-							<radio value="yes" /><text>是</text>
-						</label>
-						<label>
-							<radio value="no" /><text>否</text>
-						</label>
-					</radio-group>
-				</view> -->
+
 
 				<view class="form-bottom">
 					<button form-type="submit" @click="SubmitEvent">提交</button>
@@ -77,33 +76,54 @@
 
 <script>
 	export default {
+		// onLoad() {
+		// 	var that=this
+		// 	const eventChannel = that.getOpenerEventChannel();
+		// 	eventChannel.on('GridIndexEmit', data => {
+		// 		that.PlayPageIndex.ListID = data.ListID;
+		// 		that.PlayPageIndex.ListIndex = data.ListIndex;
+				
+		// 		console.log('play界面成功发射数据给EventFormRecord', data)
+				
+				
+		// 	});
+		// },
 		data() {
 			return {
 				// 2023-10-24添加
-				datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 * 3600000)],
+				datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 *
+					3600000)],
 				// 2023-10-24添加结束
 				
-				
+				PlayPageIndex: {
+					ListID: Number,
+					ListIndex: Number,
+					
+				},
 				item: {
 					title: '',
-					Content_value: '',
-					url: ''
+					Today:'',
+					TodaystartTime:'',
+					TodayendTime:'',
+					event_description:'',
+					rank:Number
+					
 				},
-				showicons: false,
-				Content_value: '', //事件输入框的内容
-				selectedDate: '', // 保存选择的日期
-				showCalendar: false, // 控制日历的显示与隐藏
-				info: {
-					lunar: true,
-					range: true,
-					insert: false,
-					selected: []
-				}
+				EventList:[],
+				
+
+
 			}
 		},
+		
+		// onShow() {
+		// 	let lastTime_Event = uni.getStorageSync('playEventData');
+		// 	this.item.Today= lastTime_item[];
+		// },
+
 		// 2023-10-24添加
 		watch: {
-			
+
 			datetimeRange() {
 				console.log('日期时间范围选:', this.datetimeRange);
 			}
@@ -117,25 +137,26 @@
 				}
 				return num
 			},
-			getDate(date){
-			  date = new Date(date)
-			  const year = date.getFullYear()
-			  const month = date.getMonth()+1
-			  const day = date.getDate()
-			  return `${year}-${this.addZero(month)}-${this.addZero(day)}`
+			getDate(date) {
+				date = new Date(date)
+				const year = date.getFullYear()
+				const month = date.getMonth() + 1
+				const day = date.getDate()
+				return `${year}-${this.addZero(month)}-${this.addZero(day)}`
 			},
-			getTime(date){
-			  date = new Date(date)
-			  const hour = date.getHours()
-			  const minute = date.getMinutes()
-			  const second = date.getSeconds()
-			  return this.hideSecond ? `${this.addZero(hour)}:${this.addZero(minute)}` : `${this.addZero(hour)}:${this.addZero(minute)}:${this.addZero(second)}`
+			getTime(date) {
+				date = new Date(date)
+				const hour = date.getHours()
+				const minute = date.getMinutes()
+				const second = date.getSeconds()
+				return this.hideSecond ? `${this.addZero(hour)}:${this.addZero(minute)}` :
+					`${this.addZero(hour)}:${this.addZero(minute)}:${this.addZero(second)}`
 			},
-			getDateTime(date){
-			  return `${this.getDate(date)} ${this.getTime(date)}`
+			getDateTime(date) {
+				return `${this.getDate(date)} ${this.getTime(date)}`
 			},
 			// 2023-10-24添加结束
-			
+
 			// 2023-7-30添加
 			SubmitEvent() {
 				var that = this;
@@ -147,12 +168,56 @@
 							console.log('用户点击确定')
 
 							const eventChannel = that.getOpenerEventChannel();
+							eventChannel.on('GridIndexEmit', data => {
+								that.PlayPageIndex.ListID = data.ListID;
+								that.PlayPageIndex.ListIndex = data.ListIndex;
+
+								console.log('play界面成功发射数据给EventFormRecord', data)
+							});
 							eventChannel.emit('aditorEvent', that.item);
 							console.log('EventFormRecord界面成功返回数据给play!', that.item);
+							
+							console.log(that.PlayPageIndex.ListID)
+							console.log(that.PlayPageIndex.ListIndex)
+							let EventObj={
+								ListID:that.PlayPageIndex.ListID,
+								ListIndex:that.PlayPageIndex.ListIndex,
+								title: that.item.title,
+								Today:that.item.Today,
+								TodaystartTime: that.item.TodaystartTime,
+								TodayendTime: that.item.TodayendTime,
+								event_description: that.item.event_description,
+								rank: that.item.rank,
+								
+								
+							}
+							that.EventList.push(EventObj)
+							console.log(that.EventList)
+							
+
+							uni.setStorage({ //存入Storage
+								key: 'playEventData', //自己取个名字
+								data: { //存的数据可以是很多条
+
+									EventListSAVE:that.EventList
+									
+
+								},
+
+								success() {
+									console.log('playEventData储存成功');
+								}
+							});
+
+							// 重新初始化
 							that.item = {
 								title: '',
-								Content_value: '',
-								url: ''
+								Today:'',
+								TodaystartTime:'',
+								TodayendTime:'',
+								event_description:'',
+								rank:Number
+
 							};
 
 							uni.navigateBack();
@@ -262,5 +327,18 @@
 		align-items: center;
 		justify-content: center;
 		padding: 15px 0;
+	}
+
+	.EventTitlebox {
+
+		border: 10rpx solid antiquewhite;
+		border-radius: 10px;
+		height: 90rpx;
+	}
+
+	.EventTitle {
+		/* 跟外边的间距上、左右、下 */
+		margin: 20rpx 30rpx 5rpx;
+		text-align: center;
 	}
 </style>
