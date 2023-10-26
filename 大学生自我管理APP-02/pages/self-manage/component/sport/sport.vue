@@ -294,6 +294,7 @@
 									console.log(that.now_list[index].timesForAward);
 									if(that.now_list[index].timesForAward!=null){
 										var Divisor_result=(that.now_list[index].all_finish_times)/(that.now_list[index].timesForAward);
+										var differNUM=that.now_list[index].timesForAward-that.now_list[index].all_finish_times;
 										console.log("累计完成次数与目标次数占比："+Divisor_result);
 										if(Divisor_result>=0.8){
 											console.log("还差1/5就可以实现目标！");
@@ -302,6 +303,9 @@
 												key: 'GoingToAchieveGoal', //自己取个名字
 												data: { //存的数据可以是很多条
 														
+														
+														differnumber:differNUM,
+														timesForAward:that.now_list[index].timesForAward,
 														content:that.now_list[index].title,
 											
 												},

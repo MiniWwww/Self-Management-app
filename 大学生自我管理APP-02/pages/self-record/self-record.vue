@@ -643,12 +643,14 @@
 			//运动即将成就达成时的系统提醒
 			SportGoingtoAchieveRemind(){
 				
-				let sportContent = uni.getStorageSync('GoingToAchieveGoal')
-				console.log(sportContent);
-				if (sportContent.content!=null)
+				let Sportdata = uni.getStorageSync('GoingToAchieveGoal')
+				
+				console.log(Sportdata);
+				if (Sportdata.content!=null)
 				{
+					
 					let now = new Date()
-					let content = '太棒了！你即将完成' + sportContent.content+'运动目标' 
+					let content = '还差'+Sportdata.differnumber+'个就达成' + Sportdata.timesForAward+'个'+Sportdata.content+'的运动目标了，加油噢！' 
 					
 				this.system_remind(now.getTime(), content);
 				// 清除，否则一直刷新一直发
