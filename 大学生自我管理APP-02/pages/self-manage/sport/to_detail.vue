@@ -75,6 +75,8 @@
 			const eventChannel = that.getOpenerEventChannel();
 			eventChannel.on('todetail',function(data){
 				that.item=data;
+				
+				
 				if(data.note==''){
 					that.item.note='无';
 				}

@@ -254,6 +254,8 @@
 			this.SportRemind();
 			// 睡眠目标完成
 			this.SleepRemind();
+			// 运动目标即将完成
+			this.SportGoingtoAchieveRemind();
 			
 			
 		},
@@ -621,6 +623,7 @@
 				}
 			},
 			
+			// 睡眠成就达成时
 			SleepRemind(){
 				
 				let sleepData = uni.getStorageSync('sleepGoalSuccess')
@@ -636,7 +639,24 @@
 				// 清除，否则一直刷新一直发
 				uni.removeStorageSync('sleepGoalSuccess')
 				}
-			}
+			},
+			//运动即将成就达成时的系统提醒
+			SportGoingtoAchieveRemind(){
+				
+				let Sportdata = uni.getStorageSync('GoingToAchieveGoal')
+				
+				console.log(Sportdata);
+				if (Sportdata.content!=null)
+				{
+					
+					let now = new Date()
+					let content = '还差'+Sportdata.differnumber+'个就达成' + Sportdata.timesForAward+'个'+Sportdata.content+'的运动目标了，加油噢！' 
+					
+				this.system_remind(now.getTime(), content);
+				// 清除，否则一直刷新一直发
+				uni.removeStorageSync('GoingToAchieveGoal')
+				}
+			},
 		}
 	}
 </script>
