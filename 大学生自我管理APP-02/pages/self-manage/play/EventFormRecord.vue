@@ -3,23 +3,21 @@
 		<!-- 2023-7-8-新增-->
 		<view class="FormPage">
 
-			<form class="FormPage" @submit="formSubmit" @reset="formReset">
-
 				<view class="uni-form-item-input">
 					<uni-section title="事件名称" subTitle="给我取一个更好听的名字吧~" type="line" padding>
 						<view class="EventTitlebox">
 							<view class="EventTitle">
-
+				
 								<textarea :maxlength="20" v-model="item.title" auto-height placeholder=""></textarea>
 							</view>
 						</view>
-
-
+				
+				
 					</uni-section>
 				</view>
+			<form class="FormPage" @submit="formSubmit" @reset="formReset">
 
-
-
+			
 				<!-- <view class="uni-form-item-date">
 					<button class="calendar-button" type="button" @click="opencalendar">日期选择</button>
 					<uni-calendar ref="calendar" class="uni-calendar-hook" :clear-date="true" :date="info.date"

@@ -118,14 +118,23 @@
 
 <script>
 	export default {
+		// props:["SendTOplay_SwipeList"],
 		components: {},
+		//钩子
+		// mounted() {
+		//   // 监听事件
+		//   this.$bus.$on('updateSwipeList', swipeList => {
+		//     this.swipeList = swipeList
+		//   })
+		// },
+
 		data() {
 			return {
 				// 2023-10-21新增
 				playGoalSuccessList: [],
 				playGoalSuccessListID: 0,
 				Current_Two_dimen_array_index: 0,
-
+				testLIst: this.SendTOplay_SwipeList,
 				Two_dimensional_array: [{
 						id: 0,
 						isfull: true,
@@ -435,23 +444,62 @@
 			}
 			return false
 		},
+		//在这里onshow不起作用，因为play.vue是被引入到self-management.vue界面了
+		//实际上根本不能到达play.vue界面
+		// onShow不起作用，就读不到数据
+		// 所以要到self-management.vue那里写
+		onShow() {
 
-		onLoad() {
-			// 监听事件  
+			// uni.getStorage({
+			// 	key: 'playGoalDATA',
+			// 	success(res) {
 
-			uni.$on('addnewGoal', (data) => {
-				console.log('收到数据' + data)
-				this.uitem = data;
-			})
+			// 		console.log('获取playGoalDATA成功', res.data);
+			// 		that.swipeList=res.data.PlayGoalList
+			// 		console.log('swipeList:',that.swipeList);
+			// 	}
+
+			// });
 
 		},
-		onUnload() {
-			// 移除监听事件  
-			uni.$off('addnewGoal');
-		},
+		
+		// onLoad() {
+		// 	// 监听事件
+		// 	uni.$on('SendToPlaySwipetList', function(data) {
+		// 		this.swipeList = data
+		// 		console.log('A页面传的值为:' + data);
+		// 	});
+		// },
+		// onUnload() {
+		// 	// 移除监听事件
+		// 	uni.$off('SendToPlaySwipetList');
+		// },
+		// onLoad() {
+		// 	// 监听事件  
+
+		// 	uni.$on('addnewGoal', (data) => {
+		// 		console.log('收到数据' + data)
+		// 		that.uitem = data;
+		// 	})
+
+		// },
+		// onUnload() {
+		// 	// 移除监听事件  
+		// 	uni.$off('addnewGoal');
+		// },
 		// 2023-7-30添加结束
+		// // 钩子：
+		mounted() {
+		    uni.$on('updateSwipeList', (list) => {
+		      this.swipeList = list;
+			  console.log('play页面监听到self-management传来的值了！');
+		    });
+			// 移除监听事件
+				uni.$off('addnewGoal');
+		  },
 		methods: {
 			//2023-9-10添加
+
 			messageToggle(type) {
 				this.msgType = type
 				this.messageText = `成功完成一个目标`
@@ -481,23 +529,56 @@
 				} = e;
 
 				if (content.text === '置顶') {
-					uni.showModal({
-						title: '提示',
-						content: '是否置顶',
-						success: res => {
-							if (res.confirm) {
-								console.log(this.swipeList)
-								console.log(index);
-								this.swipeList.unshift(this.swipeList[index]); //把查找到的数据复制添加到数组的首位
-								console.log('置顶后删除前', this.swipeList)
-								console.log(index);
-								this.swipeList.splice(index + 1, 1);
-								console.log('置顶后删除后', this.swipeList)
-							} else if (res.cancel) {
-								console.log('用户点击取消');
-							}
+					// uni.showModal({
+					// 	title: '提示',
+					// 	content: '是否置顶',
+					// 	success: res => {
+					// 		if (res.confirm) {
+					// 			console.log(this.swipeList)
+					// 			console.log(index);
+					// 			this.swipeList.unshift(this.swipeList[index]); //把查找到的数据复制添加到数组的首位
+					// 			console.log('置顶后删除前', this.swipeList)
+					// 			console.log(index);
+					// 			this.swipeList.splice(index + 1, 1);
+					// 			console.log('置顶后删除后', this.swipeList)
+					// 		} else if (res.cancel) {
+					// 			console.log('用户点击取消');
+					// 		}
+					// 	}
+					// });
+
+					console.log(this.swipeList)
+					console.log(index);
+					this.swipeList.unshift(this.swipeList[index]); //把查找到的数据复制添加到数组的首位
+					console.log('置顶后删除前', this.swipeList)
+					console.log(index);
+					this.swipeList.splice(index + 1, 1);
+					console.log('置顶后删除后', this.swipeList);
+					uni.showToast({
+						title: "置顶成功",
+						icon: 'success',
+						success: function(res) {
+
+						},
+						fail: function(res) {
+
+						},
+					});
+					uni.setStorage({ //存入Storage
+						key: 'playGoalDATA', //自己取个名字
+						data: { //存的数据可以是很多条
+
+							PlayGoalList: this.swipeList
+
+
+						},
+
+						success() {
+							console.log('playGoalDATA储存成功');
 						}
 					});
+
+
 
 				} else if (content.text === '完成') {
 
@@ -531,12 +612,27 @@
 
 
 				} else if (content.text === '删除') {
+					var that = this
 					uni.showModal({
 						title: '提示',
 						content: '是否删除',
 						success: res => {
 							if (res.confirm) {
-								this.swipeList.splice(index, 1);
+								that.swipeList.splice(index, 1);
+
+								uni.setStorage({ //存入Storage
+									key: 'playGoalDATA', //自己取个名字
+									data: { //存的数据可以是很多条
+
+										PlayGoalList: that.swipeList
+
+
+									},
+
+									success() {
+										console.log('playGoalDATA储存成功');
+									}
+								});
 							} else if (res.cancel) {
 								console.log('用户点击取消');
 							}
@@ -644,6 +740,19 @@
 											console.log(obj);
 											// 上一句不加分号的话下面这个就执行不了
 											console.log('查看数组：', that.swipeList);
+											uni.setStorage({ //存入Storage
+												key: 'playGoalDATA', //自己取个名字
+												data: { //存的数据可以是很多条
+
+													PlayGoalList: that.swipeList
+
+
+												},
+
+												success() {
+													console.log('playGoalDATA储存成功');
+												}
+											});
 											console.log('play页面成功接收到add_playgoal的数据');
 
 										},
@@ -694,6 +803,7 @@
 					this.$refs.inputModal.close()
 
 			},
+
 			changeTwo_dimen(listID, listIndex) {
 				console.log(listID);
 				console.log('点击了第', listIndex, '个宫格');
@@ -718,11 +828,11 @@
 							uni.setStorage({ //存入Storage
 								key: 'CurrentTitle', //自己取个名字
 								data: { //存的数据可以是很多条
-									TitleName:that.Two_dimensional_array[listID].list[listIndex].text
-									
-							
+									TitleName: that.Two_dimensional_array[listID].list[listIndex].text
+
+
 								},
-							
+
 								success() {
 									console.log('CurrentTitle储存成功');
 								}

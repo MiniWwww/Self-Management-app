@@ -5,6 +5,13 @@ import App from './App.vue'
 
 createApp(App).mount('#app')
 
+
+
+
+
+//目标数组
+
+
 // // 图标选择器需要
 // import iconPicker from 'e-icon-picker';
 // import "e-icon-picker/lib/symbol.js"; //基本彩色图标库
