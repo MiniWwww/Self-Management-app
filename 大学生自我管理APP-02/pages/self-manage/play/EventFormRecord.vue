@@ -3,23 +3,21 @@
 		<!-- 2023-7-8-新增-->
 		<view class="FormPage">
 
-			<form class="FormPage" @submit="formSubmit" @reset="formReset">
-
 				<view class="uni-form-item-input">
 					<uni-section title="事件名称" subTitle="给我取一个更好听的名字吧~" type="line" padding>
 						<view class="EventTitlebox">
 							<view class="EventTitle">
-
+				
 								<textarea :maxlength="20" v-model="item.title" auto-height placeholder=""></textarea>
 							</view>
 						</view>
-
-
+				
+				
 					</uni-section>
 				</view>
+			<form class="FormPage" @submit="formSubmit" @reset="formReset">
 
-
-
+			
 				<!-- <view class="uni-form-item-date">
 					<button class="calendar-button" type="button" @click="opencalendar">日期选择</button>
 					<uni-calendar ref="calendar" class="uni-calendar-hook" :clear-date="true" :date="info.date"
@@ -102,7 +100,7 @@
 				},
 				item: {
 					title: '',
-					Today:'',
+					Today:this.getDate(new Date()),
 					TodaystartTime:'',
 					TodayendTime:'',
 					event_description:'',
@@ -115,7 +113,31 @@
 
 			}
 		},
+		onShow() {
 		
+			var that = this;
+			uni.getStorage({
+				key: 'CurrentTitle',
+				success(res) {
+		
+					console.log('获取CurrentTitle成功', res.data);
+					that.item.title=res.data.TitleName
+					
+				}
+			});
+			
+			uni.getStorage({
+				key: 'playEventDATA',
+				success(res) {
+					
+					console.log('获取playEventDATA成功', res.data);
+					that.EventList=res.data.PlayEventList
+					console.log('EventList:',that.EventList);
+				}
+			});
+			
+		
+		},
 		// onShow() {
 		// 	let lastTime_Event = uni.getStorageSync('playEventData');
 		// 	this.item.Today= lastTime_item[];
@@ -196,10 +218,10 @@
 							
 
 							uni.setStorage({ //存入Storage
-								key: 'playEventData', //自己取个名字
+								key: 'playEventDATA', //自己取个名字
 								data: { //存的数据可以是很多条
-
-									EventListSAVE:that.EventList
+									
+									PlayEventList:that.EventList
 									
 
 								},
@@ -212,7 +234,7 @@
 							// 重新初始化
 							that.item = {
 								title: '',
-								Today:'',
+								Today:that.getDate(new Date()),
 								TodaystartTime:'',
 								TodayendTime:'',
 								event_description:'',
