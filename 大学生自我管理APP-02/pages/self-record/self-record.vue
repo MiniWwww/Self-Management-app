@@ -206,6 +206,8 @@
 			this.last_sys_date = res2;
 			console.log('从本地读取上一次系统鼓励消息的日期',res2);
 			
+			let avator = uni.getStorageSync('avator');
+			this.userhead = avator;
 			
 			//获取当前时间，看系统是否需要发送鼓励消息
 			let now = new Date();
@@ -291,6 +293,7 @@
 		onPullDownRefresh() { //监听下拉刷新动作
 			console.log('onPullDownRefresh');
 			// 这里获取数据
+			
 			setTimeout(function() {
 				//初始化数据
 				uni.stopPullDownRefresh(); //停止下拉刷新
