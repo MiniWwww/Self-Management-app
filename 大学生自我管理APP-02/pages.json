@@ -181,6 +181,29 @@
 		
 		},
 		{
+			"path": "pages/self-manage/play/editEventDescription",
+			"style": {
+				"navigationBarTitleText": "编辑事件内容",
+				"enablePullDownRefresh": false,
+				 "app-plus":{
+				                    "titleNView":{
+				                        "buttons":[
+				                            {
+				                                "text":"保存",
+				                                "type":"none",
+				                                "color":"#007AFF",
+				                                "background":"#000000",
+				                                "fontSize":"16px",
+												"float":"right"
+				                            }
+				                        ]
+				                    }
+				                }
+		
+			}
+		
+		},
+		{
 			"path": "pages/self-manage/component/PersonCenter/PersonCenter",
 			"style": {
 				"navigationBarTitleText": "个人中心",
