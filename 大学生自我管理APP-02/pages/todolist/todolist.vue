@@ -262,7 +262,8 @@
 		},
 		computed: {
 			listData() {
-				let list = JSON.parse(JSON.stringify(this.list)); //拷贝对象
+				var that=this;
+				let list = JSON.parse(JSON.stringify(that.list)); //拷贝对象
 				let newList = [];
 				const date = new Date();
 				const year = date.getFullYear();
@@ -339,7 +340,11 @@
 			},
 		    getList() {
 				let res = uni.getStorageSync('todolist')
-				this.list = res
+				console.log(res);
+				if(res){
+					this.list = res
+				}
+				
 			},
 			//选择按钮
 			choice(index) {
@@ -486,6 +491,7 @@
 				}
 				
 				// 查找事件是否已经存在于数组中
+				console.log(this.list)
 				const eventIndex = this.list.findIndex(event => event.title === this.InputValue);
 				if (eventIndex !== -1) {
 					uni.showModal({
