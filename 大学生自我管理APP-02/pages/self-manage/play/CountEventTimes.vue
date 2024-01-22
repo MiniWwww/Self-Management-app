@@ -13,8 +13,17 @@
 			<text class="EventTime">开始：{{item.TodaystartTime}}</text>
 			<text class="EventTime">结束：{{item.TodayendTime}}</text>
 		  </view>
+		  
 		  <view class="EventDescriptionBox">
-		  	<text class="EventDescription">{{item.event_description}}</text>
+			  <text class="EventDescription">{{item.event_description}}</text>
+			  <view class="editor-box">
+			  	
+				  <view class="editor-empty">
+				  </view>
+				  <view class="editor-click" @click="changeEventDescription(index)">
+				  <image :src="'/static/编辑事件内容.png'" class="Event-eidtor-image" mode="aspectFill" />
+				  </view>
+			  </view>
 		  </view>
 		  
 	  </uni-card>
@@ -62,7 +71,44 @@
 		methods: {
 			
 			
-
+			changeEventDescription(index) {
+				var that = this;
+				uni.setStorage({ //存入Storage
+					key: 'currentEventDescription', //自己取个名字
+					data: { //存的数据可以是很多条
+						currentIndex:index,
+						currentDescription:that.EventList[index].event_description,
+					},
+									
+					success() {
+						
+					}
+				});
+				
+				uni.navigateTo({
+					url: '/pages/self-manage/play/editEventDescription',
+					events: {
+						newEvendescription(data) {
+			that.EventList[index].event_description=data
+					uni.setStorage({ //存入Storage
+						key: 'playEventDATA', //自己取个名字
+						data: { //存的数据可以是很多条
+							
+							PlayEventList:that.EventList
+							
+					
+						},
+					
+						success() {
+							console.log('playEventData储存成功');
+						}
+					});
+			
+						},
+			
+					}
+				});
+			},
 			
 		}
 	}
@@ -109,5 +155,26 @@
 		flex-direction: column;
 		flex-wrap: wrapl;
 		text-align: center;
+	}
+	.editor-box{
+		display: flex;
+		flex-direction: row;
+	}
+	.editor-empty{
+		width: 100%;
+		
+	}
+	.editor-click{
+		height: 30px;
+		width: 30px;
+		
+	}
+	.Event-eidtor-image{
+		width: 30px;
+		height: 30px;
+		border-radius: 10px;
+		
+		
+		
 	}
 </style>

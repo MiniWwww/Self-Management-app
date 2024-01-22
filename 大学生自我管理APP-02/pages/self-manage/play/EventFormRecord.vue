@@ -24,13 +24,16 @@
 						:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
 						:range="info.range" @confirm="confirm" @close="close" />
 				</view> -->
-
+				<!-- 待完成从时间范围里抽取出开始时间和结束时间 -->
+				<!-- <uni-card title="选择时间范围"> -->
 				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
 				<!-- <uni-section :title="'选择时间范围：' " type="line"></uni-section> -->
-				<!-- <view class="example-body">
-					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" />
-				</view> -->
-
+				<!-- <view class="example-body"> -->
+					<!-- <uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date"/> -->
+				<!-- </view> -->
+				
+				<!-- </uni-card> -->
+				
 				<uni-card title="选择今日的时间范围">
 
 					<!-- <view>
