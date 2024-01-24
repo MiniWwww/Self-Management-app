@@ -32,12 +32,6 @@
 				</view>
 			</uni-card>
 			
-			<!-- <uni-card v-if="item.timetype0" title="选择时间范围">
-				<view class="example-body">
-					<uni-datetime-picker   v-model="datetimeRange"  type="datetimerange" rangeSeparator="至" />
-				</view>
-			</uni-card> -->
-			
 			
 			<!-- 2023-10-24添加结束 -->
 			
