@@ -1,6 +1,14 @@
 <template>
   
   <view class="">
+	  <view class="informBox">
+		  
+	  	<textarea name="" id="" cols="120" rows="1" style="
+               text-align: center;
+               font: 15px 宋体;
+			   width: 100%;
+               border: 0" >这里是你的娱乐轨迹，看看过去娱乐瞬间吧~</textarea>
+	  </view>
 	  <uni-card v-for="(item, index) in EventList" :index="item.Today" :key="index">
 		  <view class="TodayTextBox">
 		  	 <text class="TodayText">{{item.Today}}</text>
@@ -115,6 +123,16 @@
 </script>
 
 <style>
+	.informBox{
+		border:4px dotted skyblue;
+		border-radius: 5px;
+		display: flex;
+		height: 30px;
+		text-align: center;
+		margin-top: 20px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
 	.TodayTextBox{
 		/* border: 10px solid salmon; */
 		/* background-color: darkseagreen; */

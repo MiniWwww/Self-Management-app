@@ -3,6 +3,10 @@ import {
 } from 'vue'
 import App from './App.vue'
 
+// import dayjs from "dayjs"
+// Vue.prototype.$dayjs = dayjs;
+
+
 createApp(App).mount('#app')
 
 

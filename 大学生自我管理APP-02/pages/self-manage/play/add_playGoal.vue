@@ -22,18 +22,16 @@
 					:range="info.range" @confirm="confirm" @close="close" />
 			</view> -->
 			<!-- 2023-10-24添加 -->
+			
+			
 			<uni-card v-if="item.timetype0" title="选择时间范围">
-				
+			<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
 			
-			<view >
-				<uni-datetime-picker type="datetime"  v-model="item.startDate"  />
-			</view>
-			
-			<view >
-				<uni-datetime-picker type="datetime"  v-model="item.endDate" />
-			</view>
-			
+				<view class="example-body">
+					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date" :end="TodayDate" />
+				</view>
 			</uni-card>
+			
 			<!-- <uni-card v-if="item.timetype0" title="选择时间范围">
 				<view class="example-body">
 					<uni-datetime-picker   v-model="datetimeRange"  type="datetimerange" rangeSeparator="至" />
@@ -63,9 +61,10 @@
 		data() {
 			return {
 				// 2023-10-24添加
-				datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 * 3600000)],
+				// datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 * 3600000)],
+				datetimeRange: [],
 				// 2023-10-24添加结束
-
+				TodayDate:this.getDate(new Date()),
 				weeks: [{
 						text: '周一',
 						value: '每周一'
@@ -206,10 +205,20 @@
 						if (res.confirm) {
 							console.log('用户点击确定')
 							const eventChannel = that.getOpenerEventChannel();
-							
+							let EventObj={
+								timetype0: that.item.timetype0,
+								timetype1: that.item.timetype1,
+								title: that.item.title,
+								startDate: that.datetimeRange[0],
+								endDate: that.datetimeRange[1],
+								daterange:that.item.daterange,
+								checkbox2: that.item.checkbox2,
+								
+								
+							}
 							{
-								eventChannel.emit('addplayGoal', that.item);
-								console.log('add_playGoal界面成功返回数据给play!', that.item);
+								eventChannel.emit('addplayGoal', EventObj);
+								console.log('add_playGoal界面成功返回数据给play!', EventObj);
 								that.item = {
 									timetype0: false,
 									timetype1: false,
