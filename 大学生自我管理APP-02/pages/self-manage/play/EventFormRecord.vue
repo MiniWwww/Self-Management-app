@@ -24,21 +24,17 @@
 						:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
 						:range="info.range" @confirm="confirm" @close="close" />
 				</view> -->
-				<!-- 待完成从时间范围里抽取出开始时间和结束时间 -->
-				<!-- <uni-card title="选择时间范围"> -->
+				<!-- 待完成从时间格式化 -->
+				<uni-card title="选择时间范围">
 				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
-				<!-- <uni-section :title="'选择时间范围：' " type="line"></uni-section> -->
-				<!-- <view class="example-body"> -->
-					<!-- <uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date"/> -->
-				<!-- </view> -->
 				
-				<!-- </uni-card> -->
+					<view class="example-body">
+						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date" :end="item.Today" :picker-options="pickerOptions"/>
+					</view>
+				</uni-card>
 				
-				<uni-card title="选择今日的时间范围">
+				<!-- <uni-card title="选择今日的时间范围">
 
-					<!-- <view>
-						<uni-datetime-picker type="date" v-model="item.Today" />
-					</view> -->
 					<view>
 						<uni-datetime-picker type="datetime" v-model="item.TodaystartTime" />
 					</view>
@@ -47,7 +43,7 @@
 						<uni-datetime-picker type="datetime" v-model="item.TodayendTime" />
 					</view>
 
-				</uni-card>
+				</uni-card> -->
 
 				<view class="uni-form-item-content">
 					<uni-section title="事件内容" subTitle="描述一下发生的趣事吧~" type="line" padding>
@@ -92,10 +88,24 @@
 		data() {
 			return {
 				// 2023-10-24添加
-				datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 *
-					3600000)],
+				// datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 *
+				// 	3600000)],
+				datetimeRange:[],
 				// 2023-10-24添加结束
-				
+				pickerOptions:{
+					disableDate(time){
+					// const startDate=this.getDateTime(Date.now() - 5 * 24 * 3600000);
+					// this.datetimeRange[0]=startDate;
+					
+					// const endDate=this.getDateTime(Date.now() - 5 * 24 * 3600000);
+					// this.datetimeRange[1]=endDate;
+					
+					return(
+					time<this.getDisableStartDate(startDate)||
+					time>this.getDisableEndDate(endDate)
+						);
+					},
+				},
 				PlayPageIndex: {
 					ListID: Number,
 					ListIndex: Number,
@@ -181,7 +191,12 @@
 				return `${this.getDate(date)} ${this.getTime(date)}`
 			},
 			// 2023-10-24添加结束
-
+			// swapTimeFormat(time){
+			// 	let dayjs=this.dayjs;
+			// 	newTime = dayjs(time).format("YYYY-MM-DD HH:mm:ss");
+			// 	     console.log(newTime); 
+			// 		 return newTime;
+			// },
 			// 2023-7-30添加
 			SubmitEvent() {
 				var that = this;
@@ -204,13 +219,18 @@
 							
 							console.log(that.PlayPageIndex.ListID)
 							console.log(that.PlayPageIndex.ListIndex)
+							
+							// startTime=swapTimeFormat(that.datetimeRange[0]);
+							// endTime=swapTimeFormat(that.datetimeRange[1]);
+							
+							
 							let EventObj={
 								ListID:that.PlayPageIndex.ListID,
 								ListIndex:that.PlayPageIndex.ListIndex,
 								title: that.item.title,
 								Today:that.item.Today,
-								TodaystartTime: that.item.TodaystartTime,
-								TodayendTime: that.item.TodayendTime,
+								TodaystartTime: that.datetimeRange[0],
+								TodayendTime:that.datetimeRange[1],
 								event_description: that.item.event_description,
 								rank: that.item.rank,
 								

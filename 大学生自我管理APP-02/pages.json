@@ -175,7 +175,7 @@
 		{
 			"path": "pages/self-manage/play/CountEventTimes",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "娱乐轨迹",
 				"enablePullDownRefresh": false
 			}
 		
