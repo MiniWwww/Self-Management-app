@@ -85,6 +85,8 @@
 				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
 				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'}],
 				success_list:[{getup_goal:'7:00', getup_time:'6:30',sleep_goal:'23:00', sleep_time:'22:55', date:'2023年07月25日 星期二'}],
+				sleep_success_Count:Number,
+				
 			};
 		},
 		computed:{
@@ -95,6 +97,13 @@
 				};
 				return false;
 			}
+		},
+		
+		// 生命周期函数，无法使用
+		onShow() {
+		
+			
+			
 		},
 		methods:{
 			addTimes(m){return m<10?'0'+m:m },
@@ -223,6 +232,28 @@
 			},
 			like_sleep(){
 				this.sleep_like=true;
+				var that=this;
+				uni.getStorage({
+					key: 'sleep_like_Count',
+					success(res) {
+				
+						console.log('获取睡眠达成赞数成功', res.data);
+						that.sleep_success_Count=res.data.sleep_like_Count;
+					}
+				});
+				uni.setStorage({ //存入Storage
+					key: 'sleep_like_Count', //自己取个名字
+					data: { //存的数据可以是很多条
+						
+					sleep_like_Count:that.sleep_success_Count+1,
+					},
+				
+					success() {
+						console.log('sleep_like_Count睡眠达成赞数加一并且储存成功');
+					}
+				});
+				
+				
 			},
 			goto_baizaoyin(){
 				uni.navigateTo({
