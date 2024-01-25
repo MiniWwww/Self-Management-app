@@ -180,9 +180,20 @@
 						console.log(res);
 						
 						this.userpic = res.tempFilePaths[0];
+						var TempFilePath=res.tempFilePaths[0];
 						
-						//同步保存背景路径
-						uni.setStorageSync('avator',res.tempFilePaths[0]);
+						//永久保存到本地文件
+						 uni.saveFile({
+						      tempFilePath: TempFilePath,
+						      success: function (res) {
+								  console.log("图片永久保存本地成功"+res.savedFilePath)
+						        var savedFilePath = res.savedFilePath;
+								//同步保存头像路径
+								uni.setStorageSync('avator',savedFilePath);
+						      }
+						    });
+						
+						
 						// // 保存头像路径
 						// uni.setStorage({
 						// 	key: 'avator',
@@ -198,6 +209,7 @@
 			},
 			onError(e) {
 			      console.error('图片加载失败：', e);
+				  
 			    },
 			onuploadbkphoto() {
 				uni.chooseImage({
@@ -207,9 +219,19 @@
 					success: (res) => {
 						console.log(res);
 						
-						this.userbk = res.tempFilePaths[0]
-						//同步保存背景路径
-						uni.setStorageSync('background',res.tempFilePaths[0]);
+						this.userbk = res.tempFilePaths[0];
+						var TempFilePath=res.tempFilePaths[0];
+						
+						 uni.saveFile({
+						      tempFilePath: TempFilePath,
+						      success: function (res) {
+								  console.log("图片永久保存本地成功"+res.savedFilePath)
+						        var savedFilePath = res.savedFilePath;
+								//同步保存背景路径
+								uni.setStorageSync('background',savedFilePath);
+						      }
+						    });
+						
 						// // 保存背景路径
 						// uni.setStorage({
 						// 	key: 'background',
