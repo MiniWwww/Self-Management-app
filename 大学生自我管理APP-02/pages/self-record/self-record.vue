@@ -1,7 +1,7 @@
 <template>
 	<view id="moments">
 
-		<view class="home-pic">
+		<view class="home-pic" >
 			<view class="home-pic-base">
 				<!-- “我”的用户名和用户头像 -->
 				<view class="top-pic">
@@ -74,6 +74,8 @@
 		
 		data() {
 			return {
+				sleep_award_list:[],
+				sleep_success_Count:Number,
 				days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
 				
 				//每条记录数据，注意每发布一条新的就插入数组头部
@@ -176,11 +178,12 @@
 			});
 			uni.startPullDownRefresh();
 			// 获取头像
-			let avator = uni.getStorageSync('avator')
-			let username = uni.getStorageSync('userInfo').nickname
-			this.username = username != '' ? username : '我'
-			console.log(avator);
-			this.userhead = avator
+			// let avator = uni.getStorage('avator')
+			// let username = uni.getStorage('userInfo').nickname
+			// this.username = username != '' ? username : '我'
+			// console.log(avator);
+			// this.userhead = avator
+			// console.log('onLoad获取头像成功'+this.userhead);
 		},
 		
 		onShow() {
@@ -205,10 +208,23 @@
 			let res2 = uni.getStorageSync('last-system-msg-date');
 			this.last_sys_date = res2;
 			console.log('从本地读取上一次系统鼓励消息的日期',res2);
-			
+			//获取头像
 			let avator = uni.getStorageSync('avator');
+			if(avator){
 			this.userhead = avator;
-			
+			console.log('获取后的头像'+this.userhead);
+			}else{
+				this.userhead='../../static/self-record/user-head.png'
+			}
+			//获取昵称
+			console.log('获取前的昵称'+this.username)
+			let username = uni.getStorageSync('userInfo').nickname
+			if(username){
+			this.username = username ;
+			console.log('获取后的昵称'+this.username);
+			}else{
+				this.username ='我';
+			}
 			//获取当前时间，看系统是否需要发送鼓励消息
 			let now = new Date();
 			//获取now具体时间
@@ -258,6 +274,7 @@
 			this.SleepRemind();
 			// 运动目标即将完成
 			this.SportGoingtoAchieveRemind();
+			
 			
 			
 		},
@@ -660,6 +677,43 @@
 				uni.removeStorageSync('GoingToAchieveGoal')
 				}
 			},
+			SleepGoingtoAchiveRemind(){
+				var that = this;
+				uni.getStorage({
+					key: 'SleepAward',
+					success(res) {
+						
+						console.log('获取SleepAward睡眠奖励信息成功', res.data);
+						that.sleep_award_list = res.data;
+					}
+				});
+				
+				uni.getStorage({
+					key: 'sleep_like_Count',
+					success(res) {
+				
+						console.log('获取睡眠达成赞数成功', res.data);
+						that.sleep_success_Count=res.data.sleep_like_Count;
+					}
+				});
+				
+				var Divisor_result=(that.sleep_success_Count)/(that.sleep_award_list.times);
+				var differnumber=(that.sleep_award_list.times-that.sleep_success_Count);
+				if(Divisor_result>=0.8){
+					console.log("还差1/5就可以实现目标！");
+					
+					if (sleep_award_list.content!=null)
+					{
+						
+						let now = new Date()
+						let content = '还差'+differnumber+'个就达成' + sleep_award_list.times+'个'+sleep_award_list.content+'的睡眠目标了，加油噢！' 
+						
+					this.system_remind(now.getTime(), content);
+					}
+					
+				}
+				
+			}
 		}
 	}
 </script>

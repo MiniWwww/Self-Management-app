@@ -283,6 +283,7 @@
 						break;
 					case 3:
 						that.sleep_awardList[that.clickidnex].content=e;
+						that.saveSleepAwardList();
 						break;
 				}
 			},
@@ -315,6 +316,7 @@
 						break;
 					case 3:
 						that.sleep_awardList[that.clickidnex].times=e;
+						that.saveSleepAwardList();
 						break;
 				}
 			},
@@ -341,6 +343,7 @@
 				if(that.listIndex==3){
 					list1=that.sleep_awardList;
 					that.sleep_awardList=that.deleteL(list1,item);
+					that.saveSleepAwardList();
 				}
 				that.listIndex=-1;
 				that.clickidnex=-1;
@@ -389,10 +392,41 @@
 				}
 				if(that.optionIndex==2){
 					that.sleep_awardList.push(obj)
+					that.saveSleepAwardList();
 				}
 				this.activeInput = false;
 				this.content='';
 				this.numbers=Number;
+			},
+			saveSleepAwardList(){
+				var that=this;
+				// uni.removeStorage({
+				// 	key:'SleepAward',
+				// });
+				
+				uni.setStorage({ //存入Storage
+					key: 'SleepAward', //自己取个名字
+					data: { //存的数据可以是很多条
+						
+					sleep_awardList:that.sleep_awardList,
+					},
+				
+					success() {
+						console.log('SleepAward睡眠奖励储存成功');
+					}
+				});
+				
+				uni.setStorage({ //存入Storage
+					key: 'sleep_like_Count', //自己取个名字
+					data: { //存的数据可以是很多条
+						
+					sleep_like_Count:that.getup_success_list.length,
+					},
+				
+					success() {
+						console.log('sleep_like_Count睡眠达成赞数储存成功');
+					}
+				});
 			}
 		}
 	}

@@ -5,13 +5,13 @@
 			<!-- 背景图片 -->
 			<view class="head-background-pic">
 				<!-- <image @click="onuploadphoto" src="../../../../static/night.png" mode=""></image> -->
-				<image :src="userbk" class="image" mode="aspectFill" @click="onuploadbkphoto" />
+				<image :src="userbk" class="image" mode="aspectFill" @click="onuploadbkphoto" @error="onError"/>
 			</view>
 			<!-- 头像和昵称-->
 			<view class="head-logo">
 
 				<view class="head-logo-pic">
-					<image :src="userpic" class="image" mode="aspectFill" @click="onuploadheaderphoto" />
+					<image :src="userpic" class="image" mode="aspectFill" @click="onuploadheaderphoto" @error="onError"/>
 					<!-- <image @click="onuploadphoto" src="../../../../static/sun.png" mode="aspectFill"></image> -->
 				</view>
 				<view class="my-nikename">
@@ -75,8 +75,8 @@
 			return {
 
 
-				userbk: '../../../../static/night.png',
-				userpic: '../../../../static/night.png',
+				userbk: '',
+				userpic: '',
 				iconType: 'compose',
 				mydata: {
 					nickname: '我的昵称',
@@ -90,10 +90,47 @@
 			}
 
 		},
+		onLoad(){
+			console.log('onLoad查看当前头像'+this.userpic);
+			console.log('onLoad查看当前背景'+this.userbk);
+			
+			
+			
+		},
 		// 生命周期函数，监听页面显示
 		onShow() {
+			//头像更新一定要用this,不能var that=this,否则会有延迟，所以要用同步的getStorageSync
+			let avator = uni.getStorageSync('avator');
+			if(avator){
+			this.userpic = avator;
+			console.log('个人中心onShow获取后的头像'+this.userpic);
+			}else{
+				this.userpic='../../../../static/night.png';
+			}
+			
+			let backGround = uni.getStorageSync('background');
+			if(backGround){
+			this.userbk = backGround;
+			console.log('个人中心onShow获取后的背景'+this.userbk);
+			}else{
+				this.userbk='../../../../static/night.png';
+			}
+			
+			var that=this;
 
-			var that = this;
+			// uni.getStorage({
+			// 	key: 'background',
+			// 	success(res) {
+			// 		console.log('onshow查看当前背景'+that.userbk);
+			// 		console.log('获取背景成功', res.data);
+			// 		that.userbk = res.data;
+			// 		console.log('onshow查看获取后的背景'+that.userbk);
+			// 		//强制渲染
+			// 		that.$forceUpdate()
+					
+			// 	}
+			// });
+			
 			uni.getStorage({
 				key: 'userInfo',
 				success(res) {
@@ -113,8 +150,9 @@
 			});
 			
 			
-			this.getAvator()
-			this.getBackground()
+			
+			// this.getAvator()
+			// this.getBackground()
 		},
 
 		// components: {
@@ -123,6 +161,7 @@
 
 
 		methods: {
+			
 			getAvator() {
 				let res = uni.getStorageSync('avator')
 				this.userpic = res
@@ -139,19 +178,27 @@
 					sourceType: ["album", "camera"],
 					success: (res) => {
 						console.log(res);
+						
 						this.userpic = res.tempFilePaths[0];
-						// 保存头像路径
-						uni.setStorage({
-							key: 'avator',
-							data: res.tempFilePaths[0],
-							success: function() {
-								console.log('avator was saved successfully');
-							}
-						})
+						
+						//同步保存背景路径
+						uni.setStorageSync('avator',res.tempFilePaths[0]);
+						// // 保存头像路径
+						// uni.setStorage({
+						// 	key: 'avator',
+						// 	data: res.tempFilePaths[0],
+						// 	success: function() {
+						// 		console.log('avator was saved successfully');
+						// 	}
+						// })
 
 					}
-				})
+				});
+				
 			},
+			onError(e) {
+			      console.error('图片加载失败：', e);
+			    },
 			onuploadbkphoto() {
 				uni.chooseImage({
 					count: 1,
@@ -159,15 +206,18 @@
 					sourceType: ["album", "camera"],
 					success: (res) => {
 						console.log(res);
+						
 						this.userbk = res.tempFilePaths[0]
-						// 保存背景路径
-						uni.setStorage({
-							key: 'background',
-							data: res.tempFilePaths[0],
-							success: function() {
-								console.log('background was saved successfully');
-							}
-						})
+						//同步保存背景路径
+						uni.setStorageSync('background',res.tempFilePaths[0]);
+						// // 保存背景路径
+						// uni.setStorage({
+						// 	key: 'background',
+						// 	data: res.tempFilePaths[0],
+						// 	success: function() {
+						// 		console.log('background was saved successfully');
+						// 	}
+						// })
 					}
 				})
 			},
