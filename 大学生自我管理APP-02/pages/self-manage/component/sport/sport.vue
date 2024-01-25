@@ -39,7 +39,7 @@
 			<view class="select_box" v-if="activePopUp">
 				<view class="select_item_1" @click="to_add">添加</view> <!--添加计划/记录-->
 				<view class="select_item_2" @click="to_achieve">奖励</view>
-				<view class="select_item_3" @click="to_analyse">统计</view>
+				<!--<view class="select_item_3" @click="to_analyse">统计</view>-->
 			</view>
 			<view class="button" @click="popUp"></view>
 		</view>
@@ -563,8 +563,10 @@
 		width: 50px;
 		height: 50px;
 		position: fixed;
-		right: 30%;
-		bottom: 10%;
+		/*right: 30%;
+		bottom: 10%;*/
+		right: 22%;
+		bottom: 3%;
 		border-radius: 50%;
 		background-color: #d9f5db;
 		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
