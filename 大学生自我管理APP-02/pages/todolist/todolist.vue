@@ -29,27 +29,50 @@
 			</view>
 		</view>
 
-
-		<view class="todo-content" style="z-index: 0" v-for="(item, index) in listData" :key="item.title">
-
-			<view class="todo-list" :style="{ backgroundColor: item.color }" :class="{ 'todo--finish': item.select }"
-				@click="childItem(item, index)">
-				<view class="todo-list_checkbox">
-					<view class="checkbox"></view>
+		<view class="todo-content-outside">
+			<view class="todo-content" style="z-index: 0" v-for="(item, index) in listData" :key="item.title">
+				<view class="todo-time">
+					<view class="todo-time_year">{{item.year}}</view>
+					<view class="todo-time_day_outside">
+						<view class="todo-time_day">
+							<view>1月25日</view>
+							<view>周四</view>
+						</view>
+						<uni-icons type="smallcircle" size="20" color="#cccccc" style="background-color: white;"></uni-icons>
+					</view>
 				</view>
-				<view class="todo-list_content">{{ item.title }}</view>
-				<view class="todo-list_mark">{{ item.mark }}</view>
-				<view class="todo-list_date">{{ item.date }}</view>
-
-
-				<view class="todo-list_cycles">{{item.cycletime}}</view>
-
-				<!-- 新增删除按钮 -->
-				<view class="delete-btn" @click.stop="deleteEvent(item, index)">x</view>
-
+				<view class="todo-list-outside">
+					<view class="todo-list_time">
+						{{item.time}}
+					</view>
+					<view class="item-head" :style="{backgroundColor:item.color,color:item.color }" >1</view>
+					<view class="todo-list" :class="{ 'todo--finish': item.select }"
+					@click="childItem(item, index)">
+						
+						<view class="todo-list_checkbox">
+							<view class="checkbox"></view>
+						</view>
+						<view>
+							<view class="todo-list_title">{{ item.title }}</view>
+							<view class="todo-list_content">
+								<view class="todo-list_content_inside">
+									<uni-icons type="compose" size="17" color="#7e7e7e"></uni-icons>
+									<view>{{ item.mark }}</view>
+								</view>
+								<view class="todo-list_content_inside" v-if="item.cycletime">
+									<uni-icons type="refreshempty" size="17" color="#7e7e7e"></uni-icons>
+									<view>{{item.cycletime}}</view>
+								</view>
+								
+							</view>	
+						</view>
+						<!-- 新增删除按钮 -->
+						<uni-icons type="closeempty" size="13" color="#cccccc" class="delete-btn" @click="deleteEvent(item, index)"></uni-icons>
+					</view>
+					
+				
+				</view>
 			</view>
-
-
 		</view>
 
 		<SimpleDateTimePicker ref="myPicker" @submit="handleSubmit" :start-year="2023" :end-year="2030" />
@@ -116,10 +139,7 @@
 		</view>
 	</view>
 
-
-
-
-
+	<view class="br"></view>
 </template>
 
 <script>
@@ -127,24 +147,24 @@
 
 	const EVENT_TYPES = [{
 			name: '作业',
-			color: '#FFB6C1'
+			color: '#1a7482'
 		},
 		{
 			name: '考试',
-			color: '#fca800'
+			color: '#66c0a4'
 
 		},
 		{
 			name: '运动',
-			color: '#90EE90'
+			color: '#e95d54'
 		},
 		{
 			name: '娱乐',
-			color: '#ADD8E6'
+			color: '#f9cfc8'
 		},
 		{
 			name: '社会工作',
-			color: '#aaaaff'
+			color: '#f9e9a0'
 		}
 	];
 	export default {
@@ -162,42 +182,55 @@
 				text: "全部",
 				tabList: ['全部', '今天', '作业', '考试', '运动', '娱乐', '社会工作'],
 				list: [{
+						year:'2023',
+						date:'01-29',
 						title: '学习java',
 						mark: '图书馆',
 						select: true,
-						color: '#FFB6C1',
-						cycletime: '周一, 周三, 周五 20:30'
+						color: '#1a7482',
+						cycletime: '周一, 周三, 周五',
+						time: '9:00'
 					},
 					{
+						year:'2023',
 						title: '看电影',
 						mark: '电影院',
 						select: true,
-						color: '#ADD8E6',
-						date: '2023-05-16 11:10',
+						color: '#f9cfc8',
+						date: '05-16',
+						time: '13:00',
 					},
 					{
+						year:'2024',
+						date:'01-26',
 						title: '打篮球',
 						mark: '一期操场',
 						select: false,
-						color: '#90EE90',
-						cycletime: '每日 14:00',
-						cycles: ["每日"]
+						color: '#e95d54',
+						cycletime: '每日',
+						cycles: ["每日"],
+						time: '19:30',
 					},
 					{
+						year:'2024',
+						date:'01-27',
 						title: '义工活动',
 						mark: '养老院',
 						select: false,
-						color: '#aaaaff',
-						cycletime: '周六, 周日 9:30',
-						cycles: ["周六", "周日"]
+						color: '#f9e9a0',
+						cycletime: '周六, 周日',
+						cycles: ["周六", "周日"],
+						time: '9:00',
 					},
 					{
+						year:'2024',
 						title: '高数考试',
 						mark: '学武楼',
 						day: '2023-05-21',
 						select: false,
-						color: '#fca800',
-						date: '2023-05-21 8:00',
+						color: '#66c0a4',
+						date: '05-21',
+						time:'10:30'
 					},
 				],
 				day: "",
@@ -254,6 +287,7 @@
 				buttonText1: "全部",
 				selectedOption: "全部",
 				showOptions: false, // 是否显示选项列表
+				nowlist:[],
 			};
 		},
 
@@ -275,43 +309,48 @@
 
 				//点击全部
 				if (this.tabIndex == 0) {
-
+					that.nowlist = JSON.parse(JSON.stringify(list));
 					return list;
 				} else if (this.tabIndex == 2) {
 					list.forEach(v => {
-						if (v.color == '#FFB6C1') {
+						if (v.color == '#1a7482') {
 							newList.push(v);
 						}
 					});
+					that.nowlist = JSON.parse(JSON.stringify(newList));
 					return newList;
 				} else if (this.tabIndex == 3) {
 					list.forEach(v => {
-						if (v.color == '#fca800') {
+						if (v.color == '#66c0a4') {
 							newList.push(v);
 						}
 					});
+					that.nowlist = JSON.parse(JSON.stringify(newList));
 					return newList;
 				} else if (this.tabIndex == 4) {
 					list.forEach(v => {
-						if (v.color == '#90EE90') {
+						if (v.color == '#e95d54') {
 							newList.push(v);
 						}
 					});
+					that.nowlist = JSON.parse(JSON.stringify(newList));
 					return newList;
 				} else if (this.tabIndex == 5) {
 					list.forEach(v => {
-						if (v.color == '#ADD8E6') {
+						if (v.color == '#f9cfc8') {
 							newList.push(v);
 						}
 					});
+					that.nowlist = JSON.parse(JSON.stringify(newList));
 					return newList;
 				} else if (this.tabIndex == 6) {
 					list.forEach(v => {
-						if (v.color == '#aaaaff') {
+						if (v.color == '#f9e9a0') {
 
 							newList.push(v);
 						}
 					});
+					that.nowlist = JSON.parse(JSON.stringify(newList));
 					return newList;
 				} else if (this.tabIndex == 1) {
 					list.forEach(v => {
@@ -326,6 +365,7 @@
 							newList.push(v);
 						}
 					});
+					that.nowlist = JSON.parse(JSON.stringify(newList));
 					return newList;
 				}
 			}
@@ -512,7 +552,7 @@
 					day: this.day,
 					color: this.eventTypeColors[this.eventTypeIndex],
 					cycles: this.selectId,
-					cycletime: `${this.selectId.join(', ')} ${this.time}`,
+					cycletime: `${this.selectId.join(', ')}`,
 					time: this.time,
 				});
 				
@@ -579,7 +619,7 @@
 		color: #333333;
 		height: 45px;
 		box-shadow: -1px 1px 5px 0 rgba(0, 0, 0, 0.1);
-		background-color: #ffffff;
+		
 	}
 
 	.todo-header_left {
@@ -655,46 +695,133 @@
 		color: #279abf;
 	}
 
+	.todo-content-outside{
+		margin-top: 5%;
+		margin-left: 25%;
+		border-width: 0 0 0 2px;
+		border-style: dashed;
+		border-color: #CCCCCC;
+		
+	}
 	.todo-content {
 		position: relative;
 	}
-
+	
+	.todo-time{
+		position: relative;
+		left: -30%;
+		width: 30%;
+	}
+	
+	.todo-time_year{
+		display: flex;
+		justify-content: center;
+		font-size: 13px;
+		width: 80%;
+		background-color: #ccc;
+		border-radius: 5px;
+		margin: 3px;
+	}
+	
+	.todo-time_day_outside{
+		position: relative;
+		left: 10%;
+		display: flex;
+		align-items: center;
+		width: 100%;
+		margin: 3px;
+	}
+	
+	.todo-time_day{
+		font-size: 16px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		font-weight: 700;
+	}
+	
+	/*.todo-time_time{
+		display: flex;
+		justify-content: flex-end;
+		padding-right: 10%;
+		margin: 3px;
+	}*/
+	.todo-list-outside{
+		display: flex;
+		justify-content: space-between;
+		width: 118%;
+		position: relative;
+		left: -25%;
+		margin: 7px;
+	}
+	.todo-list_time{
+		font-size: 14px;
+		font-weight: 450;
+		width: 15%;
+		margin-left: 3%;
+		align-items: center;
+		color: #656565;
+	}
 	.todo-list {
 		position: relative;
 		display: flex;
 		align-items: center;
-		padding: 15px;
-		margin: 15px;
-		color: #0c3854;
+		width: 70%;
+		margin-right: 3%;
+		padding: 6px 15px 6px 10px;
 		font-size: 14px;
 		border-radius: 10px;
-		background: #cfebfd;
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 		overflow: hidden;
+		z-index: 1;
 	}
-
-	.todo-list::after {
+	.item-head{
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height:30px;
+		width: 6px;
+		border-radius: 30px;
+		color: #aae0c3;
+		top: 20%;
+		left: 17.5%;
+	}
+	/*.todo-list::after {
 		position: absolute;
 		content: '';
 		top: 0;
 		bottom: 0;
 		left: 0;
 		width: 5px;
-		background: #91d1e8;
-	}
+		background: #66c0a4;
+	}*/
 
 	.todo-list_checkbox {
 		padding-right: 15px;
 	}
 
 	.checkbox {
-		width: 20px;
-		height: 20px;
+		width: 15px;
+		height: 15px;
 		border-radius: 50%;
 		background: #ffffff;
 		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
 	}
-
+	
+	.todo-list_content{
+		display: flex;
+		justify-content: space-around;
+		margin: 5px 0 0 0;
+	}
+	.todo-list_content_inside{
+		display: flex;
+		font-size: 13px;
+		color: #7e7e7e;
+		margin-right: 5px;
+	}
+	
 	.todo--finish .checkbox {
 		position: relative;
 		background: #eee;
@@ -715,7 +842,7 @@
 		box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.2) inset;
 	}
 
-	.todo--finish .todo-list_content {
+	.todo--finish .todo-list_title {
 		color: #999;
 	}
 
@@ -737,7 +864,7 @@
 		top: 0;
 		bottom: 0;
 		left: 40px;
-		right: 10px;
+		right: 25px;
 		height: 2px;
 		margin: auto 0;
 		background: #bdcdd8;
@@ -931,21 +1058,20 @@
 
 	.delete-btn {
 		position: absolute;
-		right: 2px;
+		right: 6px;
 		top: 50%;
 		transform: translateY(-50%);
-		font-size: 15px;
 		color: #494d45;
 		cursor: pointer;
 		transition: transform 0.3s;
 	}
 
 	.delete-btn:hover {
-		color: #f00;
+		color: #81c0ab;
 		transform: scale(1.2) translateY(-50%);
 	}
-
-	.todo-list_date {
+	
+	/*.todo-list_date {
 		position: absolute;
 		right: 20px;
 		top: 50%;
@@ -976,5 +1102,8 @@
 		color: #454545;
 		cursor: pointer;
 		transition: transform 0.3s;
+	}*/
+	.br{/*留空*/
+		height: 200px;
 	}
 </style>

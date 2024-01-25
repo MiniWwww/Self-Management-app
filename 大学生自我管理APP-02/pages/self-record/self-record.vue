@@ -8,19 +8,30 @@
 					<image class="header" mode="aspectFill" :src="userhead"></image>
 				</view>
 				<view class="top-name">{{username}}</view>
+				<view class="top-sig">这里加一个个性签名</view>
 			</view>
 		</view>
 		
 		<!-- 记录数据posts -->
 		<view class="moments__post" v-for="(post,index) in posts" :key="index" :id="'post-'+index">
-			<view class="post-left">
-				<!-- 发布该条记录的用户头像 -->
-				<image class="post_header" mode="aspectFill" :src="post.header_image" @click="bindClick(index)"></image>
+			
+			<view class="post-top-outside">
+				<view class="post-top">
+					<view class="post-left">
+						<!-- 发布该条记录的用户头像 -->
+						<image class="post_header" mode="aspectFill" :src="post.header_image"></image>
+					</view>
+					
+					<view class="post_right">
+						<!-- 用户名及文本内容 -->
+						<text class="post-username">{{post.username}}</text>
+						<view class="timestamp">{{post.timestamp}}</view>
+					</view>
+				</view>
+				<uni-icons type="trash" size="22" color="white" class="trash" @click="bindClick(index)"></uni-icons>
 			</view>
-
-			<view class="post_right">
-				<!-- 用户名及文本内容 -->
-				<text class="post-username">{{post.username}}</text>
+			<view class="post_content">
+				<!--内容-->
 				<view id="paragraph" class="paragraph">{{post.content.text}}</view>
 				<!-- 图片 -->
 				<view class="thumbnails">
@@ -30,17 +41,19 @@
 				</view>
 				<!-- 操作选项 -->
 				<view class="toolbar">
-					<view class="timestamp">{{post.timestamp}}</view>
 					<view class="like" @tap="like(index)">
-						<image :src="post.islike===0?'../../static/self-record/index/islike.png':'../../static/self-record/index/like.png'"></image>
+							<!--<image :src="post.islike===0?'../../static/self-record/index/islike.png':'../../static/self-record/index/like.png'"></image>-->
+							<uni-icons v-if="!post.islike" type="hand-up" color="white" size="22"></uni-icons>
+							<uni-icons v-if="post.islike" type="hand-up-filled" color="white" size="22"></uni-icons>
 					</view>
 					<view class="comment" @tap="comment(index)">
-						<image src="../../static/self-record/index/comment.png"></image>
+						<!--<image src="../../static/self-record/index/comment.png"></image>-->
+						<uni-icons type="chatbubble" color="white" size="22"></uni-icons>
 					</view>
 				</view>
 				<!-- 点赞与评论 -->
 				<view class="post-footer">
-					<view class="footer_content">
+					<view class="footer_content" >
 						<image class="liked" src="../../static/self-record/index/liked.png"></image>
 						<text class="nickname" v-for="(user,index_like) in post.like" :key="index_like">{{user.username}}</text>
 					</view>
@@ -50,6 +63,7 @@
 				</view>
 			</view>
 		</view>
+		
 		<!-- 结束posts -->
 
 		<view class="foot" v-show="showInput">
@@ -102,7 +116,7 @@
 						"islike": 0,
 						"like": [{
 								"uid": 1,
-								"username": "系统"
+								"username": "系统",
 							}
 						],
 						"comments": {
@@ -392,7 +406,7 @@
 
 				if (this.is_reply) {
 					var reply_username = this.posts[this.index].comments.comment[this.comment_index].username;
-					var comment_content = '回复' + reply_username + ':' + message.content;
+					var comment_content = '回复' + reply_username + '：' + message.content;
 				} else {
 					var comment_content = message.content;
 				}
@@ -461,13 +475,13 @@
 					this.posts[index].islike = 1;
 					this.posts[index].like.push({
 						"uid": this.user_id,
-						"username": "," + this.username
+						"username": "，" + this.username
 					});
 				} else {
 					this.posts[index].islike = 0;
 					this.posts[index].like.splice(this.posts[index].like.indexOf({
 						"uid": this.user_id,
-						"username": "," + this.username
+						"username": "，" + this.username
 					}), 1);
 				}
 				uni.setStorageSync('self-record-posts',this.posts);

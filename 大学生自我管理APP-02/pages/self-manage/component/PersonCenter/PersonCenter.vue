@@ -79,7 +79,7 @@
 				userpic: '',
 				iconType: 'compose',
 				mydata: {
-					nickname: '我的昵称',
+					nickname: '我',
 					name: '张三',
 					gender: '女',
 					age: '17',
@@ -105,7 +105,7 @@
 			this.userpic = avator;
 			console.log('个人中心onShow获取后的头像'+this.userpic);
 			}else{
-				this.userpic='../../../../static/night.png';
+				this.userpic='../../../../static/self-record/user-head.png';
 			}
 			
 			let backGround = uni.getStorageSync('background');
