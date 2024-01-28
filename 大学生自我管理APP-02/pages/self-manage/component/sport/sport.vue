@@ -167,6 +167,7 @@
 						data: { //存的数据可以是很多条
 								
 								content:that.ListData[index].title,
+								
 					
 						},
 					
@@ -251,6 +252,12 @@
 									i.finish_times=i.finish_times+1;
 									i.all_finish_times=i.all_finish_times+1;
 									console.log('完成项',i);
+									uni.setStorage({
+										key:'plus_finishTime',
+										data:{
+											all_finish_times:i.all_finish_times
+										}
+									})
 								}
 								else{
 									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
