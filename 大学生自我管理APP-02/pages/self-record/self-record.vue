@@ -677,7 +677,7 @@
 					let sleep_goal=successData.sleep_goal
 					let sleep_time=successData.sleep_time
 					
-					let content = '恭喜你！完成今天的睡眠目标\n起床目标  '+getup_goal+ '  起床时间  '+getup_time+ '\n睡眠目标：  ' + sleep_goal+'  今日睡眠时间： ' +sleep_time
+					let content = '恭喜你！完成今天的睡眠目标\n\n起床目标  '+getup_goal+ '  起床时间  '+getup_time+ '\n睡眠目标：  ' + sleep_goal+'  今日睡眠时间： ' +sleep_time
 					
 				this.system_remind(now.getTime(), content);
 				// 清除，否则一直刷新一直发

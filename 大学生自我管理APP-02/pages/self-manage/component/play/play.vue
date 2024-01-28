@@ -338,60 +338,7 @@
 
 				// 2023-7-31新增
 				testList: [],
-				swipeList: [{
-						id: 0,
-						options: [{
-								text: '删除',
-								style: {
-									backgroundColor: 'rgb(255,58,49)'
-								}
-							},
-
-							{
-								text: '完成',
-								style: {
-									backgroundColor: 'rgb(254,156,1)'
-								}
-							}, {
-								text: '置顶'
-							}
-
-						],
-						content: '例:去一次livehouse',
-						starttime: '2023-7-21',
-						endttime: '2023-7-22',
-						timetype0: true,
-						timetype1: false,
-						isdone: false,
-						checkbox2: []
-					},
-					{
-						id: 1,
-						options: [{
-								text: '删除',
-								style: {
-									backgroundColor: 'rgb(255,58,49)'
-								}
-							},
-
-							{
-								text: '完成',
-								style: {
-									backgroundColor: 'rgb(254,156,1)'
-								}
-							}, {
-								text: '置顶'
-							}
-						],
-						content: '例:散散步',
-						starttime: '2023-7-23',
-						endttime: '2023-7-25',
-						timetype0: false,
-						timetype1: true,
-						isdone: false,
-						checkbox2: ["每周一", "每周二", "每周三"]
-					}
-				],
+				swipeList: [],
 
 				// 2023-7-31新增结束
 
@@ -450,6 +397,7 @@
 		// 所以要到self-management.vue那里写
 		onShow() {
 
+			
 			// uni.getStorage({
 			// 	key: 'playGoalDATA',
 			// 	success(res) {
@@ -462,41 +410,107 @@
 			// });
 
 		},
-		
-		// onLoad() {
-		// 	// 监听事件
-		// 	uni.$on('SendToPlaySwipetList', function(data) {
-		// 		this.swipeList = data
-		// 		console.log('A页面传的值为:' + data);
-		// 	});
-		// },
-		// onUnload() {
-		// 	// 移除监听事件
-		// 	uni.$off('SendToPlaySwipetList');
-		// },
-		// onLoad() {
-		// 	// 监听事件  
-
-		// 	uni.$on('addnewGoal', (data) => {
-		// 		console.log('收到数据' + data)
-		// 		that.uitem = data;
-		// 	})
-
-		// },
-		// onUnload() {
-		// 	// 移除监听事件  
-		// 	uni.$off('addnewGoal');
-		// },
-		// 2023-7-30添加结束
+		  
 		// // 钩子：
 		mounted() {
-		    uni.$on('updateSwipeList', (list) => {
-		      this.swipeList = list;
-			  console.log('play页面监听到self-management传来的值了！');
-		    });
+			console.log('这是play页面的mounted监听函数');
+		    
 			// 移除监听事件
-				uni.$off('addnewGoal');
+				// uni.$off('addnewGoal');
 		  },
+		created() {
+			var that=this;
+			console.log('这是play页面的created监听函数');
+			console.log('当前swipeList:',this.swipeList);
+			//能获取成功，但报别的错误
+			// uni.getStorage({
+			// 	key:'update_playEvent',
+			// 	success(res) {
+			// 		console.log('获取娱乐事件数组成功',res.data);
+			// 		that.Two_dimensional_array=res.data;
+			// 		console.log('获取后的Two_dimensional_array：',that.Two_dimensional_array);
+			// 	}
+			// }),
+			
+			uni.getStorage({
+				key: 'playGoalDATA',
+				success(res) {
+					if(res!=null){
+					that.swipeList =res.data.PlayGoalList;
+					console.log('uni.getTorage接收后的swipeList:',that.swipeList);
+					}
+				},
+				fail(){
+							console.log('获取失败');
+							that.swipeList=[{
+									id: 0,
+									options: [{
+											text: '删除',
+											style: {
+												backgroundColor: 'rgb(255,58,49)'
+											}
+										},
+							
+										{
+											text: '完成',
+											style: {
+												backgroundColor: 'rgb(254,156,1)'
+											}
+										}, {
+											text: '置顶'
+										}
+							
+									],
+									content: '例:去一次livehouse',
+									starttime: '2023-7-21',
+									endttime: '2023-7-22',
+									timetype0: true,
+									timetype1: false,
+									isdone: false,
+									checkbox2: []
+								},
+								{
+									id: 1,
+									options: [{
+											text: '删除',
+											style: {
+												backgroundColor: 'rgb(255,58,49)'
+											}
+										},
+							
+										{
+											text: '完成',
+											style: {
+												backgroundColor: 'rgb(254,156,1)'
+											}
+										}, {
+											text: '置顶'
+										}
+									],
+									content: '例:散散步',
+									starttime: '2023-7-23',
+									endttime: '2023-7-25',
+									timetype0: false,
+									timetype1: true,
+									isdone: false,
+									checkbox2: ["每周一", "每周二", "每周三"]
+								}
+							]
+						
+				}
+				
+			});
+			
+			
+			
+			//用uni.$emit发射，play页面uni.$on接收总是有延迟，每次都得uni.$emit 娱乐页面才有数据，所以弃用
+			// uni.$on('updateSwipeList', (list) => {
+			// 	if(list!=null){
+			//   this.swipeList = list;
+			//   console.log('play页面监听到self-management传来的值了！',list);
+			//   }
+			// });
+		} ,
 		methods: {
 			//2023-9-10添加
 
@@ -799,11 +813,22 @@
 				this.value = val
 				//调用add方法
 				this.add(),
+				
 					// 关闭窗口后，恢复默认内容
-					this.$refs.inputModal.close()
+					this.$refs.inputModal.close();
+					
 
 			},
-
+			savePlayEvent(){
+				var that=this;
+				uni.setStorage({
+					key:'update_playEvent',
+					data:that.Two_dimensional_array,
+					success: function () {
+						console.log('娱乐事件的二维数组存储成功！');
+					}
+				})
+			},
 			changeTwo_dimen(listID, listIndex) {
 				console.log(listID);
 				console.log('点击了第', listIndex, '个宫格');
@@ -927,6 +952,7 @@
 
 
 						});
+						
 						console.log('添加后最新二维数组的一维数组长度' + this.Two_dimensional_array[Two_dimensional_arrayLength - 1].list
 							.length);
 
@@ -936,8 +962,10 @@
 						console.log('当前第' + i2 + '个数组的isfull为：' + this.Two_dimensional_array[i2].isfull)
 						// 一旦找到一个数组了，那就跳出for循环
 						// i=Two_dimensional_arrayLength;
+						this.savePlayEvent();
 						break;
-
+						
+						
 
 					}
 
@@ -971,7 +999,8 @@
 
 							console.log("(下标从0开始)删除第" + index + "个")
 							that.Two_dimensional_array[index].list.splice(listindex, 1);
-							that.Two_dimensional_array[index].isfull = false
+							that.Two_dimensional_array[index].isfull = false;
+							that.savePlayEvent();
 							// that.dynamicList.splice(index, 1)
 
 

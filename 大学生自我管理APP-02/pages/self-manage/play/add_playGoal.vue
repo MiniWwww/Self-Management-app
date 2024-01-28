@@ -14,21 +14,12 @@
 			<uni-card title="时间类型">
 				<uni-data-checkbox v-model="baseFormData.time" :localdata="time_type" @change="choosetimetype" />
 			</uni-card>
-
-			<!-- <view v-if="item.timetype0" class="uni-form-item-date">
-				<button class="calendar-button" type="button" @click="opencalendar">时间段选择(同一天请点击两次)</button>
-				<uni-calendar ref="calendar" class="uni-calendar-hook" :clear-date="true" :date="info.date"
-					:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
-					:range="info.range" @confirm="confirm" @close="close" />
-			</view> -->
-			<!-- 2023-10-24添加 -->
-			
 			
 			<uni-card v-if="item.timetype0" title="选择时间范围">
 			<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
 			
 				<view class="example-body">
-					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date" :end="TodayDate" />
+					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date"  />
 				</view>
 			</uni-card>
 			
