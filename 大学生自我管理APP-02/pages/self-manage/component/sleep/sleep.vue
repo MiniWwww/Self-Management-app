@@ -82,10 +82,10 @@
 				sleep_success: false,
 				getup_like: false,
 				sleep_like:false,
-				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
-				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'}],
+				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
+				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
 				success_list:[{getup_goal:'7:00', getup_time:'6:30',sleep_goal:'23:00', sleep_time:'22:55', date:'2023年07月25日 星期二'}],
-				sleep_success_Count:Number,
+				
 				
 			};
 		},
@@ -142,6 +142,13 @@
 									date:that.today,
 								}
 								that.getup_success_list.push(obj);
+								uni.setStorage({
+									key:'getup_success_list',
+									data:that.getup_success_list,
+									success() {
+										console.log('getup_success_list储存成功');
+									}
+								});
 								
 								uni.showToast({
 									title:'起床时间：'+that.getup_time+'\n起床目标达成，给自己点个赞吧！',
@@ -178,6 +185,13 @@
 									date:that.today,
 								}
 								that.sleep_success_list.push(obj);
+								uni.setStorage({
+									key:'sleep_success_list',
+									data:that.sleep_success_list,
+									success() {
+										console.log('sleep_success_list储存成功');
+									}
+								});
 								var i=that.getup_success_list.find(item=>(item.date==obj.date));
 								if(i){
 									let obj={
@@ -188,6 +202,21 @@
 										date:that.today,
 									}
 									that.success_list.push(obj);
+									uni.setStorage({ //存入Storage
+										key: 'Today_getup_sleep_GoalSuccess', //自己取个名字
+										data: { //存的数据可以是很多条
+												
+												getup_goal:that.getup_goal,
+												getup_time:that.getup_time,
+												sleep_goal:that.sleep_goal,
+												sleep_time:that.sleep_time,
+									
+										},
+									
+										success() {
+											console.log('sleepGoalSuccess储存成功');
+										}
+									});
 								}
 								uni.showToast({
 									title:'就寝时间：'+that.sleep_time+'\n就寝目标达成，给自己点个赞吧！',
@@ -196,19 +225,7 @@
 								})
 								console.log(that.sleep_success_list);
 								
-								uni.setStorage({ //存入Storage
-									key: 'sleepGoalSuccess', //自己取个名字
-									data: { //存的数据可以是很多条
-											
-											sleep_time:that.sleep_time,
-											sleep_goal:that.sleep_goal,
 								
-									},
-								
-									success() {
-										console.log('sleepGoalSuccess储存成功');
-									}
-								});
 							}
 							else{
 								uni.showToast({
@@ -223,23 +240,29 @@
 			},
 			like_getup(){
 				this.getup_like=true;
+				var that=this;
+				var GetUp_Success_count=that.getup_success_list.length;
+				uni.setStorage({ //存入Storage
+					key: 'getup_like_Count', //自己取个名字
+					data: { //存的数据可以是很多条
+						
+					getup_like_Count:GetUp_Success_count,
+					},
+				
+					success() {
+						console.log('GetUp_Success_count起床达成赞数加一并且储存成功');
+					}
+				});
 			},
 			like_sleep(){
 				this.sleep_like=true;
 				var that=this;
-				uni.getStorage({
-					key: 'sleep_like_Count',
-					success(res) {
-				
-						console.log('获取睡眠达成赞数成功', res.data);
-						that.sleep_success_Count=res.data.sleep_like_Count;
-					}
-				});
+				var Sleep_Success_count=that.sleep_success_list.length;
 				uni.setStorage({ //存入Storage
 					key: 'sleep_like_Count', //自己取个名字
 					data: { //存的数据可以是很多条
 						
-					sleep_like_Count:that.sleep_success_Count+1,
+					sleep_like_Count:Sleep_Success_count,
 					},
 				
 					success() {

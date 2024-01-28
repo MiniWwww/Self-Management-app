@@ -58,7 +58,7 @@
 			</view>
 		</view>
 		
-		<view v-for="(item, index) in getup_awardList" :key="index" style="z-index: 0;" v-if="all||tabIndex==2"><!--起-->
+		<view v-for="(item, index) in getup_awardList" :key="index" style="z-index: 0;" v-if="all||tabIndex==2" ><!--起-->
 			<view class="allAward_box" >	
 				
 				<view class="awardContent" style="background: #f1ffef;"><!--奖励内容（可修改-->
@@ -103,7 +103,7 @@
 			</view>
 		</view>
 		
-		<view v-for="(item, index) in sleep_awardList" :key="index" style="z-index: 0;" v-if="all||tabIndex==3"><!--睡-->
+		<view v-for="(item, index) in sleep_awardList" :key="index" style="z-index: 0;" v-if="all||tabIndex==3" ><!--睡-->
 			<view class="allAward_box" >	
 				
 				<view class="awardContent" style="background: #fff2f4;"><!--奖励内容（可修改-->
@@ -120,7 +120,7 @@
 				
 				<view class="achieve_times_box">
 					<view class="achieve_times_item" @click="changeAward_times(3,index)"> <!--目标点赞数（可修改-->
-						<circle-progress-bar :pro="1" :border_back_color="'#cacaca'" :border_color="'#ecebf5'" style="width: 60px;height: 60px;z-index: 0;">
+						<circle-progress-bar :pro="1" :border_back_color="'#cacaca'" :border_color="'#ecebf5'" style="width: 60px;height: 60px;z-index: 0;" @error="ShowError">
 							{{item.times}}
 						</circle-progress-bar>
 						<view style="margin-top: 5px;">
@@ -209,8 +209,8 @@
 				getup_awardList:[{content:'火锅', times:10},{content:'烤肉', times:15}],
 				sleep_awardList:[{content:'看电影', times:2},{content:'逛街', times:15}],
 				
-				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
-				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'}],
+				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
+				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
 				success_list:[{getup_goal:'7:00', getup_time:'6:30',sleep_goal:'23:00', sleep_time:'22:55', date:'2023年07月25日 星期二'}],
 				
 			}
@@ -228,6 +228,56 @@
 				// console.log('success_list',that.success_list);
 			});
 			
+		},
+		onLoad(){
+			// console.log('这里是要运行sleep_award的onLoad了');
+			// this.saveGetUpAwardList();
+		},
+		onShow() {
+			var that=this;
+			
+			uni.getStorage({
+				key:'SleepAward',
+				success(res) {
+					console.log('onShow前当前睡眠奖励列表',that.sleep_awardList)
+					console.log('onShow获取睡眠奖励列表成功', res.data);
+					that.sleep_awardList= res.data.sleep_awardList;
+					console.log('onShow后当前睡眠奖励列表',that.sleep_awardList)
+				}
+				
+			});
+			uni.getStorage({
+				key:'GetUpAward',
+				success(res) {
+					console.log('onShow前当前起床奖励列表',that.getup_awardList)
+					console.log('onShow获取起床奖励列表成功', res.data);
+					that.getup_awardList= res.data.getup_awardList;
+					console.log('onShow后当前起床奖励列表',that.getup_awardList)
+				}
+				
+			});
+			
+			
+			uni.getStorage({
+				key: 'getup_success_list',
+				success(res) {
+					console.log('onshow获取前getup_success_list：', that.getup_success_list);
+					console.log('onshow获取getup_success_list成功', res.data);
+					that.getup_success_list=res.data;
+					console.log('onshow获取后getup_success_list：', that.getup_success_list);
+					
+				}
+			});
+			
+			uni.getStorage({
+				key: 'sleep_success_list',
+				success(res) {
+					console.log('onshow获取前sleep_success_list：', that.sleep_success_list);
+					console.log('获取sleep_success_list成功', res.data);
+					that.sleep_success_list=res.data;
+					console.log('onshow获取后sleep_success_list：', that.sleep_success_list);
+				}
+			});
 		},
 		computed:{
 			ListData(){
@@ -249,6 +299,9 @@
 			}
 		},
 		methods: {
+			ShowError(e){
+				console.log("渲染失败",e);
+			},
 			tabClick(item, index) {
 				this.text = item;
 				this.tabIndex = index;
@@ -280,6 +333,7 @@
 						break;
 					case 2:
 						that.getup_awardList[that.clickidnex].content=e;
+						that.saveGetUpAwardList();
 						break;
 					case 3:
 						that.sleep_awardList[that.clickidnex].content=e;
@@ -313,6 +367,7 @@
 						break;
 					case 2:
 						that.getup_awardList[that.clickidnex].times=e;
+						that.saveGetUpAwardList();
 						break;
 					case 3:
 						that.sleep_awardList[that.clickidnex].times=e;
@@ -339,6 +394,7 @@
 				if(that.listIndex==2){
 					list1=that.getup_awardList;
 					that.getup_awardList=that.deleteL(list1,item);
+					that.saveGetUpAwardList();
 				}
 				if(that.listIndex==3){
 					list1=that.sleep_awardList;
@@ -389,6 +445,7 @@
 				}
 				if(that.optionIndex==1){
 					that.getup_awardList.push(obj)
+					that.saveGetUpAwardList();
 				}
 				if(that.optionIndex==2){
 					that.sleep_awardList.push(obj)
@@ -400,9 +457,7 @@
 			},
 			saveSleepAwardList(){
 				var that=this;
-				// uni.removeStorage({
-				// 	key:'SleepAward',
-				// });
+				// uni.setStorageSync('SleepAward',that.sleep_awardList);
 				
 				uni.setStorage({ //存入Storage
 					key: 'SleepAward', //自己取个名字
@@ -416,17 +471,24 @@
 					}
 				});
 				
+				
+			},
+			saveGetUpAwardList(){
+				var that=this;
+				
 				uni.setStorage({ //存入Storage
-					key: 'sleep_like_Count', //自己取个名字
+					key: 'GetUpAward', //自己取个名字
 					data: { //存的数据可以是很多条
 						
-					sleep_like_Count:that.getup_success_list.length,
+					getup_awardList:that.getup_awardList,
 					},
 				
 					success() {
-						console.log('sleep_like_Count睡眠达成赞数储存成功');
+						console.log('GetUpAward起床奖励储存成功');
 					}
 				});
+				
+				
 			}
 		}
 	}

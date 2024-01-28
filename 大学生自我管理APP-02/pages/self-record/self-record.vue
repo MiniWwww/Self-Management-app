@@ -74,8 +74,8 @@
 		
 		data() {
 			return {
-				sleep_award_list:[],
 				sleep_success_Count:Number,
+				getup_success_Count:Number,
 				days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
 				
 				//每条记录数据，注意每发布一条新的就插入数组头部
@@ -225,6 +225,9 @@
 			}else{
 				this.username ='我';
 			}
+			
+			this.sleep_success_Count=uni.getStorageSync('self-record-sleep_success_Count');
+			console.log('获取后的上一次sleep_success_Count',this.sleep_success_Count);
 			//获取当前时间，看系统是否需要发送鼓励消息
 			let now = new Date();
 			//获取now具体时间
@@ -271,9 +274,13 @@
 			// 完成一次运动
 			this.SportRemind();
 			// 睡眠目标完成
-			this.SleepRemind();
+			this.Getup_Sleep_Remind();
 			// 运动目标即将完成
 			this.SportGoingtoAchieveRemind();
+			//睡眠目标即将完成
+			this.SleepGoingtoAchiveRemind();
+			//起床目标即将完成
+			this.GetUpGoingtoAchiveRemind();
 			
 			
 			
@@ -643,21 +650,24 @@
 				}
 			},
 			
-			// 睡眠成就达成时
-			SleepRemind(){
+			// 起床睡眠成就达成时
+			Getup_Sleep_Remind(){
 				
-				let sleepData = uni.getStorageSync('sleepGoalSuccess')
-				console.log(sleepData);
-				if (sleepData.sleep_time!=null)
+				let successData = uni.getStorageSync('Today_getup_sleep_GoalSuccess')
+				console.log(successData);
+				if (successData.sleep_time!=null)
 				{
 					let now = new Date()
-					let sleep_goal=sleepData.sleep_goal
-					let sleep_time=sleepData.sleep_time
-					let content = '恭喜你！完成今天的睡眠目标  目标：  ' + sleep_goal+'  今日睡眠时间： ' +sleep_time
+					let getup_goal=successData.getup_goal
+					let getup_time=successData.getup_time
+					let sleep_goal=successData.sleep_goal
+					let sleep_time=successData.sleep_time
+					
+					let content = '恭喜你！完成今天的睡眠目标\n起床目标  '+getup_goal+ '  起床时间  '+getup_time+ '\n睡眠目标：  ' + sleep_goal+'  今日睡眠时间： ' +sleep_time
 					
 				this.system_remind(now.getTime(), content);
 				// 清除，否则一直刷新一直发
-				uni.removeStorageSync('sleepGoalSuccess')
+				uni.removeStorageSync('Today_getup_sleep_GoalSuccess')
 				}
 			},
 			//运动即将成就达成时的系统提醒
@@ -679,38 +689,75 @@
 			},
 			SleepGoingtoAchiveRemind(){
 				var that = this;
-				uni.getStorage({
-					key: 'SleepAward',
-					success(res) {
-						
-						console.log('获取SleepAward睡眠奖励信息成功', res.data);
-						that.sleep_award_list = res.data;
+				var sleep_award_list=uni.getStorageSync('SleepAward').sleep_awardList;
+				console.log('获取点赞总数后sleep_award_list：',sleep_award_list);
+				//要用同步的，不然uni.getStorage怎么都会相比于其他操作最后执行，且遇到var操作会先执行？
+				let New_sleep_success_Count=uni.getStorageSync('sleep_like_Count').sleep_like_Count;
+				console.log('原本sleep_success_Count：',that.sleep_success_Count);
+				console.log('获取点赞总数后New_sleep_success_Count：',New_sleep_success_Count);
+				if(sleep_award_list!=null&&(New_sleep_success_Count!=that.sleep_success_Count)){
+					for(let i=0;i<sleep_award_list.length;i++){
+							that.sleep_success_Count=New_sleep_success_Count;
+							uni.setStorageSync("self-record-sleep_success_Count",that.sleep_success_Count);
+							
+						let Divisor_result=(New_sleep_success_Count)/(sleep_award_list[i].times);
+						console.log('Divisor_result:',Divisor_result);
+						let differnumber=(sleep_award_list[i].times-New_sleep_success_Count);
+						console.log('differnumber:',differnumber);
+						if(differnumber>0&&Divisor_result>=0.8){
+							console.log("还差1/5就可以实现目标！");
+							
+							if (sleep_award_list[i].content!=null)
+							{
+								
+								let now = new Date()
+								let content = '睡眠目标提醒：还差'+differnumber+'个就达成' + sleep_award_list[i].times+'个'+sleep_award_list[i].content+'的睡眠目标了，加油噢！' 
+								
+							this.system_remind(now.getTime(), content);
+							}
+							
+						}
 					}
-				});
 				
-				uni.getStorage({
-					key: 'sleep_like_Count',
-					success(res) {
+				}else{
+					console.log('点赞数没变或者sleep_award_list为空！')
+				}
 				
-						console.log('获取睡眠达成赞数成功', res.data);
-						that.sleep_success_Count=res.data.sleep_like_Count;
+			},
+			GetUpGoingtoAchiveRemind(){
+				var that = this;
+				var getup_award_list=uni.getStorageSync('GetUpAward').getup_awardList;
+				console.log('获取点赞总数后getup_award_list：',getup_award_list);
+				//要用同步的，不然uni.getStorage怎么都会相比于其他操作最后执行，且遇到var操作会先执行？
+				let New_getup_success_Count=uni.getStorageSync('getup_like_Count').getup_like_Count;
+				console.log('原本getup_success_Count：',that.getup_success_Count);
+				console.log('获取点赞总数后New_getup_success_Count：',New_getup_success_Count);
+				if(getup_award_list!=null&&(New_getup_success_Count!=that.getup_success_Count)){
+					for(let i=0;i<getup_award_list.length;i++){
+							that.getup_success_Count=New_getup_success_Count;
+							uni.setStorageSync("self-record-getup_success_Count",that.getup_success_Count);
+							
+						let Divisor_result=(New_getup_success_Count)/(getup_award_list[i].times);
+						console.log('Divisor_result:',Divisor_result);
+						let differnumber=(getup_award_list[i].times-New_getup_success_Count);
+						console.log('differnumber:',differnumber);
+						if(differnumber>0&&Divisor_result>=0.8){
+							console.log("还差1/5就可以实现目标！");
+							
+							if (getup_award_list[i].content!=null)
+							{
+								
+								let now = new Date()
+								let content = '起床目标提醒：还差'+differnumber+'个就达成' + getup_award_list[i].times+'个'+getup_award_list[i].content+'的起床目标了，加油噢！' 
+								
+							this.system_remind(now.getTime(), content);
+							}
+							
+						}
 					}
-				});
 				
-				var Divisor_result=(that.sleep_success_Count)/(that.sleep_award_list.times);
-				var differnumber=(that.sleep_award_list.times-that.sleep_success_Count);
-				if(Divisor_result>=0.8){
-					console.log("还差1/5就可以实现目标！");
-					
-					if (sleep_award_list.content!=null)
-					{
-						
-						let now = new Date()
-						let content = '还差'+differnumber+'个就达成' + sleep_award_list.times+'个'+sleep_award_list.content+'的睡眠目标了，加油噢！' 
-						
-					this.system_remind(now.getTime(), content);
-					}
-					
+				}else{
+					console.log('点赞数没变或者getup_award_list为空！')
 				}
 				
 			}
