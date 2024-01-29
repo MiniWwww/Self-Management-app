@@ -416,6 +416,7 @@
 			let query = uni.createSelectorQuery();
 			let wh = uni.getSystemInfoSync().windowHeight;//可视区域高
 			query.select('.today').boundingClientRect(rect => {
+				console.log(rect)
 				let top = rect.top;//距离顶部高度
 				let bottom = rect.bottom;
 				let vh = rect.height;//元素高度

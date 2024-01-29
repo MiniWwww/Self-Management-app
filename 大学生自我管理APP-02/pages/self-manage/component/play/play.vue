@@ -1,72 +1,74 @@
 <template>
 	<view class="wrap">
-		<uni-card is-full :is-shadow="false">
-			<text class="uni-h6">今天玩了什么呢</text>
-		</uni-card>
+		<view class="header">
+			<view class="header-text">今天玩了什么呢</view>
+			<view class="wenhao">?</view>
+		</view>
 
 
 		<!-- 基本项目 -->
-		<uni-section title="娱乐活动" type="line" padding>
-			<!--滑动换页-->
-
-			<swiper class="swiper" :indicator-dots="true">
-				<!-- 尝试把这三个放一起，行得通 -->
-				<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list">
-					<uni-grid :column="3" :show-border="false" :square="false">
-						<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index"
-							@longpress="del(item.id,gridindex)" @click="changeTwo_dimen(item.id,gridindex)">
-							<view class="grid-item-box">
-								<!-- grid里的图片、标题、角标显示 -->
-								<image class="image" :src="griditem.url" mode="aspectFill" />
-								<text class="text">{{griditem.text}}</text>
-								<view v-if="griditem.badge" class="grid-dot">
-									<!-- 角标 -->
-									<uni-badge :text="griditem.badge" :type="griditem.type" />
-								</view>
-							</view>
-						</uni-grid-item>
-					</uni-grid>
-				</swiper-item>
-
-
-			</swiper>
-
-		</uni-section>
-
-
-
-		<uni-card title="目标列表">
-			<!-- <uni-collapse> -->
-			<!-- <uni-collapse-item title="目标列表" :open="true"> -->
-			<view class="swipeBox">
-				<uni-swipe-action ref="swipeAction">
-					<uni-swipe-action-item class="test" v-for="(item, index) in swipeList" :left-options="item.options"
-						:key="item.id" @change="swipeChange($event, index)" @click="swipeClick($event, index)">
-						<view class="content-box">
-							<view class="content-text-time">
-								<text class="content-text">{{ item.content }}</text>
-								<view v-if="item.timetype0" class="content-time">
-									<text>开始:{{ item.starttime }}</text>
-									<text>结束:{{ item.endttime }}</text>
-								</view>
-
-								<view v-if="item.timetype1" class="content-time-cycle">
-
-									<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
-										:key="dayindex">{{ day }}</text>
-
-								</view>
-							</view>
-							<view class="showDown" v-if="item.isdone">
-								<image :src="'/static/done1.png'" class="doneimage" mode="aspectFill" />
+		<!--滑动换页-->
+		
+		<swiper class="swiper" :indicator-dots="true">
+			<!-- 尝试把这三个放一起，行得通 -->
+			<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list">
+				<uni-grid :column="3" :show-border="false" :square="false">
+					<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index"
+						@longpress="del(item.id,gridindex)" @click="changeTwo_dimen(item.id,gridindex)">
+						<view class="grid-item-box">
+							<!-- grid里的图片、标题、角标显示 -->
+							<image class="image" :src="griditem.url" mode="aspectFill" />
+							<text class="text">{{griditem.text}}</text>
+							<view v-if="griditem.badge" class="grid-dot">
+								<!-- 角标 -->
+								<uni-badge :text="griditem.badge" :type="griditem.type" />
 							</view>
 						</view>
-					</uni-swipe-action-item>
-				</uni-swipe-action>
-			</view>
+					</uni-grid-item>
+				</uni-grid>
+			</swiper-item>
+		
+		
+		</swiper>
+
+
+
+		<!-- <uni-card title="目标列表"> -->
+			<!-- <uni-collapse> -->
+			<!-- <uni-collapse-item title="目标列表" :open="true"> -->
+		<view class="target_header">
+			<view class="header-text">目标列表</view>
+			<view class="wenhao">!</view>
+		</view>
+		<view class="swipeBox">
+			<uni-swipe-action ref="swipeAction">
+				<uni-swipe-action-item class="test" v-for="(item, index) in swipeList" :left-options="item.options"
+					:key="item.id" @change="swipeChange($event, index)" @click="swipeClick($event, index)">
+					<view class="content-box">
+						<view class="content-text-time">
+							<text class="content-text">{{ item.content }}</text>
+							<view v-if="item.timetype0" class="content-time">
+								<text>开始:{{ item.starttime }}</text>
+								<text>结束:{{ item.endttime }}</text>
+							</view>
+		
+							<view v-if="item.timetype1" class="content-time-cycle">
+		
+								<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
+									:key="dayindex">{{ day }}</text>
+		
+							</view>
+						</view>
+						<view class="showDown" v-if="item.isdone">
+							<image :src="'/static/done1.png'" class="doneimage" mode="aspectFill" />
+						</view>
+					</view>
+				</uni-swipe-action-item>
+			</uni-swipe-action>
+		</view>
 			<!-- </uni-collapse-item> -->
 			<!-- </uni-collapse> -->
-		</uni-card>
+		<!-- </uni-card> -->
 
 
 
@@ -347,8 +349,8 @@
 				fabpattern: {
 					color: '#7A7E83',
 					backgroundColor: '#fff',
-					selectedColor: '#007AFF',
-					buttonColor: '#007AFF',
+					selectedColor: '#009688',
+					buttonColor: '#009688',
 					iconColor: '#fff'
 				},
 				fabcontent: [{
@@ -1018,6 +1020,41 @@
 
 
 <style lang="scss">
+	.header{
+		display: flex;
+		text-align: left;
+		font-size: 23px;
+		font-weight: 800;
+		margin: 25px 0 0 30px;
+	}
+	.target_header{
+		display: flex;
+		text-align: left;
+		font-size: 23px;
+		font-weight: 800;
+		margin: 5px 0 0 30px;
+	}
+	.header-text{
+		background:-webkit-linear-gradient(top, #000000, #aeaeae);/*设置线性渐变*/
+		/*为了支持更多的浏览器*/
+		-webkit-background-clip: text;/*背景被裁剪到文字*/
+		-webkit-text-fill-color: transparent;/*设置文字的填充颜色*/
+	}
+	.wenhao{
+		font-size: 15px;
+		font-weight: 800;
+		font-family: 'Courier New', Courier, monospace;
+		width: 20px;
+		height: 20px;
+		background-color: #009688;
+		color: #f6f6f6;
+		border-radius: 20px 100px 80px 120px;
+		margin: 20px 0 10px 8px;
+		text-align: center;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
 	.image {
 		width: 25px;
 		height: 25px;
@@ -1080,12 +1117,13 @@
 
 	.grid-dot {
 		position: absolute;
-		top: 5px;
+		top: -5px;
 		right: 15px;
 	}
 
 	.swiper {
-		height: 420px;
+		margin-top: 20px;
+		height: 380px;
 	}
 
 	.swipeBox {
@@ -1203,7 +1241,10 @@
 		width: 50px;
 		// background-color:crimson;
 	}
-
+	// .warp{
+	// 	width: 50px;
+	// 	height: 50px;
+	// }
 	// .custom-modal{
 	// 	//提示框圆角设计
 	// 	border-radius: 30px;

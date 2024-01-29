@@ -106,7 +106,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 50px;
+		height: 55px;
 		padding-top: 30px;
 		box-shadow: -2px 3px 5px 0 rgba(0, 0, 0, 0.1);
 		position: fixed;
@@ -126,7 +126,7 @@
 	}
 	.item_bottom{
 		position: absolute;
-		top: 38px;
+		top: 35px;
 		width: 40%;
 		height: 5px;
 		border-radius: 30px;
