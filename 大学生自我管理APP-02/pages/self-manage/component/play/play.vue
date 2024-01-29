@@ -74,27 +74,11 @@
 		<!-- <button type="primary" @click="inputModalToggle"><text class="button-text">添加新项目</text>
 			</button> -->
 
-
-
-
 		<uni-popup ref="inputModal" type="dialog">
 			<uni-popup-dialog ref="inputClose" mode="input" title="输入事件名称" value="烧烤" placeholder="请输入内容"
 				@confirm="dialogInputConfirm">
 			</uni-popup-dialog>
 		</uni-popup>
-
-		<!-- 设定目标的弹出框 ：目前弃用 -->
-		<uni-popup ref="inputPlayGoal" type="dialog">
-			<uni-popup-dialog ref="inputClose" mode="input" title="输入目标名称" value="游泳" placeholder="请输入内容"
-				@confirm="confirmAddNewPlayGoal">
-
-			</uni-popup-dialog>
-			<uni-easyinput errorMessage v-model="start" focus placeholder="开始时间(格式2023-7-23-3am)"
-				@input="inputStartTime"></uni-easyinput>
-			<uni-easyinput errorMessage v-model="end" focus placeholder="结束时间(格式2023-7-23-3pm)"
-				@input="inputEndTime"></uni-easyinput>
-		</uni-popup>
-
 
 
 		<!-- 悬浮按钮 -->
@@ -144,7 +128,6 @@
 								url: '/static/Game.png',
 								text: '打游戏',
 								badge: '0',
-
 								type: "primary"
 							},
 							{
@@ -172,31 +155,36 @@
 								listindex: 4,
 								url: '/static/摄影.png',
 								text: '摄影',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 5,
 								url: '/static/艺术品.png',
 								text: '看展',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 6,
 								url: '/static/14-企业团建.png',
 								text: '团建',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 7,
 								url: '/static/密室预订.png',
 								text: '密室逃脱',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 8,
 								url: '/static/旅游.png',
 								text: '旅游',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							}
 						]
 					},
@@ -209,7 +197,6 @@
 								url: '/static/综合素质评价.png',
 								text: '素拓',
 								badge: '0',
-
 								type: "primary"
 							},
 							{
@@ -237,31 +224,36 @@
 								listindex: 4,
 								url: '/static/购物车空.png',
 								text: '购物',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 5,
 								url: '/static/画画.png',
 								text: '画画',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 6,
 								url: '/static/美食.png',
 								text: '品尝美食',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 7,
 								url: '/static/跳舞.png',
 								text: '跳舞',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 8,
 								url: '/static/桌球.png',
 								text: '桌球',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							}
 						],
 					},
@@ -314,6 +306,7 @@
 								url: '/static/DIY手工.png',
 								text: 'DIY手工',
 								badge: '0',
+								type: "primary"
 
 							},
 							{
@@ -321,12 +314,14 @@
 								url: '/static/玩手机.png',
 								text: '玩手机',
 								badge: '0',
+								type: "primary"
 
 							}, {
 								listindex: 8,
 								url: '/static/演出.png',
 								text: '演出',
 								badge: '0',
+								type: "primary"
 
 							},
 						],
@@ -397,17 +392,6 @@
 		// 所以要到self-management.vue那里写
 		onShow() {
 
-			
-			// uni.getStorage({
-			// 	key: 'playGoalDATA',
-			// 	success(res) {
-
-			// 		console.log('获取playGoalDATA成功', res.data);
-			// 		that.swipeList=res.data.PlayGoalList
-			// 		console.log('swipeList:',that.swipeList);
-			// 	}
-
-			// });
 
 		},
 		  
@@ -427,10 +411,11 @@
 			// 	key:'update_playEvent',
 			// 	success(res) {
 			// 		console.log('获取娱乐事件数组成功',res.data);
+					
 			// 		that.Two_dimensional_array=res.data;
 			// 		console.log('获取后的Two_dimensional_array：',that.Two_dimensional_array);
 			// 	}
-			// }),
+			// });
 			
 			uni.getStorage({
 				key: 'playGoalDATA',
@@ -971,20 +956,6 @@
 
 				}
 
-				// this.dynamicList.push({
-
-				// 	// url: `/static/c${this.dynamicList.length+1}.png`,
-				// 	// url: `/static/c${(this.dynamicList.length)%12+1}.png`,
-				// 	// 随机函数产生1-12之间的随机数Math.floor(Math.random() * (max - min + 1)) + min
-				// 	url: `/static/c${Math.floor(Math.random() * (12 - 1 + 1)) + 1}.png`,
-
-				// 	// url: `/static/c6.png`,
-				// 	text: this.value,
-				// 	badge: '0',
-				// 	type: "primary",
-				// 	// color: this.dynamicList.length % 2 === 0 ? '#f5f5f5' : "#fff"
-
-				// })
 
 
 			},
