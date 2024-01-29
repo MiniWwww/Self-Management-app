@@ -129,6 +129,7 @@
 					if(this.item.period_free){
 						this.item.cycle='自由'
 					}
+					
 					const eventChannel = this.getOpenerEventChannel();
 					eventChannel.emit('addNewSport',this.item);
 					console.log('Success!',this.item);
