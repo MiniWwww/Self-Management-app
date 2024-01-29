@@ -110,6 +110,19 @@
 		mounted() {
 			this.getNowTime();
 		},
+		created() {
+			console.log('这是sleep页面的created监听函数');
+			var that=this;
+			uni.getStorage({
+				key:'getUp_sleep_Goal',
+				success(res) {
+					console.log("获取到起床睡眠目标",res.data);
+					that.getup_goal=res.data.getup_goal;
+					that.sleep_goal=res.data.sleep_goal;
+					
+				}
+			})
+		},
 		methods:{
 			addTimes(m){return m<10?'0'+m:m },
 			getNowTime(){ //获取当前时间
@@ -137,9 +150,32 @@
 			},
 			bindTimeChange_g: function(e) {
 				this.getup_goal = e.detail.value
+				var that=this;
+				uni.setStorage({
+					key:'getUp_sleep_Goal',
+					data:{
+						getup_goal:that.getup_goal,
+						sleep_goal:that.sleep_goal
+					},
+					success() {
+						console.log('起床目标存储成功！')
+					}
+				})
 			},
 			bindTimeChange_s: function(e) {
 				this.sleep_goal = e.detail.value
+				var that=this;
+				uni.setStorage({
+					key:'getUp_sleep_Goal',
+					data:{
+						getup_goal:that.getup_goal,
+						sleep_goal:that.sleep_goal
+					},
+					success() {
+						console.log('睡眠目标存储成功！')
+					}
+				})
+				
 			},
 			getup_clock(){
 				var that=this;

@@ -181,6 +181,21 @@
 				
 			}
 		},
+		
+		created() {
+			console.log("这是sport页面的created函数");
+			var that=this;
+			uni.getStorage({
+				key:'sportList',
+				success(res) {
+					console.log('收到前的List：',that.list);
+					console.log('收到sportList',res.data);
+					that.list=res.data;
+					console.log('收到后的List：',that.list);
+					
+				}
+			})
+		},
 		methods:{
 			addTimes(m){return m<10?'0'+m:m },
 			getNowTime(){ //获取当前时间
@@ -258,6 +273,13 @@
 								award:data.award,
 							}
 							that.list.push(obj);
+							uni.setStorage({
+								key:'sportList',
+								data:that.list,
+								success() {
+									console.log('运动数组存储成功！');
+								}
+							});
 							//that.now_list=that.list;
 						}
 					}
