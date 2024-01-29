@@ -13,21 +13,35 @@
 			</view>
 		</view>
 		<view class="todo_box">
-			<uni-swipe-action  v-for="(item,index) in ListData" :key="item.title" > <!--左滑完成、删除√，点击查看详情√，详情可修改-->	<!--可计时,计时结束时完成一次该运动-->
-				<uni-swipe-action-item :right-options="options" :show="right" :auto-close="false"  @click="bindClick($event,index)">
-					<view :style="[{background:((item.intensity=='高')?'#ffa5ab':((item.intensity=='中')?'#ffd0b5':'#e8fdfd'))}]" class="todo_item" :class="{'todo_finish':item.finish}" @click="to_detail(index)">  
-						<view class="todo_item_left">
-							<view class="todo_checkbox">
-								<view v-if="!item.finish&&item.times" style="color: #8c8c8c;">{{item.times-item.finish_times}}</view>
-							</view>
-							<view class="todo_title"> {{item.title}}</view>
+			<uni-swipe-action v-for="(item,index) in ListData" :key="item.title" > <!--左滑完成、删除√，点击查看详情√，详情可修改-->	<!--可计时,计时结束时完成一次该运动-->
+				<view class="run">
+					<image class="run_img" :style="{left: item.position_left}"
+							:src="item.run_img" mode="aspectFill" :animation="item.run_animationData"></image>
+					<image class="dst_img" src="../../../../static/flag.png" mode="aspectFill"></image>
+				</view>
+				<uni-swipe-action-item :right-options="options" :show="right" :auto-close="false"  @click="bindClick($event,item,index)">
+					<view class="todo_item" :class="{'todo_finish':item.finish}" @click="to_detail(index)">
+						<view class="item-head" :style="[{background:((item.intensity=='高')?'#e9564c':((item.intensity=='中')?'#f6eda4':'#66c0a4'))}]"></view>
+						<view class="item-icon">
+							<uni-icons type="vip-filled" size="24"></uni-icons>
 						</view>
-						<view class="todo_item_right">
-							<view class="todo_tiem_cycle">{{item.cycle}}</view>
-							<view class="todo_item_achieve" v-if="item.all_finish_times">
-								<image class="img" src="../../../../static/点赞(透明).png" mode="widthFix"></image>
-								
-								<view class="todo_item_achieve_number">{{item.all_finish_times}}</view>
+						<view class="todo-item_content">
+							<view class="todo_item_left">
+								<view class="todo_title"> {{item.title}}</view>
+								<view class="todo_item_cycle">{{item.cycle}}</view>
+							</view>
+							<view class="todo_item_right">
+								<view class="todo_item_right_content" v-if="item.finish_times||today_list.includes(item)">
+									<view class="todo_item_right_text">今日完成：</view>
+									<view class="todo_item_right_number">
+										{{item.finish_times}}
+										<view v-if="today_list.includes(item)&&item.times">/{{item.times}}</view>
+									</view>
+								</view>
+								<view class="todo_item_right_content">
+									<view class="todo_item_right_text">总共完成：</view>
+									<view class="todo_item_right_number">{{item.all_finish_times}}/{{item.timesForAward}}</view>
+								</view>
 							</view>
 						</view>
 						
@@ -69,6 +83,8 @@
 						}
 					}
 				],
+				run_animationData: {},
+				item_width: 0,
 				week:["周日","周一","周二","周三","周四","周五","周六"],
 				change: false,		//是否到新的一天
 				activePopUp: false,
@@ -77,13 +93,47 @@
 				text: '全部',
 				tabList: ['全部','今天'],
 				tabIndex: 1,
-				list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'低', times:3, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'周一 周二 周五',timesForAward:50, award:'吃火锅！'}, 
-					{title: '跑步',period_free: true, period:false, note:'', intensity:'中', times: '', finish: false, finish_times:0, all_finish_times:0, finish_day:'', cycle:'自由', timesForAward:20, award:'吃烤肉'},
-					{title: '打球', period_free: false, period:true, note:'',intensity:'高', times:1, finish: false, finish_times:0, all_finish_times:5, finish_day:'', cycle:'周日 周二 周四 周六',timesForAward:10, award:'吃烧烤！'},
-					{title: '仰卧起坐', period_free: false, period:true, note:'一次50个',intensity:'中', times:2, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'每天',timesForAward:30, award:'喝奶茶！'}],
+				list:[{
+						title: '跳绳', 
+						period_free: false, 
+						period:true, 
+						note:'',
+						intensity:'低', 
+						times:3, 
+						finish: false, 
+						finish_times:0, 
+						all_finish_times:49, 
+						finish_day:'', 
+						cycle:'周一 周二 周五',
+						timesForAward:50, 
+						award:'吃火锅！',
+						run_animationData: {},
+						position_left: 20,
+						run_img: "../../../../static/run.png"
+						}, 
+						{title: '跑步',
+						period_free: true, 
+						period:false, 
+						note:'', 
+						intensity:'中', 
+						times: '', 
+						finish: false, 
+						finish_times:0, 
+						all_finish_times:0, 
+						finish_day:'', 
+						cycle:'自由', 
+						timesForAward:20, 
+						award:'吃烤肉',
+						run_animationData: {},
+						position_left: 20,
+						run_img: "../../../../static/run.png"
+						},
+						{title: '打球', period_free: false, period:true, note:'',intensity:'高', times:1, finish: false, finish_times:0, all_finish_times:5, finish_day:'', cycle:'周日 周二 周四 周六',timesForAward:10, award:'吃烧烤！', run_animationData: {}, position_left: 20, run_img: "../../../../static/run.png"},
+						{title: '仰卧起坐', period_free: false, period:true, note:'一次50个',intensity:'中', times:2, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'每天',timesForAward:30, award:'喝奶茶！', run_animationData: {}, position_left: 20, run_img: "../../../../static/run.png"}],
 				now_list:[//{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:2, finish: false, finish_times:0, cycle:'周一 周三 周五',},
 				// 	{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:1, finish: false, finish_times:0, cycle:''}
 				],
+				today_list: [],
 				finish_list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'低', times:3, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'周一 周二 周五',timesForAward:50, award:'吃火锅！'}, 
 					{title: '打球', period_free: false, period:true, note:'',intensity:'高', times:1, finish: false, finish_times:0, all_finish_times:13, finish_day:'', cycle:'周日 周二 周四 周六',timesForAward:10, award:'吃烧烤！'},
 					{title: '仰卧起坐', period_free: false, period:true, note:'一次50个',intensity:'中', times:2, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'每天',timesForAward:30, award:'喝奶茶！'}],
@@ -94,7 +144,7 @@
 				var that=this;
 				let list=[];
 				that.getNowTime();
-				
+				that.activePopUp=false;
 				that.list.forEach(v=>{
 					let flag=0;
 					
@@ -119,6 +169,7 @@
 				})
 				if(that.tabIndex==1){
 					that.now_list=list;
+					that.today_list=list;
 					console.log(that.now_list);
 					return list;
 				}
@@ -157,18 +208,15 @@
 				this.text = item;
 				this.tabIndex = index;
 			},
-			bindClick(e,index){
+			bindClick(e,item,index){
 				var that=this;
 				console.log(e);
 				if(e.content.text=="完成"){
-					that.finish_sport(index);
+					that.finish_sport(item,index);
 					uni.setStorage({ //存入Storage
 						key: 'sportGoalSuccess', //自己取个名字
 						data: { //存的数据可以是很多条
-								
 								content:that.ListData[index].title,
-								
-					
 						},
 					
 						success() {
@@ -224,6 +272,7 @@
 						res.eventChannel.emit('toaward',that.finish_list);
 					}
 				})
+				that.activePopUp=false;
 			},
 			to_analyse(){//统计
 				var that=this;
@@ -234,19 +283,16 @@
 					}
 				})
 			},
-			finish_sport(index){  //完成项目
+			finish_sport(item,index){  //完成项目
 				var that=this;
-				//console.log(index);
-				if(this.now_list[index].times>1&&this.now_list[index].finish_times<this.now_list[index].times-1){
+				console.log(index);
+				if(that.now_list[index].period_free||(that.now_list[index].times>1&&that.now_list[index].finish_times<that.now_list[index].times-1)){
 					uni.showModal({
 						title:'提示',
 						content: '是否完成一次'+that.now_list[index].title+'？',
 						success: function(res){
 							if(res.confirm){
-								
 								that.now_list[index].finish_day=that.today;
-								
-								
 								var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
 								if(i){
 									i.finish_times=i.finish_times+1;
@@ -265,9 +311,8 @@
 									that.finish_list.push(that.now_list[index]);
 									
 								}
-								
+								that.run(item,index);
 								console.log('完成表',that.finish_list);
-								
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
@@ -325,6 +370,8 @@
 										
 										
 									}
+									that.run(item,index);
+									item.run_img = "../../../../static/run.png";
 									uni.showToast({
 										title:'今天的'+that.now_list[index].title+'已完成！',
 										icon:'none',
@@ -368,18 +415,57 @@
 					}
 				})
 			},
-			
+			//小人奔跑动画
+			run(item,index){
+				var that=this;
+				let percent = item.all_finish_times/item.timesForAward;
+				if(percent>=1){
+					percent=1
+				}
+				//获取节点宽度
+				let query = uni.createSelectorQuery();
+				query.select('.todo_item').boundingClientRect(rect => {
+					let item_width = rect.width;
+					let l = item_width*percent*0.84;//要移动的距离
+					const animation = uni.createAnimation();
+					animation
+						.translateX(0) // 0%
+						.translateX(l*0.2) // 20%
+						.step({duration: 100,});
+					animation.translateX(l*0.3).step({duration: 100,}); // 30%
+					animation.translateX(l*0.4).step({duration: 100,}); // 40%
+					animation.translateX(l*0.5).step({duration: 100,}); // 50%
+					animation.translateX(l*0.6).step({duration: 100,}); // 60%
+					animation.translateX(l*0.7).step({duration: 100,}); // 70%
+					animation.translateX(l*0.8).step({duration: 100,}); // 80%
+					animation.translateX(l*0.9).step({duration: 100,}); // 90%
+					animation.translateX(l).step(); // 100%
+					item.run_img = "../../../../static/run.gif";
+					item.run_animationData = animation.export();
+					setTimeout(()=>{
+						that.run_recover(item);
+					},1000);
+					item.position_left = item.run_animationData.actions[item.run_animationData.actions.length-1].animates[0].args[0]
+					//console.log(item.run_animationData)
+					//console.log(item.run_animationData.actions[item.run_animationData.actions.length-1].animates[0].args[0]);
+				})
+				.exec();
+			},
+			run_recover(item){
+				item.run_img = "../../../../static/run.png";
+			}
 		}
 	}
 </script>
 
 <style>
-	.box{
-		/* height: 100%; */
+	page {
+		background-color: #fcfcfc
 	}
-	.todo_box{
-		padding-top: 45px;
-	}
+	/* .box{
+		z-index: 0;
+	} */
+	
 	.todo-header {
 		display: flex;
 		align-items: center;
@@ -390,8 +476,10 @@
 		box-shadow: -2px 3px 5px 0 rgba(0, 0, 0, 0.1);
 		background-color: #ffffff;
 		position: fixed;
-		z-index: 1;
+		z-index: 2;
 		width: 100%;
+		margin-bottom: 13px;
+		
 	}
 	.todo-header_left {
 		/*width: 100%;*/
@@ -400,7 +488,7 @@
 	}
 	.active-text {
 		font-size: 14px;
-		color: #3ebf69;
+		color: #009688;
 		padding-right: 10px;
 		font-weight: bold;
 	}
@@ -412,7 +500,8 @@
 		padding: 0 5px;
 	}
 	.active-tab {
-		color: #3ebf69;
+		color: #009688;
+		/* color: #3ebf69; */
 		font-weight: bold;
 		font-size: 18px;
 	}
@@ -420,24 +509,97 @@
 		margin-right:3px;
 		font-size: 20px;
 	}
+	.todo_box{
+		padding: 55px 7px 20px 7px;
+	}
 	.todo_item{
+		z-index: 1;
+		background-color: white;
 		position: relative;
 		display: flex;
 		align-items: center;
-		padding: 15px;
-		margin: 15px;
+		padding: 6px 15px;
+		margin: 10px 15px;
 		border-radius: 10px;
-		height: 30px;
+		height: 45px;
 		/* background: #e3fde4; */
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+	}
+	.item-head{
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height:60%;
+		width: 6px;
+		border-radius: 30px;
+		background-color: #aae0c3;
+		color: #aae0c3;
+		top: 20%;
+		left: -5px;
+	}
+	.item-icon{
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		left: 10px;
+		/* top: 20%; */
+	}
+	.todo-item_content{
+		z-index: 1;
+		width: 100%;
+		height: 45px;
+		display: flex;
 		justify-content: space-between;
 	}
-	.todo_item_left{
-		display: flex;
-		align-items: center;
-		font-size: 14px;
-		color: #085432;
+	.run{
+		position: relative;
+		height: 18px;
+		
 	}
+	.run_img{
+		height: 20px;
+		width: 20px;
+		top: 8px;
+		position: absolute;
+		left: 20px;
+		z-index: 3;
+	}
+	.dst_img{
+		position: absolute;
+		top: 8px;
+		right: 20px;
+		height: 20px;
+		width: 20px;
+		z-index: 3;
+	}
+	.todo_item_left{
+		position: relative;
+		left: 25px;
+		height: 45px;
+		width: 65%;
+	}
+	.todo_title {
+		text-align: left;
+		font-size: 14px;
+		height: 50%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.todo_item_cycle{
+		text-align: left;
+		font-size: 11px;
+		color: #7e7e7e;
+		height: 50%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	
 	.todo_checkbox{
 		width: 20px;
 		height: 20px;
@@ -449,17 +611,38 @@
 		justify-content: center;
 		align-items: center;
 	}
-	.todo_item_right{/*  */
+	.todo_item_right{
+		border-width: 0 0 0 7upx;
+		border-style: dotted;
+		border-color: #ccc;
+		padding: 8px;
+		height: 30px;
+		width: 35%;
+		margin-right: -8px;
+		/* align-items: center; */
 		display: flex;
-		align-items: center;
-		/* height: 100%; */
-	}
-	.todo_tiem_cycle{
-		color: #8c8c8c;
-		font-size: 14px;
-		align-items: center;
+		flex-direction: column;
 		justify-content: center;
-		
+	}
+	.todo_item_right_content{
+		/* position: relative; */
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 50%;
+		margin: -2px 0 0px 4px;
+		padding: 4px 0;
+		text-align: center;
+	}
+	.todo_item_right_text{
+		font-size: 11px;
+		color: #979797;
+	}
+	.todo_item_right_number{
+		display: flex;
+		font-size: 13px;
+		font-weight: 600;
+		color: #333333;
 	}
 	.todo_item_achieve{
 		margin-left: 10px;
@@ -493,6 +676,9 @@
 		width: 20px;
 		/* background-color: #ffffff; */
 	}
+	.todo_finish .todo_title {
+		color: #999;
+	}
 	.todo_finish .todo_checkbox {
 		position: relative;
 		background: #eee;
@@ -511,10 +697,7 @@
 		background: #8c8c8c;
 		box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.2) inset;
 	}
-	.todo_finish .todo_title {
-		color: #999;
-	}
-	.todo_finish.todo_item:before {
+	/* .todo_finish.todo_item:before {
 		content: '';
 		position: absolute;
 		top: 0;
@@ -524,7 +707,7 @@
 		height: 2px;
 		margin: auto 0;
 		background: #8c8c8c;
-	}
+	} */
 	.todo_finish.todo_item:after {
 		background: #ccc;
 	}
@@ -544,6 +727,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
+		
 		/* z-index: -1; */
 	}
 	.select_item_1{
@@ -555,10 +739,11 @@
 		height: 50px;
 		position: fixed;
 		right: 22%;
-		bottom: 17%;
+		bottom: 10%;
 		border-radius: 50%;
-		background-color: #d9f5db;
-		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
+		background-color: #009688;
+		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
+		color: white;
 		/* z-index: 99; */
 		
 	}
@@ -573,10 +758,11 @@
 		/*right: 30%;
 		bottom: 10%;*/
 		right: 22%;
-		bottom: 3%;
+		bottom: 2%;
 		border-radius: 50%;
-		background-color: #d9f5db;
-		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
+		background-color: #009688;
+		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
+		color: white;
 		/* z-index: 99; */
 	}
 	.select_item_3{
@@ -590,21 +776,30 @@
 		right: 22%;
 		bottom: 3%;
 		border-radius: 50%;
-		background-color: #d9f5db;
-		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
+		background-color: #009688;
+		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
+		color: white;
 		/* z-index: 99; */
 	}
 	.button{
 		position: fixed;
-		right: 10%;
-		bottom: 10%;
-		margin: 0 auto;
-		width: 50px;
-		height: 50px;
+		bottom: 100rpx;
+		right: 40rpx;
+		width: 90rpx;
+		height: 90rpx;
+		line-height: 90rpx;
+		text-align: center;
 		border-radius: 50%;
-		background-color: #d9f5db;
-		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
+		background-color: #009688;
+		color: #fff;
+		font-size: 70rpx;
+		z-index: 97;
+		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
 		/* z-index: 99; */
+	}
+	.select_show {
+		opacity: 1;
+		transform: scale(1) translateY(0);
 	}
 	.br{/*留空*/
 		height: 250px;

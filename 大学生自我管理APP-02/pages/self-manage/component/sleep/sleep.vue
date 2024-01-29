@@ -16,28 +16,35 @@
 				</view>
 			</view>
 			<view class="clock_box">	<!--打卡-->
-				<view >
-					<image v-if="DayTimeJudge" class="img" src="../../static/sun.png" mode="heightFix"></image>
-					<image v-if="!DayTimeJudge" class="img" src="../../static/moon.png" mode="heightFix"></image>
+				<view>
+					<view v-if="getup">
+						<image v-if="!DayTimeJudge" class="img" src="../../static/moon.png" mode="heightFix"></image>
+						<image v-if="DayTimeJudge" class="img" src="../../static/sun.png" mode="heightFix"></image>
+						<button @click="sleep_clock">睡觉</button>
+						
+					</view>
+					<view v-if="sleep">
+						<image class="img" src="../../static/sleeping_zzz.jpg" mode="heightFix"></image>
+						<button @click="getup_clock">起床</button>
+						<view style="font-size: 12px; color: #00a9fd; text-decoration: underline;" @click="cancel_sleep">取消</view>
+					</view>
 				</view>
 				<view class="clockTime_box">
-					<view class="clock_today">{{today}}</view>
+					<view class="clock_today">
+						<view class="clock_today_item">{{today_year}}</view>
+						<view class="clock_today_item">{{today_date}}</view>
+						<view class="clock_today_item">{{today_week}}</view>
+					</view>
 					<view class="clockTime">
 						<view class="clockTime_item">
-							<view @click="getup_clock">起床打卡</view>
-							<view v-if="getup">
-								<image v-if="getup_success&&!getup_like" class="like_img" src="../../../../static/点赞.png" @click="like_getup"></image>
-								<image v-if="getup_like" class="like_img" src="../../../../static/点赞2.jpg"></image>
-								{{getup_time}}
-							</view>
+							<view class="clockTime_item_text">起床时间：{{getup_time}} </view>
+							<image v-if="getup_success&&!getup_like" class="like_img" src="../../../../static/点赞.png" @click="like_getup"></image>
+							<image v-if="getup_like" class="like_img" src="../../../../static/点赞2.jpg"></image>
 						</view>
 						<view class="clockTime_item" >
-							<view @click="sleep_clock">就寝打卡</view>
-							<view v-if="sleep">
-								<image v-if="sleep_success&&!sleep_like" class="like_img" src="../../../../static/点赞.png" @click="like_sleep"></image>
-								<image v-if="sleep_like" class="like_img" src="../../../../static/点赞2.jpg"></image>
-								{{sleep_time}}
-							</view>
+							<view class="clockTime_item_text">就寝时间：{{sleep_time}}</view>
+							<image v-if="sleep_success&&!sleep_like" class="like_img" src="../../../../static/点赞.png" @click="like_sleep"></image>
+							<image v-if="sleep_like" class="like_img" src="../../../../static/点赞2.jpg"></image>
 						</view>
 					</view>
 				</view>
@@ -56,7 +63,7 @@
 			</uni-collapse>
       
 			<uni-list-item class="list_item0" title="睡眠小tips" showArrow clickable @click="goto_tips"></uni-list-item>
-			<uni-list-item class="list_item0" title="睡眠报告" showArrow clickable @click="goto_analyse"></uni-list-item>
+			<!--<uni-list-item class="list_item0" title="睡眠报告" showArrow clickable @click="goto_analyse"></uni-list-item>-->
 			<uni-list-item class="list_item0" title="奖励" showArrow clickable @click="goto_award"></uni-list-item>
 			
 		</uni-list>
@@ -73,20 +80,22 @@
 				getup_goal:'07:00',
 				sleep_goal:'23:00',
 				today: '',
+				today_year:'',
+				today_date:'',
+				today_week:'',
 				nowtime: [{hour:''},{minute:''}],
-				getup_time:'9:00',
-				sleep_time:'11:00',
+				sleepGoalTime: [{hour:''},{minute:''}],
+				getup_time:'--:--',
+				sleep_time:'--:--',
 				sleep: false,
-				getup: false,
+				getup: true,
 				getup_success: false,
 				sleep_success: false,
 				getup_like: false,
 				sleep_like:false,
-				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
-				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'},{getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
+				getup_success_list:[{getup_goal:'7:00', getup_time:'6:30',date:'2023年07月24日 星期一'}, {getup_goal:'7:00', getup_time:'6:59',date:'2023年07月25日 星期二'}],
+				sleep_success_list:[{sleep_goal:'23:00', sleep_time:'22:55',date:'2023年07月23日 星期日'}, {sleep_goal:'23:00', sleep_time:'22:50',date:'2023年07月25日 星期二'}],
 				success_list:[{getup_goal:'7:00', getup_time:'6:30',sleep_goal:'23:00', sleep_time:'22:55', date:'2023年07月25日 星期二'}],
-				
-				
 			};
 		},
 		computed:{
@@ -98,7 +107,9 @@
 				return false;
 			}
 		},
-		
+		mounted() {
+			this.getNowTime();
+		},
 		methods:{
 			addTimes(m){return m<10?'0'+m:m },
 			getNowTime(){ //获取当前时间
@@ -111,6 +122,14 @@
 				let day=time.getDay();
 				
 				this.today=y+'年'+this.addTimes(m)+'月'+this.addTimes(d)+'日'+' '+this.week[day];
+				this.today_year=y+'年';
+				var date=this.addTimes(m)+'月'+this.addTimes(d)+'日';
+				if(this.today_date!=date){
+					this.getup_time="--:--";
+					this.sleep_time="--:--";
+					this.today_date=date;
+				}
+				this.today_week=this.week[day]
 				this.nowtime.hour = this.addTimes(h);
 				this.nowtime.minute = this.addTimes(mi);
 				
@@ -124,153 +143,178 @@
 			},
 			getup_clock(){
 				var that=this;
-				uni.showModal({
-					title:'提示',
-					content:'进行起床打卡？',
-					success:function(res){
-						if(res.confirm){
-							that.getNowTime();
-							that.getup_time=that.nowtime.hour+':'+that.nowtime.minute;
-							that.getup=true;
-							var time_goal=Date.parse('2023/01/01 '+that.getup_goal+':59');
-							var time_now=Date.parse('2023/01/01 '+that.getup_time+':00');
-							if(time_now<=time_goal){
-								that.getup_success=true;
-								let obj={
-									getup_goal:that.getup_goal,
-									getup_time:that.getup_time,
-									date:that.today,
-								}
-								that.getup_success_list.push(obj);
-								uni.setStorage({
-									key:'getup_success_list',
-									data:that.getup_success_list,
-									success() {
-										console.log('getup_success_list储存成功');
-									}
-								});
+				if(that.nowtime.hour<4||that.nowtime>=12){
+					uni.showModal({
+						title:'提示',
+						content:'您只能在早上4点之后至中午12点之前进行起床打卡喔',
+						showCancel:false,
+					})
+				}
+				else{
+					uni.showModal({
+						title:'提示',
+						content:'进行起床打卡？',
+						success:function(res){
+							if(res.confirm){
+								that.getNowTime();
+								that.getup_time=that.nowtime.hour+':'+that.nowtime.minute;
+								that.getup=true;
+								that.sleep=false;
+								var time_goal=Date.parse('2023/01/01 '+that.getup_goal+':59');
+								var time_now=Date.parse('2023/01/01 '+that.getup_time+':00');
 								
-								uni.showToast({
-									title:'起床时间：'+that.getup_time+'\n起床目标达成，给自己点个赞吧！',
-									icon:'none',
-								})
-							}
-							else{
-								uni.showToast({
-									title:'起床时间：'+that.getup_time,
-									icon:'none',
-								})
+								if(time_now<=time_goal){
+									that.getup_success=true;
+									let obj={
+										getup_goal:that.getup_goal,
+										getup_time:that.getup_time,
+										date:that.today,
+									}
+									that.getup_success_list.push(obj);
+									uni.setStorage({
+										key:'getup_success_list',
+										data:that.getup_success_list,
+										success() {
+											console.log('getup_success_list储存成功');
+										}
+									})
+									uni.showToast({
+										title:'起床时间：'+that.getup_time+'\n起床目标达成，给自己点个赞吧！',
+										icon:'none',
+									})
+								}
+								else{
+									uni.showToast({
+										title:'起床时间：'+that.getup_time,
+										icon:'none',
+									})
+								}
 							}
 						}
+					})
+				}
+			},
+			achieve_sleep(){	//就寝目标达成
+				var that=this;
+				that.sleep_success=true;
+				let obj={
+					sleep_goal:that.sleep_goal,
+					sleep_time:that.sleep_time,
+					date:that.today,
+				}
+				that.sleep_success_list.push(obj);
+				var i=that.getup_success_list.find(item=>(item.date==obj.date));
+				if(i){
+					let obj={
+						getup_goal:that.getup_goal,
+						getup_time:that.getup_time,
+						sleep_goal:that.sleep_goal,
+						sleep_time:that.sleep_time,
+						date:that.today,
 					}
+					that.success_list.push(obj);
+				}
+				uni.showToast({
+					title:'就寝时间：'+that.sleep_time+'\n就寝目标达成，给自己点个赞吧！',
+					icon:'none',
+					duration:2500,
+				})
+				console.log(that.sleep_success_list);
+				
+				uni.setStorage({ //存入Storage
+					key: 'sleepGoalSuccess', //自己取个名字
+					data: { //存的数据可以是很多条
+							
+							sleep_time:that.sleep_time,
+							sleep_goal:that.sleep_goal,
+					},
+					success() {
+						console.log('sleepGoalSuccess储存成功');
+					}
+				});
+				uni.setStorage({
+					key:'sleep_success_list',
+					data:that.sleep_success_list,
+					success() {
+						console.log('sleep_success_list储存成功');
+					}
+				});
+			},
+			fail_sleep(){	//就寝目标失败
+				var that=this;
+				uni.showToast({
+					title:'就寝时间：'+that.sleep_time,
+					icon:'none',
+					duration:2500,
 				})
 			},
 			sleep_clock(){
 				var that=this;
+				if(that.nowtime.hour<20&&that.nowtime.hour>=4){
+					uni.showModal({
+						title:'提示',
+						content:'您只能在晚上20点之后至凌晨4点之前进行就寝打卡喔',
+						showCancel:false,
+					})
+				}
+				else{
+					uni.showModal({
+						title:'提示',
+						content:'进行就寝打卡？',
+						success:function(res){
+							if(res.confirm){
+								that.getNowTime();
+								that.sleep_time=that.nowtime.hour+':'+that.nowtime.minute;
+								that.sleep=true;		//睡了
+								that.getup=false;
+								//var time_goal=Date.parse('2023/01/01 '+that.sleep_goal+':59');
+								//var time_now=Date.parse('2023/01/01 '+that.sleep_time+':00');
+								that.sleepGoalTime.hour=that.sleep_goal.split(':')[0];
+								that.sleepGoalTime.minute=that.sleep_goal.split(':')[1];
+								if(that.sleep){		//睡了	零点前：12~24，零点后：00~12（11：59）
+									if(that.sleepGoalTime.hour<12&&that.nowtime.hour>12){	//目标零点后，打卡零点前
+										that.achieve_sleep();
+									}
+									else if((that.sleepGoalTime.hour<12&&that.nowtime.hour<12)||
+									(that.sleepGoalTime.hour>=12&&that.nowtime.hour>=12)){	//目标零点前、打卡零点前或目标零点后、打卡零点后
+										if(that.nowtime.hour<that.sleepGoalTime.hour||
+										(that.nowtime.hour=that.sleepGoalTime.hour&&that.nowtime.minute<that.sleepGoalTime.minute)){
+											that.achieve_sleep();
+										}
+										else{
+											that.fail_sleep();
+										}
+									}
+									else{
+										that.fail_sleep();
+									}
+								}
+							}
+						}
+					})
+				}
+			},
+			cancel_sleep(){	//取消就寝状态
+				var that=this;
 				uni.showModal({
 					title:'提示',
-					content:'进行就寝打卡？',
+					content:'取消就寝状态？',
 					success:function(res){
 						if(res.confirm){
-							that.getNowTime();
-							that.sleep_time=that.nowtime.hour+':'+that.nowtime.minute;
-							that.sleep=true;
-							var time_goal=Date.parse('2023/01/01 '+that.sleep_goal+':59');
-							var time_now=Date.parse('2023/01/01 '+that.sleep_time+':00');
-							if(time_now<=time_goal){
-								that.sleep_success=true;
-								let obj={
-									sleep_goal:that.sleep_goal,
-									sleep_time:that.sleep_time,
-									date:that.today,
-								}
-								that.sleep_success_list.push(obj);
-								uni.setStorage({
-									key:'sleep_success_list',
-									data:that.sleep_success_list,
-									success() {
-										console.log('sleep_success_list储存成功');
-									}
-								});
-								var i=that.getup_success_list.find(item=>(item.date==obj.date));
-								if(i){
-									let obj={
-										getup_goal:that.getup_goal,
-										getup_time:that.getup_time,
-										sleep_goal:that.sleep_goal,
-										sleep_time:that.sleep_time,
-										date:that.today,
-									}
-									that.success_list.push(obj);
-									uni.setStorage({ //存入Storage
-										key: 'Today_getup_sleep_GoalSuccess', //自己取个名字
-										data: { //存的数据可以是很多条
-												
-												getup_goal:that.getup_goal,
-												getup_time:that.getup_time,
-												sleep_goal:that.sleep_goal,
-												sleep_time:that.sleep_time,
-									
-										},
-									
-										success() {
-											console.log('sleepGoalSuccess储存成功');
-										}
-									});
-								}
-								uni.showToast({
-									title:'就寝时间：'+that.sleep_time+'\n就寝目标达成，给自己点个赞吧！',
-									icon:'none',
-									duration:2500,
-								})
-								console.log(that.sleep_success_list);
-								
-								
-							}
-							else{
-								uni.showToast({
-									title:'就寝时间：'+that.sleep_time,
-									icon:'none',
-									duration:2500,
-								})
-							}
+							that.sleep=false;
+							that.getup=true;
+							that.sleep_time="--:--";
+							that.sleep_success=false;
+							that.sleep_like=false;
 						}
 					}
 				})
 			},
 			like_getup(){
 				this.getup_like=true;
-				var that=this;
-				var GetUp_Success_count=that.getup_success_list.length;
-				uni.setStorage({ //存入Storage
-					key: 'getup_like_Count', //自己取个名字
-					data: { //存的数据可以是很多条
-						
-					getup_like_Count:GetUp_Success_count,
-					},
-				
-					success() {
-						console.log('GetUp_Success_count起床达成赞数加一并且储存成功');
-					}
-				});
 			},
 			like_sleep(){
 				this.sleep_like=true;
-				var that=this;
-				var Sleep_Success_count=that.sleep_success_list.length;
-				uni.setStorage({ //存入Storage
-					key: 'sleep_like_Count', //自己取个名字
-					data: { //存的数据可以是很多条
-						
-					sleep_like_Count:Sleep_Success_count,
-					},
-				
-					success() {
-						console.log('sleep_like_Count睡眠达成赞数加一并且储存成功');
-					}
-				});
-				
-				
 			},
 			goto_baizaoyin(){
 				uni.navigateTo({
@@ -374,31 +418,57 @@
 		justify-content: center;
 	}
 	.clockTime_box{
+		display: flex;
 		width: 100%;
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 		border-radius: 10px;
 		background: #f1fdf2;
 	}
 	.clock_today{
-		font-size: 20px;
-		width: 100%;
+		height: 90px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		font-size: 15px;
+		width: 40%;
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 		border-radius: 10px;
 	}
-	.clockTime{
-		height: 100px;
+	.clock_today_item{
 		display: flex;
-		justify-content: space-evenly;
-		align-items: center;
-		width: 100%;
+		flex-direction: column;
+		justify-content: center;
+		height: 25px;
+		text-align: center;
+	}
+	.clockTime{
+		height: 90px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		font-size: 15px;
+		width: 60%;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
 	}
 	.clockTime_item{
-		font-size: 25px;
+		height: 35px;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
+	.clockTime_item_text{
 		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
 	.like_img{
 		height: 20px;
 		width: 20px;
+		margin-left: 5px;
 	}
 	.assistant_box{
 		width: 90%;
