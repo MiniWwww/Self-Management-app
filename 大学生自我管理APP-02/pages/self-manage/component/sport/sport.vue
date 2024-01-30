@@ -498,7 +498,7 @@
 		box-shadow: -2px 3px 5px 0 rgba(0, 0, 0, 0.1);
 		background-color: #ffffff;
 		position: fixed;
-		z-index: 2;
+		z-index: 100;
 		width: 100%;
 		margin-bottom: 13px;
 		

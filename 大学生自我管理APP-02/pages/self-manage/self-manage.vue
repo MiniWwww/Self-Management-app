@@ -110,7 +110,7 @@
 		padding-top: 30px;
 		box-shadow: -2px 3px 5px 0 rgba(0, 0, 0, 0.1);
 		position: fixed;
-		z-index: 1;
+		z-index: 99;
 		width: 100%;
 		background-color: #ffffff;
 	}

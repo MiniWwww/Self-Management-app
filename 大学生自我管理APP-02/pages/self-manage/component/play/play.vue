@@ -1,5 +1,5 @@
 <template>
-	<view class="wrap">
+	<view style="overflow-y: auto; min-height: 100vh;" @touchstart="closePop">
 		<view class="header">
 			<view class="header-text">今天玩了什么呢</view>
 			<view class="wenhao">?</view>
@@ -37,34 +37,46 @@
 			<!-- <uni-collapse> -->
 			<!-- <uni-collapse-item title="目标列表" :open="true"> -->
 		<view class="target_header">
-			<view class="header-text">目标列表</view>
+			<view class="header-text">我的目标</view>
 			<view class="wenhao">!</view>
 		</view>
-		<view class="swipeBox">
-			<uni-swipe-action ref="swipeAction">
-				<uni-swipe-action-item class="test" v-for="(item, index) in swipeList" :left-options="item.options"
-					:key="item.id" @change="swipeChange($event, index)" @click="swipeClick($event, index)">
-					<view class="content-box">
-						<view class="content-text-time">
-							<text class="content-text">{{ item.content }}</text>
-							<view v-if="item.timetype0" class="content-time">
-								<text>开始:{{ item.starttime }}</text>
-								<text>结束:{{ item.endttime }}</text>
-							</view>
-		
-							<view v-if="item.timetype1" class="content-time-cycle">
-		
-								<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
-									:key="dayindex">{{ day }}</text>
-		
-							</view>
-						</view>
-						<view class="showDown" v-if="item.isdone">
-							<image :src="'/static/done1.png'" class="doneimage" mode="aspectFill" />
-						</view>
+		<view class="target-box">
+			<view class="content-box" :class="{'targetDone': item.isdone}" v-for="(item, index) in swipeList" :key="item.id">
+				<view class="content-title">
+					{{ item.content }}
+					<view class="pop_select" @touchstart.stop @click="popup(index)">	<!--弹出-->
+						<uni-icons  type="more" size="20" color="#009688"  style="position: absolute; right: 9%;"></uni-icons>
 					</view>
+				</view>
+				<view class="content-time">
+					<view v-if="item.timetype0" class="content-time-time">
+						<text>开始：{{ item.starttime }}</text>
+						<text>结束：{{ item.endttime }}</text>
+					</view>
+					
+					<view v-if="item.timetype1" class="content-time-cycle">
+					
+						<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
+							:key="dayindex">{{ day }}, </text>
+					
+					</view>
+				</view>
+				<view class="more_list" v-if="item.pop_flag" @touchstart.stop>
+					<view v-for="(option_item, option_index) in item.options" :key="option_item.text" class="more_list_item" 
+						@click.stop="swipeClick(option_item, index, item)">
+						{{option_item.text}}
+					</view>
+				</view>
+				<view class="showDown" v-if="item.isdone">
+					<image src="/static/小红花.png" class="doneimage" mode="aspectFill" />
+				</view>
+			</view>
+			<!-- <uni-swipe-action ref="swipeAction">
+				<uni-swipe-action-item  :left-options="item.options"
+					 @change="swipeChange($event, index)" @click="swipeClick($event, index)">
+					
 				</uni-swipe-action-item>
-			</uni-swipe-action>
+			</uni-swipe-action> -->
 		</view>
 			<!-- </uni-collapse-item> -->
 			<!-- </uni-collapse> -->
@@ -99,6 +111,7 @@
 				<uni-popup-message :type="msgType" :message="messageText" :duration="2000"></uni-popup-message>
 			</uni-popup>
 		</view>
+		<view class="br"></view>
 	</view>
 </template>
 
@@ -396,7 +409,13 @@
 
 
 		},
-		  
+		onPageScroll:function(e){
+			console.log("???")
+			this.swipeList.forEach(v=>{
+				v.pop_flag=false
+			})
+		},
+		
 		// // 钩子：
 		mounted() {
 			console.log('这是play页面的mounted监听函数');
@@ -425,6 +444,9 @@
 					if(res!=null){
 					that.swipeList =res.data.PlayGoalList;
 					console.log('uni.getTorage接收后的swipeList:',that.swipeList);
+					that.swipeList.forEach(v=>{
+						v.pop_flag=false;
+					})
 					}
 				},
 				fail(){
@@ -454,7 +476,8 @@
 									timetype0: true,
 									timetype1: false,
 									isdone: false,
-									checkbox2: []
+									checkbox2: [],
+									pop_flag: false,
 								},
 								{
 									id: 1,
@@ -480,7 +503,8 @@
 									timetype0: false,
 									timetype1: true,
 									isdone: false,
-									checkbox2: ["每周一", "每周二", "每周三"]
+									checkbox2: ["每周一", "每周二", "每周三"],
+									pop_flag: false,
 								}
 							]
 						
@@ -524,12 +548,10 @@
 				console.log('当前索引：', index);
 
 			},
-			swipeClick(e, index) {
-				let {
-					content
-				} = e;
-
-				if (content.text === '置顶') {
+			
+			swipeClick(e, index, item) {
+				item.pop_flag=false;
+				if (e.text === '置顶') {
 					// uni.showModal({
 					// 	title: '提示',
 					// 	content: '是否置顶',
@@ -581,7 +603,7 @@
 
 
 
-				} else if (content.text === '完成') {
+				} else if (e.text === '完成') {
 
 					this.swipeList[index].isdone = true;
 					// 成功弹窗
@@ -612,7 +634,7 @@
 					//2023-10-21添加结束
 
 
-				} else if (content.text === '删除') {
+				} else if (e.text === '删除') {
 					var that = this
 					uni.showModal({
 						title: '提示',
@@ -734,8 +756,8 @@
 												starttime: data.startDate,
 												endttime: data.endDate,
 												checkbox2: data.checkbox2,
-												isdone: false
-
+												isdone: false,
+												pop_flag: false,
 											}
 											that.swipeList.push(obj);
 											console.log(obj);
@@ -984,7 +1006,24 @@
 
 				})
 			},
-
+			popup(index){
+				this.swipeList.forEach(v=>{
+					if(v.id!=this.swipeList[index].id){
+						v.pop_flag = false;
+					}
+				})
+				if(this.swipeList[index].pop_flag){
+					this.swipeList[index].pop_flag = false
+				}
+				else{
+					this.swipeList[index].pop_flag = true;
+				}
+			},
+			closePop(){
+				this.swipeList.forEach(v=>{
+					v.pop_flag = false;
+				})
+			}
 		}
 	}
 </script>
@@ -1032,10 +1071,13 @@
 	}
 
 	.doneimage {
-		width: 30px;
-		height: 30px;
-
+		width: 80px;
+		height: 80px;
 		margin: 30px auto;
+		filter:alpha(opacity=80);
+		-moz-opacity:0.85;
+		-khtml-opacity: 0.85;
+		opacity: 0.85;
 		/* 设置左右外边距为auto，实现水平居中 */
 		// text-align: center;
 		// /* 设置文本居中，以修复可能的对齐问题 */
@@ -1097,11 +1139,6 @@
 		height: 380px;
 	}
 
-	.swipeBox {
-		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
-		border-radius: 20px;
-	}
-
 	// 2023-7-2新增
 	.icon-content {
 		display: flex;
@@ -1141,83 +1178,123 @@
 	}
 
 	/* #endif */
-
-	.content-box {
-		// background-color: antiquewhite;
-		// border-radius: 20px;
-		border: 10px solid salmon;
-		border-radius: 20px;
+	.target-box {
+		margin: 20px;
 		display: flex;
-		flex-direction: row;
-		flex-wrap: wrapl;
-		// 固定高度
-		height: 90px;
-
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 	}
-
-	.content-text-time {
+	.content-box {
+		position: relative;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		width: 88%;
+		margin: 10px 0;
+	}
+	.targetDone{
+		position: relative;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		width: 88%;
+		margin: 10px 0;
+		color: #989898;
+	}
+	.content-title{
+		width: 90%;
+		font-size: 20px;
+		font-weight: 700;
+		margin: 15px 0 10px 20px;
+		display: flex;
+		justify-content: space-between;
+		border-width: 0 0 2px 0;
+		border-style: dashed;
+		border-color: #989898;
+	}
+	.pop_select{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		// margin-right: -15px;
+	}
+	.content-time {
 		// background-color: rebeccapurple;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		margin: 0 0 10px 20px;
 	}
 
-	.content-text {
-
-		display: flex;
-		flex-direction: row;
-		// background-color: #18a0c2;
-
-
-		text-align: center;
-		justify-content: center;
-		flex-direction: column;
-	}
-
-	.content-time {
-		// 取消缩放的
-		// flex-shrink: 0;
-		border-radius: 10px;
-		background-color: rgb(227, 239, 205);
+	.content-time-time {
 		// 跟外边的间距上、左右、下
-		margin: 5rpx 30rpx 0rpx;
 		display: flex;
 		flex-direction: column;
-		text-align: center;
-		font-size: 10px;
+		font-size: 15px;
+		align-items: flex-start;
 	}
 
 	.content-time-cycle {
-		background-color: rgb(193, 232, 246);
-		border-radius: 10px;
 		display: flex;
-		flex-direction: row;
-		font-size: 10px;
-		margin: 5rpx 30rpx 0rpx;
-		text-align: center;
-		justify-content: space-between;
-
+		font-size: 15px;
+		// margin: 5rpx 30rpx 0rpx;
+		// text-align: center;
+		justify-content: flex-start;
+		align-items: center;
 	}
-
-
-
+	.more_list{
+		z-index: 10;
+		position: absolute;
+		right: -15px;
+		top: 52px;
+		background: white;
+		border-radius: 4px;
+		width: 80px;
+		box-shadow: 0px 0px 4px rgba(30, 30, 30, 0.1);
+		padding: 8px 8px 2px 8px;
+		border: 1px solid #ccc;
+	}
+	.more_list_item{
+		color: white;
+		font-size: 14px;
+		z-index: 3;
+		padding: -5px 0;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		background-color: #009688;
+		// box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 8px;
+		height: 40px;
+	}
 	.test {
 		// background-color: #18a0c2;
+		margin: 15px;
 	}
 
 	.showDown {
+		position: absolute;
 		justify-content: flex-end;
 		margin-left: auto;
-
-		width: 50px;
+		width: 100px;
+		top: -50px;
+		left: -40px;
 		// background-color:crimson;
 	}
-	// .warp{
-	// 	width: 50px;
-	// 	height: 50px;
-	// }
+	.warp{
+		z-index: 100;
+	}
 	// .custom-modal{
 	// 	//提示框圆角设计
 	// 	border-radius: 30px;
 	// }
+	.br{/*留空*/
+		height: 200px;
+	}
 </style>

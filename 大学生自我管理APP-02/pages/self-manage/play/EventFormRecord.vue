@@ -1,20 +1,19 @@
 <template>
 	<view>
 		<!-- 2023-7-8-新增-->
-		<view class="FormPage">
-
-				<view class="uni-form-item-input">
-					<uni-section title="事件名称" subTitle="给我取一个更好听的名字吧~" type="line" padding>
-						<view class="EventTitlebox">
-							<view class="EventTitle">
-				
-								<textarea :maxlength="20" v-model="item.title" auto-height placeholder=""></textarea>
-							</view>
-						</view>
-				
-				
-					</uni-section>
+		<view class="box">
+			<view class="uni-form-item-input">
+				<uni-section style="height: 50px;" title="事件名称" subTitle="给我取一个更好听的名字吧~" padding>
+					<template v-slot:decoration>
+						<view class="decoration"></view>
+					</template>
+				</uni-section>
+				<view class="EventTitlebox">
+					<view class="EventTitle">
+						<textarea :maxlength="20" v-model="item.title" auto-height placeholder=""></textarea>
+					</view>
 				</view>
+			</view>
 			<form class="FormPage" @submit="formSubmit" @reset="formReset">
 
 			
@@ -25,13 +24,19 @@
 						:range="info.range" @confirm="confirm" @close="close" />
 				</view> -->
 				<!-- 待完成从时间格式化 -->
-				<uni-card title="选择时间范围">
-				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
-				
-					<view class="example-body">
+				<view class="form-item_outside">
+					<uni-section style="height: 50px;" title="事件时间" subTitle="什么时候做了这件事呢？" padding>
+						<template v-slot:decoration>
+							<view class="decoration"></view>
+						</template>
+					</uni-section>
+					<view class="form-item_content">
 						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date" :end="item.Today" :picker-options="pickerOptions"/>
 					</view>
-				</uni-card>
+				</view>
+				<!-- <uni-card title="选择时间范围"> -->
+				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
+				<!-- </uni-card> -->
 				
 				<!-- <uni-card title="选择今日的时间范围">
 
@@ -44,30 +49,38 @@
 					</view>
 
 				</uni-card> -->
-
-				<view class="uni-form-item-content">
-					<uni-section title="事件内容" subTitle="描述一下发生的趣事吧~" type="line" padding>
+				<view class="form-item_outside">
+					<uni-section style="height: 50px;" title="事件内容" subTitle="描述一下发生的趣事吧~" padding>
+						<template v-slot:decoration>
+							<view class="decoration"></view>
+						</template>
+					</uni-section>
+					<view class="form-item_content">
 						<uni-easyinput type="textarea" v-model="item.event_description"
 							placeholder="请输入内容"></uni-easyinput>
+					</view>
+				</view>
+				<view class="form-item_outside">
+					<uni-section style="height: 50px;" title="今天的心情指数" subTitle="给今天的心情评个分吧!" padding>
+						<template v-slot:decoration>
+							<view class="decoration"></view>
+						</template>
 					</uni-section>
+					<view class="form-item_content">
+						<uni-rate :max="10" :value="5" v-model="item.rank" />
+					</view>
 				</view>
 
-
-				<uni-section title="今天的心情指数" subTitle="给今天的心情评个分吧!" type="line" padding>
-					<uni-rate :max="10" :value="5" v-model="item.rank" />
-				</uni-section>
-
-
-
 				<view class="form-bottom">
-					<button form-type="submit" @click="SubmitEvent">提交</button>
-					<button type="default" form-type="reset">重设</button>
+					<button class="button" form-type="submit" @click="SubmitEvent">提交</button>
+					<button class="button" style="background-color: #797979; " form-type="reset">重设</button>
 				</view>
 
 
 				<!-- 2023-7-8-新增结束 -->
 			</form>
 		</view>
+		<view class="br"></view>
 	</view>
 </template>
 
@@ -319,27 +332,62 @@
 </script>
 
 <style>
-	.FormPage {
-		/* 表单页面颜色:浅灰*/
-		background-color: rgb(254, 254, 254);
+	page {
+		background-color: rgb(245, 245, 245);
 	}
-
-
+	.box{
+		width: 100%;
+		background-color: rgb(245, 245, 245);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	
 	/* .uni-form-item .checkbox-item {
 		padding: 5% 20%;
 	} */
-
+	.decoration{
+		width: 4px;
+		height: 20px;
+		margin-right: 8px;
+		border-radius: 30%;
+		background-color: #009688;
+	}
 	.uni-form-item-input {
-		padding: 1% 1%;
+		padding: 2% 2%;
 		text-align: left;
-
+		background-color: white;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		width: 80%;
+		margin: 20px 0 10px;
+	}
+	.FormPage {
+		/* 表单页面颜色:浅灰*/
+		width: 88%;
+		background-color: rgb(245, 245, 245);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.form-item_outside{
+		padding: 2% 2%;
+		text-align: left;
+		background-color: white;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		width: 113%;
+		margin: 10px 0 20px -20px;
+	}
+	.form-item_content{
+		margin: 12px 20px 15px;
 	}
 
 	.uni-form-item-date {
 		padding: 1% 5%;
 		text-align: left;
 	}
-
+	
 	.uni-form-item-date .calendar-button {
 		/* width:60%; /* 设定按钮的宽度和高度 */
 		/* height: 40px; */
@@ -350,11 +398,26 @@
 	}
 
 	.form-bottom {
+		width: 100%;
+		margin-left: -20px;
+		margin-top: 40px;
 		padding: 1% 5%;
-		text-align: left;
-		text-size-adjust: auto;
+		/* text-align: left; */
+		/* text-size-adjust: auto; */
+		display: flex;
+		justify-content: space-evenly;
 	}
-
+	.button{
+		
+		color: white;
+		background-color: #009688;
+		border-radius: 180px;
+		border-color: white;
+		border-width: 1px;
+		width: 100px;
+		height: 45px;
+		text-align: center;
+	}
 	/* 2023-7-30添加 */
 	.image {
 		width: 25px;
@@ -375,15 +438,18 @@
 	}
 
 	.EventTitlebox {
-
-		border: 10rpx solid antiquewhite;
-		border-radius: 10px;
-		height: 90rpx;
+		margin: 10px 15px 5px;
+		/* border: 10rpx solid antiquewhite; */
+		/* border-radius: 10px; */
+		/* height: 90rpx; */
 	}
 
 	.EventTitle {
 		/* 跟外边的间距上、左右、下 */
-		margin: 20rpx 30rpx 5rpx;
-		text-align: center;
+		margin: 12px 20px 15px;
+		/* text-align: center; */
+	}
+	.br{/*留空*/
+		height: 80px;
 	}
 </style>
