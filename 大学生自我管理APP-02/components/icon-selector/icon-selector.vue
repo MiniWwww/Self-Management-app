@@ -39,6 +39,12 @@ export default {
 		'/static/c19.png',
 		'/static/c20.png',
 		'/static/c21.png',
+		'/static/c22.png',
+		'/static/c23.png',
+		'/static/c24.png',
+		'/static/c25.png',
+		'/static/c26.png',
+		'/static/c27.png',
         // 添加更多图标URL
       ]
     };
