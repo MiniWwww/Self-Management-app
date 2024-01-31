@@ -141,49 +141,49 @@
 						list: [{
 								listindex: 0,
 
-								url: '/static/Game.png',
+								url: '/static/c22.png',
 								text: '打游戏',
 								badge: '0',
 								type: "primary"
 							},
 							{
 								listindex: 1,
-								url: '/static/烧烤.png',
+								url: '/static/c23.png',
 								text: '露营烧烤',
 								badge: '0',
 								type: "success"
 							},
 							{
 								listindex: 2,
-								url: '/static/k歌.png',
+								url: '/static/c20.png',
 								text: 'k歌',
 								badge: '0',
 								type: "warning"
 							},
 							{
 								listindex: 3,
-								url: '/static/游乐园.png',
+								url: '/static/c24.png',
 								text: '游园',
 								badge: '0',
 								type: "error" //type是角标的类型，比如errors红色的
 							},
 							{
 								listindex: 4,
-								url: '/static/摄影.png',
+								url: '/static/c25.png',
 								text: '摄影',
 								badge: '0',
 								type: "primary"
 							},
 							{
 								listindex: 5,
-								url: '/static/艺术品.png',
+								url: '/static/c27.png',
 								text: '看展',
 								badge: '0',
 								type: "primary"
 							},
 							{
 								listindex: 6,
-								url: '/static/14-企业团建.png',
+								url: '/static/c26.png',
 								text: '团建',
 								badge: '0',
 								type: "primary"
@@ -286,7 +286,7 @@
 							},
 							{
 								listindex: 1,
-								url: '/static/骑行.png',
+								url: '/static/c21.png',
 								text: '骑行',
 								badge: '0',
 								type: "success"
@@ -883,6 +883,11 @@
 								key: 'CurrentTitle', //自己取个名字
 								data: { //存的数据可以是很多条
 									TitleName: that.Two_dimensional_array[listID].list[listIndex].text,
+<<<<<<< HEAD
+=======
+									iconUrl:that.Two_dimensional_array[listID].list[listIndex].url,
+
+>>>>>>> e9a0cfd8f663aa05aa088a4d4f46a7d10cb274ca
 
 								},
 
@@ -905,12 +910,13 @@
 										let obj = {
 											title: data.title,
 											Content_value: data.Content_value,
-											url: data.url
+											url: data.iconUrl
 										}
 										that.testList.push(obj);
 										// 改变后的名称覆盖过去
 										that.Two_dimensional_array[listID].list[listIndex].text = data
 											.title;
+										that.Two_dimensional_array[listID].list[listIndex].url = data.iconUrl;
 										
 										that.savePlayEvent();
 										console.log(obj);

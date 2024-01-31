@@ -14,9 +14,21 @@
 					</view>
 				</view>
 			</view>
+
+			<view class="uni-form-item-input">
+			<view>
+			      <uni-section style="height: 50px;" title="选择图标" subTitle="选择一个新图标" padding>
+					  <template v-slot:decoration>
+					  	<view class="decoration"></view>
+					  </template>
+					  </uni-section>
+			      <icon-selector @select="handleIconSelect"></icon-selector>
+			    </view>
+			</view>
+			
 			<form class="FormPage" @submit="formSubmit" @reset="formReset">
 
-			
+
 				<!-- <view class="uni-form-item-date">
 					<button class="calendar-button" type="button" @click="opencalendar">日期选择</button>
 					<uni-calendar ref="calendar" class="uni-calendar-hook" :clear-date="true" :date="info.date"
@@ -31,13 +43,14 @@
 						</template>
 					</uni-section>
 					<view class="form-item_content">
-						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" :end="item.Today" :picker-options="pickerOptions"/>
+						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至"
+							return-type="date" :end="item.Today" :picker-options="pickerOptions" />
 					</view>
 				</view>
 				<!-- <uni-card title="选择时间范围"> -->
 				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
 				<!-- </uni-card> -->
-				
+
 				<!-- <uni-card title="选择今日的时间范围">
 
 					<view>
@@ -85,37 +98,43 @@
 </template>
 
 <script>
+	import IconSelector from '@/components/icon-selector/icon-selector.vue';
 	export default {
+		components: {
+		    IconSelector
+		  },
+		  
 		// onLoad() {
 		// 	var that=this
 		// 	const eventChannel = that.getOpenerEventChannel();
 		// 	eventChannel.on('GridIndexEmit', data => {
 		// 		that.PlayPageIndex.ListID = data.ListID;
 		// 		that.PlayPageIndex.ListIndex = data.ListIndex;
-				
+
 		// 		console.log('play界面成功发射数据给EventFormRecord', data)
-				
-				
+
+
 		// 	});
 		// },
 		data() {
 			return {
+				selectedIcon: '',
 				// 2023-10-24添加
 				// datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 *
 				// 	3600000)],
-				datetimeRange:[],
+				datetimeRange: [],
 				// 2023-10-24添加结束
-				pickerOptions:{
-					disableDate(time){
-					// const startDate=this.getDateTime(Date.now() - 5 * 24 * 3600000);
-					// this.datetimeRange[0]=startDate;
-					
-					// const endDate=this.getDateTime(Date.now() - 5 * 24 * 3600000);
-					// this.datetimeRange[1]=endDate;
-					
-					return(
-					time<this.getDisableStartDate(startDate)||
-					time>this.getDisableEndDate(endDate)
+				pickerOptions: {
+					disableDate(time) {
+						// const startDate=this.getDateTime(Date.now() - 5 * 24 * 3600000);
+						// this.datetimeRange[0]=startDate;
+
+						// const endDate=this.getDateTime(Date.now() - 5 * 24 * 3600000);
+						// this.datetimeRange[1]=endDate;
+
+						return (
+							time < this.getDisableStartDate(startDate) ||
+							time > this.getDisableEndDate(endDate)
 						);
 					},
 				},
@@ -126,43 +145,48 @@
 				},
 				item: {
 					title: '',
-					Today:this.getDate(new Date()),
-					TodaystartTime:'',
-					TodayendTime:'',
-					event_description:'',
-					rank:Number
-					
+					Today: this.getDate(new Date()),
+					iconUrl:'',
+					TodaystartTime: '',
+					TodayendTime: '',
+					event_description: '',
+					rank: Number
+
 				},
-				EventList:[],
-				
+				EventList: [],
+
 
 
 			}
 		},
+		onUnload() {
+			console.log('这是EventFormRecord的onUnload函数');
+		},
 		onShow() {
-		
+
 			var that = this;
 			uni.getStorage({
 				key: 'CurrentTitle',
 				success(res) {
-		
+
 					console.log('获取CurrentTitle成功', res.data);
-					that.item.title=res.data.TitleName
-					
+					that.item.title = res.data.TitleName
+					that.item.iconUrl=res.data.iconUrl
+
 				}
 			});
-			
+
 			uni.getStorage({
 				key: 'playEventDATA',
 				success(res) {
-					
+
 					console.log('获取playEventDATA成功', res.data);
-					that.EventList=res.data.PlayEventList
-					console.log('EventList:',that.EventList);
+					that.EventList = res.data.PlayEventList
+					console.log('EventList:', that.EventList);
 				}
 			});
-			
-		
+
+
 		},
 		// onShow() {
 		// 	let lastTime_Event = uni.getStorageSync('playEventData');
@@ -178,6 +202,13 @@
 		},
 		// 2023-10-24添加结束
 		methods: {
+			handleIconSelect(icon) {
+				
+			     // this.selectedIcon = icon;
+				 this.item.iconUrl=icon;
+				 console.log("当前icon:",this.item.iconUrl);
+				 
+			   },
 			// 2023-10-24添加
 			addZero(num) {
 				if (num < 10) {
@@ -229,37 +260,37 @@
 							});
 							eventChannel.emit('aditorEvent', that.item);
 							console.log('EventFormRecord界面成功返回数据给play!', that.item);
-							
+
 							console.log(that.PlayPageIndex.ListID)
 							console.log(that.PlayPageIndex.ListIndex)
-							
+
 							// startTime=swapTimeFormat(that.datetimeRange[0]);
 							// endTime=swapTimeFormat(that.datetimeRange[1]);
-							
-							
+
 							let EventObj={
 								ListID:that.PlayPageIndex.ListID,
 								ListIndex:that.PlayPageIndex.ListIndex,
 								ListImage:that.PlayPageIndex.ListImage,
 								title: that.item.title,
-								Today:that.item.Today,
+								iconUrl:that.item.iconUrl,
+								Today: that.item.Today,
 								TodaystartTime: that.datetimeRange[0],
-								TodayendTime:that.datetimeRange[1],
+								TodayendTime: that.datetimeRange[1],
 								event_description: that.item.event_description,
 								rank: that.item.rank,
-								
-								
+
+
 							}
 							that.EventList.push(EventObj)
 							console.log(that.EventList)
-							
+
 
 							uni.setStorage({ //存入Storage
 								key: 'playEventDATA', //自己取个名字
 								data: { //存的数据可以是很多条
-									
-									PlayEventList:that.EventList
-									
+
+									PlayEventList: that.EventList
+
 
 								},
 
@@ -271,11 +302,11 @@
 							// 重新初始化
 							that.item = {
 								title: '',
-								Today:that.getDate(new Date()),
-								TodaystartTime:'',
-								TodayendTime:'',
-								event_description:'',
-								rank:Number
+								Today: that.getDate(new Date()),
+								TodaystartTime: '',
+								TodayendTime: '',
+								event_description: '',
+								rank: Number
 
 							};
 
@@ -336,24 +367,26 @@
 	page {
 		background-color: rgb(245, 245, 245);
 	}
-	.box{
+
+	.box {
 		width: 100%;
 		background-color: rgb(245, 245, 245);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
-	
+
 	/* .uni-form-item .checkbox-item {
 		padding: 5% 20%;
 	} */
-	.decoration{
+	.decoration {
 		width: 4px;
 		height: 20px;
 		margin-right: 8px;
 		border-radius: 30%;
 		background-color: #009688;
 	}
+
 	.uni-form-item-input {
 		padding: 2% 2%;
 		text-align: left;
@@ -363,6 +396,7 @@
 		width: 80%;
 		margin: 20px 0 10px;
 	}
+
 	.FormPage {
 		/* 表单页面颜色:浅灰*/
 		width: 88%;
@@ -371,7 +405,8 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	.form-item_outside{
+
+	.form-item_outside {
 		padding: 2% 2%;
 		text-align: left;
 		background-color: white;
@@ -380,7 +415,8 @@
 		width: 113%;
 		margin: 10px 0 20px -20px;
 	}
-	.form-item_content{
+
+	.form-item_content {
 		margin: 12px 20px 15px;
 	}
 
@@ -388,7 +424,7 @@
 		padding: 1% 5%;
 		text-align: left;
 	}
-	
+
 	.uni-form-item-date .calendar-button {
 		/* width:60%; /* 设定按钮的宽度和高度 */
 		/* height: 40px; */
@@ -408,8 +444,9 @@
 		display: flex;
 		justify-content: space-evenly;
 	}
-	.button{
-		
+
+	.button {
+
 		color: white;
 		background-color: #009688;
 		border-radius: 180px;
@@ -419,6 +456,7 @@
 		height: 45px;
 		text-align: center;
 	}
+
 	/* 2023-7-30添加 */
 	.image {
 		width: 25px;
@@ -450,7 +488,9 @@
 		margin: 12px 20px 15px;
 		/* text-align: center; */
 	}
-	.br{/*留空*/
+
+	.br {
+		/*留空*/
 		height: 80px;
 	}
 </style>
