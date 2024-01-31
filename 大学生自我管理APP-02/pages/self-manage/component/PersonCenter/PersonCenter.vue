@@ -1,6 +1,8 @@
 <template>
 	<view>
-		
+		<uni-icons class="back" type="back" size="25" @click="goback"></uni-icons>
+		<uni-icons class="edit" type="compose" size="25" @click="editordetail"></uni-icons>
+		<uni-nav-bar  title="" color="white" left-icon="back" right-icon="compose"></uni-nav-bar>
 		<!-- 背景图片 -->
 		<view class="background-pic">
 			<!-- <image @click="onuploadphoto" src="../../../../static/night.png" mode=""></image> -->
@@ -51,23 +53,20 @@
 			
 			</view>
 			<view class="body">
-				<uni-list class="list-item">
+				<uni-list :border="false">
 					<!-- <uni-list-item title="个人资料" note="" showArrow
 						thumb="/static/编辑个人资料.png" thumb-size="lg"
 						rightText=""  link to="/pages/self-manage/personalCenter/editorPersonalData" />
 					 -->
-					<uni-list-item title="昵称" note="" :right-text="mydata.nickname" clickable @click="editordetail"
-						showArrow />
+					<uni-list-item class="list-item" :border="false" title="昵称" note="" :right-text="mydata.nickname"  />
 			
 					<!-- 如果只是 right-text=“”那么只能显示一个字符串，加上冒号才能动态赋值-->
-					<uni-list-item title="名字" note="" :right-text="mydata.name" clickable @click="editordetail" showArrow />
+					<uni-list-item class="list-item" :border="false" title="名字" note="" :right-text="mydata.name"  />
 			
-					<uni-list-item title="性别" note="" :right-text="mydata.gender" clickable @click="editordetail"
-						showArrow />
-					<uni-list-item title="年龄" note="" :right-text="mydata.age" clickable @click="editordetail" showArrow />
-					<uni-list-item title="地区" note="" :right-text="mydata.zone" clickable @click="selectzone" showArrow />
-					<uni-list-item title="个性签名" note="" :right-text="mydata.motto" clickable @click="editordetail"
-						showArrow />
+					<uni-list-item class="list-item" :border="false" title="性别" note="" :right-text="mydata.gender" />
+					<uni-list-item class="list-item" :border="false" title="年龄" note="" :right-text="mydata.age"  />
+					<uni-list-item class="list-item" :border="false" title="地区" note="" :right-text="mydata.zone"  />
+					<uni-list-item class="list-item" :border="false" title="个性签名" note="" :right-text="mydata.motto" />
 				</uni-list>
 				
 			</view>
@@ -150,14 +149,14 @@
 				}
 			});
 
-			uni.getStorage({
+			/* uni.getStorage({
 				key: 'userZone',
 				success(res) {
 
 					console.log('获取地区成功', res.data);
 					that.mydata.zone = res.data.zone;
 				}
-			});
+			}); */
 			
 			
 			
@@ -171,7 +170,9 @@
 
 
 		methods: {
-			
+			goback(){
+				uni.navigateBack()
+			},
 			getAvator() {
 				let res = uni.getStorageSync('avator')
 				this.userpic = res
@@ -264,7 +265,7 @@
 							that.mydata.name = data.name;
 							that.mydata.gender = data.gender;
 							that.mydata.age = data.age;
-
+							that.mydata.zone = data.zone;
 							uni.setStorage({ //存入Storage
 								key: 'userInfo', //自己取个名字
 								data: { //存的数据可以是很多条
@@ -273,7 +274,7 @@
 									name: that.mydata.name,
 									gender: that.mydata.gender,
 									age: that.mydata.age,
-
+									zone: that.mydata.zone,
 								},
 
 								success() {
@@ -290,38 +291,6 @@
 					}
 				});
 			},
-			selectzone() {
-				var that = this;
-				uni.navigateTo({
-					url: '/pages/self-manage/personalCenter/selectZone',
-					events: {
-						editZone(data) {
-							that.mydata.zone = data.zone
-
-							uni.setStorage({ //存入Storage
-								key: 'userZone', //自己取个名字
-								data: { //存的数据可以是很多条
-
-									zone: that.mydata.zone,
-
-								},
-
-								success() {
-									console.log('userZone储存成功');
-								}
-							});
-
-							// 上一句不加分号的话下面这个就执行不了
-							console.log('查看数组：', that.mydata.zone);
-							console.log('PersonalCenter页面成功接收到selectZone的数据');
-
-						},
-
-					}
-				});
-			}
-
-
 
 		}
 	}
@@ -331,6 +300,26 @@
 	page {
 		background: #ffffff;
 	}
+	.back{
+		z-index: 99;
+		position: fixed;
+		top: 40px;
+		left: 15px;
+		text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; /*文本描边*/
+		// width: 50px;
+		// height: 50px;
+		// filter:alpha(opacity=80);
+		// -moz-opacity:0.85;
+		// -khtml-opacity: 0.85;
+		// opacity: 0.85;
+	}
+	.edit{
+		z-index: 99;
+		position: fixed;
+		top: 40px;
+		right: 15px;
+		text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; /*文本描边*/
+	}
 	.background-pic {
 		position: absolute;
 		top: 0;
@@ -339,7 +328,7 @@
 		left: 0; //撑开
 		filter: blur; //模糊
 		opacity: 0.5; //透明度
-		height: 200px;
+		height: 280px;
 		image {
 			width: 100%;
 			height: 100%;
@@ -350,7 +339,7 @@
 		position: relative;
 		top: 200px;
 		box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-		border-radius: 50px 50px 0 0;
+		border-radius: 45px 45px 0 0;
 	}
 	.head {
 		text-align: center;
@@ -403,6 +392,7 @@
 	.myNickname {
 		width: 120px;
 		font-size: 16px;
+		margin: 5px;
 	
 	}
 	.my-name {
@@ -412,16 +402,23 @@
 		margin-bottom: 15px;
 	}
 	.mySig{
-		font-size: 16px;
+		font-size: 17px;
+		margin-bottom: 10px;
+		color: #989898;
 	}
 	.my-sig {
 		margin-top: 15px;
-		font-size: 16px;
+		font-size: 14px;
 		font-weight: bold;
 		margin-bottom: 15px;
 	}
 	.body {
-		padding: 20px;
+		padding: 30px;
+		font-size: 20px;
+	}
+	.list-item{
+		height: 50px;
+		
 	}
 	.fg{
 		height: 20px;

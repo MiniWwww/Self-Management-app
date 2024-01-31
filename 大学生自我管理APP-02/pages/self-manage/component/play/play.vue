@@ -43,7 +43,7 @@
 		<view class="target-box">
 			<view class="content-box" :class="{'targetDone': item.isdone}" v-for="(item, index) in swipeList" :key="item.id">
 				<view class="content-title">
-					{{ item.content }}
+					{{ item.title }}
 					<view class="pop_select" @touchstart.stop @click="popup(index)">	<!--弹出-->
 						<uni-icons  type="more" size="20" color="#009688"  style="position: absolute; right: 9%;"></uni-icons>
 					</view>
@@ -407,8 +407,7 @@
 		// onShow不起作用，就读不到数据
 		// 所以要到self-management.vue那里写
 		onShow() {
-
-
+			
 		},
 		onPageScroll:function(e){
 			console.log("???")
@@ -457,11 +456,11 @@
 				key: 'playGoalDATA',
 				success(res) {
 					if(res!=null){
-					that.swipeList =res.data.PlayGoalList;
-					console.log('uni.getTorage接收后的swipeList:',that.swipeList);
-					that.swipeList.forEach(v=>{
-						v.pop_flag=false;
-					})
+						that.swipeList =res.data.PlayGoalList;
+						console.log('uni.getTorage接收后的swipeList:',that.swipeList);
+						that.swipeList.forEach(v=>{
+							v.pop_flag=false;
+						})
 					}
 				},
 				fail(){
@@ -485,7 +484,8 @@
 										}
 							
 									],
-									content: '例:去一次livehouse',
+									title: '例:去一次livehouse',
+									content: '五月的帆布小镇或者六月的棱镜都可以！',
 									starttime: '2023-7-21',
 									endttime: '2023-7-22',
 									timetype0: true,
@@ -512,7 +512,8 @@
 											text: '置顶'
 										}
 									],
-									content: '例:散散步',
+									title: '例:散散步',
+									content: '每天晚上饭后走一走',
 									starttime: '2023-7-23',
 									endttime: '2023-7-25',
 									timetype0: false,
@@ -628,7 +629,7 @@
 					//2023-10-21添加
 					let obj = {
 						id: that.playGoalSuccessListID + 1,
-						content: that.swipeList[index].content,
+						title: that.swipeList[index].title,
 
 					}
 					console.log(obj);
@@ -638,7 +639,7 @@
 						key: 'playGoalSuccess', //自己取个名字
 						data: { //存的数据可以是很多条
 
-							content: that.swipeList[index].content,
+							title: that.swipeList[index].title,
 
 						},
 
@@ -765,7 +766,8 @@
 														text: '置顶'
 													}
 												],
-												content: data.title,
+												title: data.title,
+												content: data.content,
 												timetype0: data.timetype0,
 												timetype1: data.timetype1,
 												starttime: data.startDate,
@@ -792,7 +794,7 @@
 												}
 											});
 											console.log('play页面成功接收到add_playgoal的数据');
-
+											that.$set(that, 'swipeList', that.swipeList);
 										},
 
 									}
@@ -873,14 +875,14 @@
 							
 							let Indexobj = {
 								ListID: listID,
-								ListIndex: listIndex
+								ListIndex: listIndex,
+								ListImage: that.Two_dimensional_array[listID].list[listIndex].url,
 							};
 
 							uni.setStorage({ //存入Storage
 								key: 'CurrentTitle', //自己取个名字
 								data: { //存的数据可以是很多条
-									TitleName: that.Two_dimensional_array[listID].list[listIndex].text
-
+									TitleName: that.Two_dimensional_array[listID].list[listIndex].text,
 
 								},
 

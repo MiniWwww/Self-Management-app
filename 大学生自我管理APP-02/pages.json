@@ -207,7 +207,11 @@
 			"path": "pages/self-manage/component/PersonCenter/PersonCenter",
 			"style": {
 				"navigationBarTitleText": "个人中心",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"bounce": "none",
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 
 		}, {

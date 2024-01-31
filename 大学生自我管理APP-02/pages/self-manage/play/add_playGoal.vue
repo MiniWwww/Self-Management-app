@@ -1,43 +1,57 @@
 <template>
-
-
 	<view class="addGoalForm">
 		<form class="FormPage" @reset="formReset">
-			<uni-card title="目标名称">
-				<textarea :maxlength="20" v-model="item.title" auto-height placeholder="请输入娱乐目标"></textarea>
-			</uni-card>
-
-			<uni-card title="目标描述">
-				<textarea :maxlength="20" v-model="item.content" auto-height placeholder="请输入内容"></textarea>
-			</uni-card>
-
-			<uni-card title="时间类型">
-				<uni-data-checkbox v-model="baseFormData.time" :localdata="time_type" @change="choosetimetype" />
-			</uni-card>
+			<view class="form-item_outside">
+				<uni-section style="height: 50px;" title="目标名称" subTitle="有什么想去做的事情呢~" padding>
+					<template v-slot:decoration>
+						<view class="decoration"></view>
+					</template>
+				</uni-section>
+				<view class="form-item_content">
+					<textarea :maxlength="20" v-model="item.title" auto-height placeholder="请输入"></textarea>
+				</view>
+			</view>
+			<view class="form-item_outside">
+				<uni-section style="height: 50px;" title="目标描述" subTitle="畅想一下想如何做这件快乐的事情吧~" padding>
+					<template v-slot:decoration>
+						<view class="decoration"></view>
+					</template>
+				</uni-section>
+				<view class="form-item_content">
+					<textarea :maxlength="20" v-model="item.content" auto-height placeholder="请输入"></textarea>
+				</view>
+			</view>
+			<view class="form-item_outside">
+				<uni-section style="height: 50px;" title="时间" subTitle="想什么时候做这件事呢？" padding>
+					<template v-slot:decoration>
+						<view class="decoration"></view>
+					</template>
+				</uni-section>
+				<view class="form-item_content">
+					<uni-data-checkbox v-model="baseFormData.time" :localdata="time_type" @change="choosetimetype" selectedColor="#009688" />
+					<view v-if="item.timetype0" class="time-picker">
+						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" start-placeholder="开始时间" rangeSeparator="至" end-placeholder="结束时间" />
+					</view>
+					<!-- 2023-10-24添加结束 -->
+					<!-- 周期时间选择器 -->				
+					<!-- 多选，循环遍历填充数据 -->
+					<view class="list-box" v-if="item.timetype1">
+						<view v-for="(item,index) in weeks" :key="index" @click="choice(index)"
+							:class="[item.selected?'selde':'noselde']">
+							{{item.selected?item.text:item.text}}
+						</view>
+					</view>
+				</view>
+			</view>
 			
-			<uni-card v-if="item.timetype0" title="选择时间范围">
 			<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
 			
-				<view class="example-body">
-					<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date"  />
-				</view>
-			</uni-card>
-			
-			
-			<!-- 2023-10-24添加结束 -->
-			
-			<view v-if="item.timetype1" class="uni-form-item-date">
-				<view class="uni-px-5 uni-pb-5">
-					<!-- <view class="text">多选选中：{{JSON.stringify(item.checkbox2)}}</view> -->
-					<uni-data-checkbox multiple v-model="item.checkbox2" :localdata="weeks"></uni-data-checkbox>
-				</view>
-			</view>
-
 			<view class="form-bottom">
-				<button form-type="submit" @click="SubmitEvent">提交</button>
-				<button type="default" form-type="reset">重设</button>
+				<button class="button" form-type="submit" @click="SubmitEvent">提交</button>
+				<button class="button" style="background-color: #797979; " form-type="reset">重设</button>
 			</view>
 		</form>
+		<view class="br"></view>
 	</view>
 </template>
 
@@ -51,36 +65,36 @@
 				// 2023-10-24添加结束
 				TodayDate:this.getDate(new Date()),
 				weeks: [{
-						text: '周一',
+						selected: false,
+						text: '一',
 						value: '每周一'
 					}, {
-						text: '周二',
+						selected: false,
+						text: '二',
 						value: '每周二'
 					}, {
-						text: '周三',
+						selected: false,
+						text: '三',
 						value: '每周三'
 					}, {
-						text: '周四',
+						selected: false,
+						text: '四',
 						value: '每周四'
-					},
-					{
-						text: '周五',
+					}, {
+						selected: false,
+						text: '五',
 						value: '每周五'
-					},
-					{
-						text: '周六',
+					}, {
+						selected: false,
+						text: '六',
 						value: '每周六'
-					},
-					{
-						text: '周日',
+					}, {
+						selected: false,
+						text: '日',
 						value: '每周日'
-					},
-					{
-						text: '每天',
-						value: '每天'
 					}
-
 				],
+				selectIndex:[],
 				// 基础表单数据
 				baseFormData: {
 					time: 2
@@ -104,7 +118,8 @@
 					startDate: '',
 					endDate: '',
 					daterange:'',
-					checkbox2: '',
+					checkbox2: [],
+					content: '',
 				},
 				info: {
 					lunar: true,
@@ -189,6 +204,14 @@
 					success: function(res) {
 						if (res.confirm) {
 							console.log('用户点击确定')
+							if(that.selectIndex.length==7){
+								that.item.checkbox2.push('每天');
+							}
+							else{
+								that.selectIndex.forEach(v=>{
+									that.item.checkbox2.push(that.weeks[v].value)
+								})
+							}
 							const eventChannel = that.getOpenerEventChannel();
 							let EventObj={
 								timetype0: that.item.timetype0,
@@ -198,7 +221,7 @@
 								endDate: that.datetimeRange[1],
 								daterange:that.item.daterange,
 								checkbox2: that.item.checkbox2,
-								
+								content: that.item.content,
 								
 							}
 							{
@@ -210,7 +233,7 @@
 									title: '',
 									startDate: '',
 									endDate: '',
-									checkbox2: '',
+									checkbox2: [],
 								};
 
 								uni.navigateBack();
@@ -226,12 +249,100 @@
 				console.log('清空数据')
 				console.log(e)
 			},
-
+			choice(index) {
+				//当再次被选中时，取消当前选中项
+				var that=this;
+				if (this.weeks[index].selected == true) {
+					this.weeks[index].selected = false;
+					//取消选中时删除数组中的值
+					for (var i = 0; i < this.selectIndex.length; i++) {
+						if (this.selectIndex[i] === index) {
+							this.selectIndex.splice(i, 1);
+						}
+					}
+					console.log("选中的值", this.selectIndex)
+				} else {
+					this.weeks[index].selected = true;
+					this.selectIndex.push(index)
+					console.log("选中的值", this.selectIndex)
+				}
+				this.selectIndex.sort((a,b)=>{
+					return a-b
+				})
+				console.log("排序后", this.selectIndex)
+			},
 		}
 	}
 </script>
 
 <style>
+	page {
+		background-color: rgb(245, 245, 245);
+	}
+	.addGoalForm{
+		display: flex;
+		flex-direction: column;
+		background-color: rgb(245, 245, 245);
+		/* justify-content: center; */
+		align-items: center;
+	}
+	.FormPage {
+		/* 表单页面颜色:浅灰*/
+		width: 100%;
+		padding: 20px;
+		background-color: rgb(245, 245, 245);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.form-item_outside{
+		padding: 2% 2%;
+		text-align: left;
+		background-color: white;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		width: 75%;
+		margin: 10px 0 20px 40px;
+	}
+	.decoration{
+		width: 4px;
+		height: 20px;
+		margin-right: 8px;
+		border-radius: 30%;
+		background-color: #009688;
+	}
+	.form-item_content{
+		margin: 12px 20px 15px;
+	}
+	.time-picker{
+		margin: 10px;
+	}
+	.list-box {
+		display: flex;
+		justify-content: space-between;
+		margin: 10px 0;
+	}
+	
+	.list-box>view {
+		width: 18px;
+		margin: 2px;
+		padding: 5px;
+		border-radius: 50px;
+		/* box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); */
+		text-align: center;
+		font-size: 12px;
+	}
+	
+	.list-box>view.selde {
+		background-color: #009688;
+		color: #fff;
+	}
+	
+	.list-box>view.noselde {
+		background-color: rgba(0, 0, 0, 0.1);
+		color: #3f3f3f;
+	}
 	.uni-form-item-date {
 		padding: 1% 5%;
 		text-align: left;
@@ -248,9 +359,33 @@
 
 	.uni-form-item-content {}
 
-	.form-bottom {
+	/* .form-bottom {
 		padding: 1% 5%;
 		text-align: left;
 		text-size-adjust: auto;
+	} */
+	.form-bottom {
+		width: 75%;
+		margin-left: 30px;
+		margin-top: 40px;
+		padding: 1% 5%;
+		/* text-align: left; */
+		/* text-size-adjust: auto; */
+		display: flex;
+		justify-content: space-evenly;
+	}
+	.button{
+		
+		color: white;
+		background-color: #009688;
+		border-radius: 180px;
+		border-color: white;
+		border-width: 1px;
+		width: 100px;
+		height: 45px;
+		text-align: center;
+	}
+	.br{/*留空*/
+		height: 80px;
 	}
 </style>

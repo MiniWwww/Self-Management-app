@@ -1,45 +1,62 @@
 <template>
-  
-  <view class="">
-	  <view class="informBox">
-		  
-	  	<textarea name="" id="" cols="120" rows="1" style="
-               text-align: center;
-               font: 15px 宋体;
-			   width: 100%;
-               border: 0" >这里是你的娱乐轨迹，看看过去娱乐瞬间吧~</textarea>
-	  </view>
-	  <uni-card v-for="(item, index) in EventList" :index="item.Today" :key="index">
-		  <view class="TodayTextBox">
-		  	 <text class="TodayText">{{item.Today}}</text>
-		  </view>
-		  <view class="EventNameBox">
-		  	<text class="EventName">{{item.title}}</text>
-			<uni-rate :readonly="true" :value="item.rank"  :max="10"/>
-			</view>
-			<view class="EventTimeBox">
-			<text class="EventTime">开始：{{item.TodaystartTime}}</text>
-			<text class="EventTime">结束：{{item.TodayendTime}}</text>
-		  </view>
-		  
-		  <view class="EventDescriptionBox">
-			  <text class="EventDescription">{{item.event_description}}</text>
-			  <view class="editor-box">
-			  	
-				  <view class="editor-empty">
-				  </view>
-				  <view class="editor-click" @click="changeEventDescription(index)">
-				  <image :src="'/static/编辑事件内容.png'" class="Event-eidtor-image" mode="aspectFill" />
-				  </view>
-			  </view>
-		  </view>
-		  
-	  </uni-card>
-  	
-	
-	
-  </view>
-	
+	<view class="">
+		<view class="header">
+			<text class="header-text">这里是你的娱乐轨迹\n看看过去娱乐瞬间吧~</text>
+		</view>
+		<view class="EventBox">
+			<uni-collapse v-for="(item, index) in EventList" :index="item.Today" :key="index" class="itemBox">
+				<uni-collapse-item :show-animation="true" :border="false" titleBorder="none">
+					<template v-slot:title>
+						<uni-list :border="false">
+							<uni-list-item :title="item.title" :note="item.Today" :thumb="item.ListImage">
+							</uni-list-item>
+						</uni-list>
+					</template>
+					<view style="margin-bottom: 20px; margin-top: -10px">
+						<view class="TodayTextBox">
+							<text class="TodayText"></text>
+						</view>
+						<view class="EventItem">
+							<uni-section style="height: 50px;" title="我的心情" padding>
+								<template v-slot:decoration>
+									<view class="decoration"></view>
+								</template>
+							</uni-section>
+							<view class="EventItem_content">
+								<uni-rate :readonly="true" :value="item.rank"  :max="10"/>
+							</view>
+						</view>
+						<view class="EventItem">
+							<uni-section style="height: 50px;" title="发生时间" padding>
+								<template v-slot:decoration>
+									<view class="decoration"></view>
+								</template>
+							</uni-section>
+							<view class="EventItem_content">
+								<text class="EventTime">开始：{{item.TodaystartTime}}</text>
+								<text class="EventTime">结束：{{item.TodayendTime}}</text>
+							</view>
+						</view>
+						<view class="EventItem" style="position: relative;">
+							<uni-section style="height: 50px;" title="记录" padding>
+								<template v-slot:decoration>
+									<view class="decoration"></view>
+								</template>
+							</uni-section>
+							<view class="EventItem_content">
+								<text class="EventDescription">{{item.event_description}}</text>
+							</view>
+							<view class="editor-click" @click="changeEventDescription(index)">
+								<image :src="'/static/编辑事件内容.png'" class="Event-eidtor-image" mode="aspectFill" />
+							</view>
+						</view>
+					</view>
+					
+				</uni-collapse-item>
+			</uni-collapse>
+		</view>
+		
+	</view>
 </template>
 
 <script>
@@ -123,76 +140,77 @@
 </script>
 
 <style>
-	.informBox{
-		border:4px dotted skyblue;
-		border-radius: 5px;
+	.header{
 		display: flex;
-		height: 30px;
-		text-align: center;
-		margin-top: 20px;
-		margin-left: 10px;
-		margin-right: 10px;
+		text-align: left;
+		font-size: 23px;
+		font-weight: 800;
+		margin: 25px 0 0 30px;
+	}
+	.header-text{
+		background:-webkit-linear-gradient(top, #000000, #aeaeae);/*设置线性渐变*/
+		/*为了支持更多的浏览器*/
+		-webkit-background-clip: text;/*背景被裁剪到文字*/
+		-webkit-text-fill-color: transparent;/*设置文字的填充颜色*/
+	}
+	.EventBox{
+		width: 88%;
+		margin: 15px;
+	}
+	.itemBox{
+		background: white;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		margin: 8px; 
+		text-align: left;
+		/* padding-bottom: 10px; */
+		/* border-radius: 10px; */
 	}
 	.TodayTextBox{
-		/* border: 10px solid salmon; */
-		/* background-color: darkseagreen; */
-		background-color: lavender;
 		border-radius: 20px;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrapl;
-		text-align: center;
+		margin: 10px;
 		
 	}
 	.TodayText{
-		
-		font-size: 3ch;
+		font-size: 13px;
 		
 	}
-	.EventNameBox{
+	.EventItem{
+		/* padding: 2% 2%; */
+		font-size: 17px;
+		text-align: left;
+		margin: 10px 15px;
+	}
+	.decoration{
+		width: 4px;
+		height: 15px;
+		margin-right: 8px;
+		border-radius: 30%;
+		background-color: #009688;
+	}
+	.EventItem_content{
+		margin: -8px 20px 0;
 		display: flex;
 		flex-direction: column;
-	}
-	.EventTimeBox{
-		display: flex;
-		flex-direction: column;
-	}
-	.EventName{
-		font-size: 2ch;
-		text-align: center;
 	}
 	.EventTime{
-		font-size: 1ch;
-		text-align: center;
+		font-size: 15px;
+		margin: 3px;
+		/* text-align: center; */
 	}
-	.EventDescriptionBox{
-		border: 5px solid antiquewhite;
-		
-		border-radius: 10px;
-		display: flex;
-		flex-direction: column;
-		flex-wrap: wrapl;
-		text-align: center;
-	}
-	.editor-box{
-		display: flex;
-		flex-direction: row;
-	}
-	.editor-empty{
-		width: 100%;
-		
+	.EventDescription{
+		font-size: 15px;
 	}
 	.editor-click{
-		height: 30px;
-		width: 30px;
+		height: 20px;
+		width: 20px;
 		
 	}
 	.Event-eidtor-image{
-		width: 30px;
-		height: 30px;
+		width: 20px;
+		height: 20px;
 		border-radius: 10px;
-		
-		
-		
+		position: absolute;
+		right: 10px;
+		top: 10px;
 	}
 </style>

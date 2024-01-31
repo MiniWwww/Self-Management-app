@@ -151,11 +151,6 @@
 					
 					<!-- 周期时间选择器 -->
 					<view v-if="cycle" class="cycle-seclct_outside">
-						<picker mode="time" :value="time" @change="onChange">
-							<view>
-								<text>{{time }}</text>
-							</view>
-						</picker>
 					
 						<!-- 多选，循环遍历填充数据 -->
 						<view class="list-box">

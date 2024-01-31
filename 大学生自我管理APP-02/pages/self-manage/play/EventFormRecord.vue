@@ -31,7 +31,7 @@
 						</template>
 					</uni-section>
 					<view class="form-item_content">
-						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" return-type="date" :end="item.Today" :picker-options="pickerOptions"/>
+						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至" :end="item.Today" :picker-options="pickerOptions"/>
 					</view>
 				</view>
 				<!-- <uni-card title="选择时间范围"> -->
@@ -122,7 +122,7 @@
 				PlayPageIndex: {
 					ListID: Number,
 					ListIndex: Number,
-					
+					ListImage: '',
 				},
 				item: {
 					title: '',
@@ -222,9 +222,9 @@
 
 							const eventChannel = that.getOpenerEventChannel();
 							eventChannel.on('GridIndexEmit', data => {
-								that.PlayPageIndex.ListID = data.ListID;
-								that.PlayPageIndex.ListIndex = data.ListIndex;
-
+								that.PlayPageIndex.ListID = data.data.ListID;
+								that.PlayPageIndex.ListIndex = data.data.ListIndex;
+								that.PlayPageIndex.ListImage = data.data.ListImage;
 								console.log('play界面成功发射数据给EventFormRecord', data)
 							});
 							eventChannel.emit('aditorEvent', that.item);
@@ -240,6 +240,7 @@
 							let EventObj={
 								ListID:that.PlayPageIndex.ListID,
 								ListIndex:that.PlayPageIndex.ListIndex,
+								ListImage:that.PlayPageIndex.ListImage,
 								title: that.item.title,
 								Today:that.item.Today,
 								TodaystartTime: that.datetimeRange[0],
