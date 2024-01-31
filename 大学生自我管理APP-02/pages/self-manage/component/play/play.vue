@@ -9,9 +9,9 @@
 		<!-- 基本项目 -->
 		<!--滑动换页-->
 		
-		<swiper class="swiper" :indicator-dots="true">
+		<swiper  class="swiper" :indicator-dots="true" >
 			<!-- 尝试把这三个放一起，行得通 -->
-			<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list">
+			<swiper-item  v-if="boolGetPlayEvent" v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list" >
 				<uni-grid :column="3" :show-border="false" :square="false">
 					<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index"
 						@longpress="del(item.id,gridindex)" @click="changeTwo_dimen(item.id,gridindex)">
@@ -130,6 +130,7 @@
 		data() {
 			return {
 				// 2023-10-21新增
+				boolGetPlayEvent:true,
 				playGoalSuccessList: [],
 				playGoalSuccessListID: 0,
 				Current_Two_dimen_array_index: 0,
@@ -419,25 +420,39 @@
 		// // 钩子：
 		mounted() {
 			console.log('这是play页面的mounted监听函数');
-		    
 			// 移除监听事件
 				// uni.$off('addnewGoal');
+		  },
+		  beforeMount(){
+			  console.log('这是play页面的beforeMount监听函数');
+			
 		  },
 		created() {
 			var that=this;
 			console.log('这是play页面的created监听函数');
 			console.log('当前swipeList:',this.swipeList);
 			//能获取成功，但报别的错误
+			var that=this;
+			let List=uni.getStorageSync('update_playEvent');
+			if(List){
+				console.log('获取娱乐事件数组成功',List);
+				//swiper一定要先销毁，不然报错
+				that.boolGetPlayEvent=false;
+				that.Two_dimensional_array=List;
+						that.boolGetPlayEvent=true;
+						console.log('获取后的Two_dimensional_array：',that.Two_dimensional_array);
+			}
 			// uni.getStorage({
 			// 	key:'update_playEvent',
 			// 	success(res) {
 			// 		console.log('获取娱乐事件数组成功',res.data);
-					
+			// 				//swiper一定要先销毁，不然报错
+			// 				that.boolGetPlayEvent=false;
 			// 		that.Two_dimensional_array=res.data;
+			// 				that.boolGetPlayEvent=true;
 			// 		console.log('获取后的Two_dimensional_array：',that.Two_dimensional_array);
 			// 	}
-			// });
-			
+			// }),
 			uni.getStorage({
 				key: 'playGoalDATA',
 				success(res) {
@@ -853,7 +868,9 @@
 							console.log('用户点击确定事件+1');
 							that.Two_dimensional_array[listID].list[listIndex].badge && that
 								.Two_dimensional_array[listID].list[listIndex].badge++;
-
+							
+							that.savePlayEvent();
+							
 							let Indexobj = {
 								ListID: listID,
 								ListIndex: listIndex
@@ -892,7 +909,8 @@
 										// 改变后的名称覆盖过去
 										that.Two_dimensional_array[listID].list[listIndex].text = data
 											.title;
-
+										
+										that.savePlayEvent();
 										console.log(obj);
 										// 上一句不加分号的话下面这个就执行不了
 										console.log('查看数组：', that.Two_dimensional_array[listID].list[

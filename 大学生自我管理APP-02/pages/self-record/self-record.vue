@@ -8,7 +8,7 @@
 					<image class="header" mode="aspectFill" :src="userhead"></image>
 				</view>
 				<view class="top-name">{{username}}</view>
-				<view class="top-sig">这里加一个个性签名</view>
+				<view class="top-sig">{{userMotto}}</view>
 			</view>
 		</view>
 		
@@ -163,6 +163,7 @@
 				
 				user_id: 2,//“我”的用户id
 				username: '我',
+				userMotto:'',
 				userhead:'../../static/self-record/user-head.png',//用户头像，考虑与个人信息页面的关联？
 
 				index: '',
@@ -233,12 +234,21 @@
 			//获取昵称
 			console.log('获取前的昵称'+this.username)
 			let username = uni.getStorageSync('userInfo').nickname
+			let userMotto=uni.getStorageSync('userInfo').motto
 			if(username){
 			this.username = username ;
 			console.log('获取后的昵称'+this.username);
 			}else{
 				this.username ='我';
 			}
+			
+			if(userMotto){
+			this.userMotto = userMotto ;
+			console.log('获取后的昵称'+this.userMotto);
+			}else{
+				this.userMotto ='这里是一个个性签名';
+			}
+			
 			
 			this.sleep_success_Count=uni.getStorageSync('self-record-sleep_success_Count');
 			console.log('获取后的上一次sleep_success_Count',this.sleep_success_Count);
