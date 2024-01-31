@@ -883,11 +883,7 @@
 								key: 'CurrentTitle', //自己取个名字
 								data: { //存的数据可以是很多条
 									TitleName: that.Two_dimensional_array[listID].list[listIndex].text,
-<<<<<<< HEAD
-=======
 									iconUrl:that.Two_dimensional_array[listID].list[listIndex].url,
-
->>>>>>> e9a0cfd8f663aa05aa088a4d4f46a7d10cb274ca
 
 								},
 
