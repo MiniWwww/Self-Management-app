@@ -141,49 +141,49 @@
 						list: [{
 								listindex: 0,
 
-								url: '/static/Game.png',
+								url: '/static/c22.png',
 								text: '打游戏',
 								badge: '0',
 								type: "primary"
 							},
 							{
 								listindex: 1,
-								url: '/static/烧烤.png',
+								url: '/static/c23.png',
 								text: '露营烧烤',
 								badge: '0',
 								type: "success"
 							},
 							{
 								listindex: 2,
-								url: '/static/k歌.png',
+								url: '/static/c20.png',
 								text: 'k歌',
 								badge: '0',
 								type: "warning"
 							},
 							{
 								listindex: 3,
-								url: '/static/游乐园.png',
+								url: '/static/c24.png',
 								text: '游园',
 								badge: '0',
 								type: "error" //type是角标的类型，比如errors红色的
 							},
 							{
 								listindex: 4,
-								url: '/static/摄影.png',
+								url: '/static/c25.png',
 								text: '摄影',
 								badge: '0',
 								type: "primary"
 							},
 							{
 								listindex: 5,
-								url: '/static/艺术品.png',
+								url: '/static/c27.png',
 								text: '看展',
 								badge: '0',
 								type: "primary"
 							},
 							{
 								listindex: 6,
-								url: '/static/14-企业团建.png',
+								url: '/static/c26.png',
 								text: '团建',
 								badge: '0',
 								type: "primary"
@@ -286,7 +286,7 @@
 							},
 							{
 								listindex: 1,
-								url: '/static/骑行.png',
+								url: '/static/c21.png',
 								text: '骑行',
 								badge: '0',
 								type: "success"
