@@ -879,7 +879,8 @@
 							uni.setStorage({ //存入Storage
 								key: 'CurrentTitle', //自己取个名字
 								data: { //存的数据可以是很多条
-									TitleName: that.Two_dimensional_array[listID].list[listIndex].text
+									TitleName: that.Two_dimensional_array[listID].list[listIndex].text,
+									iconUrl:that.Two_dimensional_array[listID].list[listIndex].url,
 
 
 								},
@@ -903,12 +904,13 @@
 										let obj = {
 											title: data.title,
 											Content_value: data.Content_value,
-											url: data.url
+											url: data.iconUrl
 										}
 										that.testList.push(obj);
 										// 改变后的名称覆盖过去
 										that.Two_dimensional_array[listID].list[listIndex].text = data
 											.title;
+										that.Two_dimensional_array[listID].list[listIndex].url = data.iconUrl;
 										
 										that.savePlayEvent();
 										console.log(obj);
