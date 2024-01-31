@@ -19,7 +19,10 @@
 			<uni-card title="年龄">
 				<textarea :maxlength="20" v-model="mydata.age" auto-height placeholder=""></textarea>
 			</uni-card>
-
+			
+			<uni-card title="个性签名">
+				<textarea :maxlength="20" v-model="mydata.motto" auto-height placeholder=""></textarea>
+			</uni-card>
 
 			<view class="form-bottom">
 				<button form-type="submit" @click="SubmitEvent">提交</button>
@@ -37,6 +40,7 @@
 				
 				mydata: {
 					nickname: '',
+					motto:'',
 					name: '',
 					gender: '',
 					age: '',

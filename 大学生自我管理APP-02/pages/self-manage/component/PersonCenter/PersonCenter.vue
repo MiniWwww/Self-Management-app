@@ -21,7 +21,7 @@
 						<!-- <input type="text" placeholder="请输入我的昵称" class="myNickname"> -->
 					</view>
 					<view class="mySig">
-						<text class="my-sig">这里一个个性签名</text>
+						<text class="my-sig">{{mydata.motto}}</text>
 						<!-- <input type="text" placeholder="请输入我的昵称" class="myNickname"> -->
 					</view>
 				</view>
@@ -66,6 +66,8 @@
 						showArrow />
 					<uni-list-item title="年龄" note="" :right-text="mydata.age" clickable @click="editordetail" showArrow />
 					<uni-list-item title="地区" note="" :right-text="mydata.zone" clickable @click="selectzone" showArrow />
+					<uni-list-item title="个性签名" note="" :right-text="mydata.motto" clickable @click="editordetail"
+						showArrow />
 				</uni-list>
 				
 			</view>
@@ -87,6 +89,7 @@
 				iconType: 'compose',
 				mydata: {
 					nickname: '我',
+					motto:'这里是一个个性签名',
 					name: '张三',
 					gender: '女',
 					age: '17',
@@ -257,6 +260,7 @@
 					events: {
 						editPersonalData(data) {
 							that.mydata.nickname = data.nickname;
+							that.mydata.motto=data.motto;
 							that.mydata.name = data.name;
 							that.mydata.gender = data.gender;
 							that.mydata.age = data.age;
@@ -265,6 +269,7 @@
 								key: 'userInfo', //自己取个名字
 								data: { //存的数据可以是很多条
 									nickname: that.mydata.nickname,
+									motto:that.mydata.motto,
 									name: that.mydata.name,
 									gender: that.mydata.gender,
 									age: that.mydata.age,
