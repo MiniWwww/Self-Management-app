@@ -4,11 +4,11 @@
 			:showNotWeek="true"></SqTimetable>
 		<!-- 字体图标 -->
 		<view class="create-todo" @click="creat"><text class="iconfont iconhao1"
-				:class="{ 'create-todo-active': textShow }">+</text></view>
+				:class="{ 'create-todo-active': textShow }" v-if="!textShow">+</text></view>
 		<!-- 输入框 -->
 		<view class="create-content" style="z-index: 1" v-if="activeInput" :class="{ 'create-show': textShow }">
 			<view class="create-content-box">
-				<uni-forms ref="form" :modelValue="formData" :rules="rules">
+				<uni-forms ref="form" :modelValue="formData" :rules="rules" label-width="80px">
 					<uni-forms-item required label="起始节" name="begin">
 						<uni-easyinput type="number" v-model="formData.begin" placeholder="这门课第几节开始？" />
 					</uni-forms-item>
@@ -22,19 +22,19 @@
 						<uni-easyinput type="text" v-model="formData.name" placeholder="请填写课程名" />
 					</uni-forms-item>
 					<uni-forms-item required label="起始周" name="week_begin">
-						<uni-easyinput type="number" v-model="formData.week_begin" placeholder="请填写课程名" />
+						<uni-easyinput type="number" v-model="formData.week_begin" placeholder="这门课第几周开始上？" />
 					</uni-forms-item>
 					<uni-forms-item required label="终止周" name="week_end">
-						<uni-easyinput type="number" v-model="formData.week_end" placeholder="请填写课程名" />
+						<uni-easyinput type="number" v-model="formData.week_end" placeholder="这门课第几周结课？" />
 					</uni-forms-item>
 					<uni-forms-item required label="上课地点" name="place">
-						<uni-easyinput type="text" v-model="formData.place" placeholder="请填写课程名" />
+						<uni-easyinput type="text" v-model="formData.place" placeholder="请填写上课地点" />
 					</uni-forms-item>
 					<uni-forms-item required label="授课老师" name="teacher">
-						<uni-easyinput type="text" v-model="formData.teacher" placeholder="请填写课程名" />
+						<uni-easyinput type="text" v-model="formData.teacher" placeholder="请填写授课老师" />
 					</uni-forms-item>
 					<uni-forms-item required label="学分" name="credit">
-						<uni-easyinput type="number" v-model="formData.credit" placeholder="请填写课程名" />
+						<uni-easyinput type="number" v-model="formData.credit" placeholder="请填写本课程学分" />
 					</uni-forms-item>
 				</uni-forms>
 				<view class="creat-button" v-if="creatButtonShow" @click="submit">创建</view>
@@ -373,7 +373,7 @@
 		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
 		z-index: 2;
 	}
-
+	
 	.create-show {
 		opacity: 1;
 		transform: scale(1) translateY(0);

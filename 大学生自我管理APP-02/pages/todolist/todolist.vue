@@ -76,7 +76,7 @@
 
 		<!-- 字体图标 -->
 		<view class="create-todo" @click="creat">
-			<text class="iconfont iconhao1" :class="{ 'create-todo-active': tetxShow }">+</text>
+			<text class="iconfont iconhao1" v-if="!tetxShow">+</text>
 		</view>
 		<!-- 定位到“今天” -->
 		<view v-if="today_button_flag" class="today_button" @click="goToToday">
@@ -90,7 +90,7 @@
 			<view class="create-content-box">
 				<view class="create-header">
 					<view class="create-header_left">
-						<uni-icons type="closeempty" size="28" @click="close()"></uni-icons>
+						<uni-icons type="closeempty" size="28" @click="creat"></uni-icons>
 						<text style="font-size: 17px; font-weight: 600;">新建事项</text>
 					</view>
 					<view class="create-header_right">
@@ -877,7 +877,8 @@
 				this.list1[4].selected = false;
 				this.list1[5].selected = false;
 				this.list1[6].selected = false;
-				this.close();
+				this.creat();
+				this.clear();
 				
 				this.$set(this, 'listAfterSort', this.listAfterSort);
 				this.$set(this, 'list', this.list);
@@ -1277,7 +1278,7 @@
 	}
 	.create-todo {
 		position: fixed;
-		bottom: 100rpx;
+		bottom: 80rpx;
 		right: 40rpx;
 		width: 90rpx;
 		height: 90rpx;
@@ -1290,14 +1291,14 @@
 		z-index: 97;
 		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
 	}
-
+	
 	.create-todo {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		position: fixed;
 		bottom: 20px;
-
+		font-size: 70rpx;
 		right: 20;
 		margin: 0 auto;
 		width: 50px;
