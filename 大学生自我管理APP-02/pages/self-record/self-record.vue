@@ -646,15 +646,27 @@
 			playRemind(){
 				
 				let playContent = uni.getStorageSync('playGoalSuccess')
-				console.log(playContent);
-				if (playContent.content!=null)
+				
+				if(playContent){
+				console.log("成功接收到playGoalSuccess："+playContent);
+				
+				}
+				if (playContent.title!=null)
 				{
-					let now = new Date()
-					let content = '恭喜你！目标： ' + playContent.content + ` 已完成`
 					
-				this.system_remind(now.getTime(), content);
-				// 清除，否则一直刷新一直发
-				uni.removeStorageSync('playGoalSuccess')
+					let now = new Date()
+					if(playContent.timetype0&&(playContent.timetype1==false)){
+						let content = '恭喜你！目标： ' + playContent.title + ` 已完成`
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('playGoalSuccess')
+					}else if(playContent.timetype1&&(playContent.timetype0==false)){
+						let content = '恭喜你！完成一次目标： ' + playContent.title 
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('playGoalSuccess')
+					}
+
 				}
 			},
 			
