@@ -44,7 +44,7 @@
 					</uni-section>
 					<view class="form-item_content">
 						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至"
-							return-type="date" :end="item.Today" :picker-options="pickerOptions" />
+							 :end="item.Today" :picker-options="pickerOptions" />
 					</view>
 				</view>
 				<!-- <uni-card title="选择时间范围"> -->

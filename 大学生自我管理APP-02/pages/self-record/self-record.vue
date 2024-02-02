@@ -661,10 +661,25 @@
 						// 清除，否则一直刷新一直发
 						uni.removeStorageSync('playGoalSuccess')
 					}else if(playContent.timetype1&&(playContent.timetype0==false)){
+						console.log('playContent.isdone==',playContent.isdone)
+						
+						if(playContent.isdone==false){
 						let content = '恭喜你！完成一次目标： ' + playContent.title 
 						this.system_remind(now.getTime(), content);
 						// 清除，否则一直刷新一直发
 						uni.removeStorageSync('playGoalSuccess')
+						}else if(playContent.isdone==true ){
+							let weekDoneContent= uni.getStorageSync('doneWeekMessage')
+							if(weekDoneContent.title){
+								let content = `恭喜你！目标：${weekDoneContent.title} 已完成！ 完成周数:${weekDoneContent.doneWeekCount} 执行日：${
+								    weekDoneContent.completedWeeks.map(w => `第${w.week}周: ${w.days.join(", ")}`).join("; ")
+								}`;
+								this.system_remind(now.getTime(), content);
+								uni.removeStorageSync('playGoalSuccess')
+								uni.removeStorageSync('doneWeekMessage')
+							}
+							
+						}
 					}
 
 				}
