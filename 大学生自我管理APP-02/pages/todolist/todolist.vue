@@ -76,7 +76,7 @@
 
 		<!-- 字体图标 -->
 		<view class="create-todo" @click="creat">
-			<text class="iconfont iconhao1" :class="{ 'create-todo-active': tetxShow }">+</text>
+			<text class="iconfont iconhao1" v-if="!tetxShow">+</text>
 		</view>
 		<!-- 定位到“今天” -->
 		<view v-if="today_button_flag" class="today_button" @click="goToToday">
@@ -86,11 +86,11 @@
 		<SimpleDateTimePicker ref="myPicker" @submit="handleSubmit_dayAndTime" :start-year="2023" :end-year="2030" />
 		
 		<!-- 输入框 -->
-		<view class="create-content" style="z-index: 99" v-if="activeInput" :class="{ 'create-show': tetxShow }">
+		<view class="create-content" style="z-index: 96" v-if="activeInput" :class="{ 'create-show': tetxShow }">
 			<view class="create-content-box">
 				<view class="create-header">
 					<view class="create-header_left">
-						<uni-icons type="closeempty" size="28" @click="close()"></uni-icons>
+						<uni-icons type="closeempty" size="28" @click="creat"></uni-icons>
 						<text style="font-size: 17px; font-weight: 600;">新建事项</text>
 					</view>
 					<view class="create-header_right">
@@ -151,11 +151,6 @@
 					
 					<!-- 周期时间选择器 -->
 					<view v-if="cycle" class="cycle-seclct_outside">
-						<picker mode="time" :value="time" @change="onChange">
-							<view>
-								<text>{{time }}</text>
-							</view>
-						</picker>
 					
 						<!-- 多选，循环遍历填充数据 -->
 						<view class="list-box">
@@ -399,8 +394,10 @@
 		},
 
 		onLoad() {
-			this.listAfterSort=this.sort_list();
-			//this.getList()
+			this.getList()
+			if(this.listAfterSort.length==0){
+				this.listAfterSort=this.sort_list();
+			}
 		},
 		onReady() {
 			var that=this;
@@ -414,6 +411,7 @@
 			let query = uni.createSelectorQuery();
 			let wh = uni.getSystemInfoSync().windowHeight;//可视区域高
 			query.select('.today').boundingClientRect(rect => {
+				//console.log(rect)
 				let top = rect.top;//距离顶部高度
 				let bottom = rect.bottom;
 				let vh = rect.height;//元素高度
@@ -430,7 +428,7 @@
 			listData() {
 				var that=this;
 				let list = JSON.parse(JSON.stringify(that.listAfterSort)); //拷贝对象
-				console.log(list);
+				//console.log(list);
 				const date = new Date();
 				const year = date.getFullYear();
 				const month = date.getMonth() + 1;
@@ -449,7 +447,7 @@
 				that.buttonText = nowtime;
 				that.selectedDate = nowtime;
 				that.day = today;
-				that.year = `${year}年`;
+				that.year = `${year}`;
 				that.weekday = todayWeekday;
 				that.time = time;
 				that.todayWeekday = todayWeekday
@@ -544,14 +542,22 @@
 					key: 'todolist',
 					data: this.list
 				})
+				await uni.setStorage({
+					key: 'todolist_sorted',
+					data: this.listAfterSort
+				})
 			},
 		    getList() {
 				let res = uni.getStorageSync('todolist')
-				console.log(res);
 				if(res){
+					console.log("list",res);
 					this.list = res
 				}
-				
+				res = uni.getStorageSync('todolist_sorted')
+				if(res){
+					console.log("listAfterSort",res);
+					this.listAfterSort = res
+				}
 			},
 			sort_list(){
 				var that=this;
@@ -566,7 +572,7 @@
 						list_cycles.push(v);
 					}
 				})
-				console.log(list_sort);
+				//console.log(list_sort);
 				list_sort.sort((a,b)=>{
 					return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
 				})
@@ -862,7 +868,7 @@
 				this.list.unshift(obj);
 				this.listAfterSort = this.sort_list();
 				console.log(this.listAfterSort);
-				//this.saveList()
+				this.saveList()
 
 				this.list1[0].selected = false;
 				this.list1[1].selected = false;
@@ -871,7 +877,8 @@
 				this.list1[4].selected = false;
 				this.list1[5].selected = false;
 				this.list1[6].selected = false;
-				this.close();
+				this.creat();
+				this.clear();
 				
 				this.$set(this, 'listAfterSort', this.listAfterSort);
 				this.$set(this, 'list', this.list);
@@ -939,7 +946,7 @@
 				})
 				const query = uni.createSelectorQuery()
 				query.select('.first').boundingClientRect((data) => {
-					console.log("第一个", data);
+					//console.log("第一个", data);
 					let height = Math.abs(data.top)+25;
 					uni.pageScrollTo({
 						scrollTop: height, //滚动的距离
@@ -1266,12 +1273,12 @@
 		background-color: #009688;
 		color: #fff;
 		font-size: 15px;
-		z-index: 999997;
+		z-index: 97;
 		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
 	}
 	.create-todo {
 		position: fixed;
-		bottom: 100rpx;
+		bottom: 80rpx;
 		right: 40rpx;
 		width: 90rpx;
 		height: 90rpx;
@@ -1281,17 +1288,17 @@
 		background-color: #009688;
 		color: #fff;
 		font-size: 70rpx;
-		z-index: 999997;
+		z-index: 97;
 		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
 	}
-
+	
 	.create-todo {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		position: fixed;
 		bottom: 20px;
-
+		font-size: 70rpx;
 		right: 20;
 		margin: 0 auto;
 		width: 50px;
@@ -1327,7 +1334,7 @@
 		border-radius: 20rpx;
 		background-color: #f3f3f3;
 		/*box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;*/
-		z-index: 2;
+		z-index: 96;
 	}
 	.create-header{
 		display: flex;

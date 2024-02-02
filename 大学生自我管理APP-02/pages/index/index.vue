@@ -32,7 +32,7 @@
 		<!-- 输入框 -->
 		<view class="create-content" style="z-index: 1" v-if="activeInput" :class="{ 'create-show': textShow }">
 			<view class="create-content-box">
-				<uni-forms ref="form" :modelValue="formData" :rules="rules">
+				<uni-forms ref="form" :modelValue="formData" :rules="rules" label-width="80px">
 					<uni-forms-item required label="起始节" name="begin">
 						<uni-easyinput type="number" v-model="formData.begin" placeholder="这门课第几节开始？" />
 					</uni-forms-item>
@@ -476,7 +476,7 @@
 		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
 		z-index: 2;
 	}
-
+	
 	.create-show {
 		opacity: 1;
 		transform: scale(1) translateY(0);

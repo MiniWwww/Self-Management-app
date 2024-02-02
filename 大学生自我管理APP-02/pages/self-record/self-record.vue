@@ -8,7 +8,7 @@
 					<image class="header" mode="aspectFill" :src="userhead"></image>
 				</view>
 				<view class="top-name">{{username}}</view>
-				<view class="top-sig">这里加一个个性签名</view>
+				<view class="top-sig">{{userMotto}}</view>
 			</view>
 		</view>
 		
@@ -163,6 +163,7 @@
 				
 				user_id: 2,//“我”的用户id
 				username: '我',
+				userMotto:'',
 				userhead:'../../static/self-record/user-head.png',//用户头像，考虑与个人信息页面的关联？
 
 				index: '',
@@ -233,12 +234,21 @@
 			//获取昵称
 			console.log('获取前的昵称'+this.username)
 			let username = uni.getStorageSync('userInfo').nickname
+			let userMotto=uni.getStorageSync('userInfo').motto
 			if(username){
 			this.username = username ;
 			console.log('获取后的昵称'+this.username);
 			}else{
 				this.username ='我';
 			}
+			
+			if(userMotto){
+			this.userMotto = userMotto ;
+			console.log('获取后的昵称'+this.userMotto);
+			}else{
+				this.userMotto ='这里是一个个性签名';
+			}
+			
 			
 			this.sleep_success_Count=uni.getStorageSync('self-record-sleep_success_Count');
 			console.log('获取后的上一次sleep_success_Count',this.sleep_success_Count);
@@ -636,15 +646,42 @@
 			playRemind(){
 				
 				let playContent = uni.getStorageSync('playGoalSuccess')
-				console.log(playContent);
-				if (playContent.content!=null)
+				
+				if(playContent){
+				console.log("成功接收到playGoalSuccess："+playContent);
+				
+				}
+				if (playContent.title!=null)
 				{
-					let now = new Date()
-					let content = '恭喜你！目标： ' + playContent.content + ` 已完成`
 					
-				this.system_remind(now.getTime(), content);
-				// 清除，否则一直刷新一直发
-				uni.removeStorageSync('playGoalSuccess')
+					let now = new Date()
+					if(playContent.timetype0&&(playContent.timetype1==false)){
+						let content = '恭喜你！目标： ' + playContent.title + ` 已完成`
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('playGoalSuccess')
+					}else if(playContent.timetype1&&(playContent.timetype0==false)){
+						console.log('playContent.isdone==',playContent.isdone)
+						
+						if(playContent.isdone==false){
+						let content = '恭喜你！完成一次目标： ' + playContent.title 
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('playGoalSuccess')
+						}else if(playContent.isdone==true ){
+							let weekDoneContent= uni.getStorageSync('doneWeekMessage')
+							if(weekDoneContent.title){
+								let content = `恭喜你！目标：${weekDoneContent.title} 已完成！ 完成周数:${weekDoneContent.doneWeekCount} 执行日：${
+								    weekDoneContent.completedWeeks.map(w => `第${w.week}周: ${w.days.join(", ")}`).join("; ")
+								}`;
+								this.system_remind(now.getTime(), content);
+								uni.removeStorageSync('playGoalSuccess')
+								uni.removeStorageSync('doneWeekMessage')
+							}
+							
+						}
+					}
+
 				}
 			},
 			
@@ -677,7 +714,7 @@
 					let sleep_goal=successData.sleep_goal
 					let sleep_time=successData.sleep_time
 					
-					let content = '恭喜你！完成今天的睡眠目标\n起床目标  '+getup_goal+ '  起床时间  '+getup_time+ '\n睡眠目标：  ' + sleep_goal+'  今日睡眠时间： ' +sleep_time
+					let content = '恭喜你！完成今天的睡眠目标\n\n起床目标  '+getup_goal+ '  起床时间  '+getup_time+ '\n睡眠目标：  ' + sleep_goal+'  今日睡眠时间： ' +sleep_time
 					
 				this.system_remind(now.getTime(), content);
 				// 清除，否则一直刷新一直发

@@ -3,9 +3,18 @@
 		<view class="navbar_box">
 			<view class="part">
 				
-				<view  @click="goToSport" class="box_item" :style="[{background:((this.sport)?'#f5f5f5':'white')},{fontSize:((this.sport)?'20px':'')}]">运动</view>
-				<view  @click="goToSleep" class="box_item" :style="[{background:((this.sleep)?'#f5f5f5':'white')},{fontSize:((this.sleep)?'20px':'')}]">睡眠</view>
-				<view  @click="goToPlay" class="box_item" :style="[{background:((this.play)?'#f5f5f5':'white')},{fontSize:((this.play)?'20px':'')}]">娱乐</view>
+				<view  @click="goToSport" class="box_item" :style="[{fontSize:((this.sport)?'19px':'')}]">
+					运动
+					<view class="item_bottom" v-if="this.sport"></view>
+				</view>
+				<view  @click="goToSleep" class="box_item" :style="[{fontSize:((this.sleep)?'19px':'')}]">
+					睡眠
+					<view class="item_bottom" v-if="this.sleep"></view>
+				</view>
+				<view  @click="goToPlay" class="box_item" :style="[{fontSize:((this.play)?'19px':'')}]">
+					娱乐
+					<view class="item_bottom" v-if="this.play"></view>
+				</view>
 				
 				
 			</view>
@@ -97,11 +106,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 50px;
+		height: 55px;
 		padding-top: 30px;
 		box-shadow: -2px 3px 5px 0 rgba(0, 0, 0, 0.1);
 		position: fixed;
-		z-index: 1;
+		z-index: 99;
 		width: 100%;
 		background-color: #ffffff;
 	}
@@ -110,10 +119,18 @@
 		align-items: center;
 		justify-content: center;
 		position: relative;
-		width:20%;
+		width:16%;
 		height: 40px;
 		font-size: 15px;
 		border-radius: 10px;
+	}
+	.item_bottom{
+		position: absolute;
+		top: 35px;
+		width: 40%;
+		height: 5px;
+		border-radius: 30px;
+		background-color: #009688;
 	}
 	.part{
 		display: flex;

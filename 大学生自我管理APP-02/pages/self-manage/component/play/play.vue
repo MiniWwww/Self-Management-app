@@ -1,72 +1,101 @@
 <template>
-	<view class="wrap">
-		<uni-card is-full :is-shadow="false">
-			<text class="uni-h6">今天玩了什么呢</text>
-		</uni-card>
+	<view style="overflow-y: auto; min-height: 100vh;" @touchstart="closePop">
+		<view class="header">
+			<view class="header-text">今天玩了什么呢</view>
+			<view class="wenhao">?</view>
+		</view>
 
 
 		<!-- 基本项目 -->
-		<uni-section title="娱乐活动" type="line" padding>
-			<!--滑动换页-->
+		<!--滑动换页-->
 
-			<swiper class="swiper" :indicator-dots="true">
-				<!-- 尝试把这三个放一起，行得通 -->
-				<swiper-item v-for="(item ,index) in Two_dimensional_array" :index="item.id" :key="item.list">
-					<uni-grid :column="3" :show-border="false" :square="false">
-						<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index"
-							@longpress="del(item.id,gridindex)" @click="changeTwo_dimen(item.id,gridindex)">
-							<view class="grid-item-box">
-								<!-- grid里的图片、标题、角标显示 -->
-								<image class="image" :src="griditem.url" mode="aspectFill" />
-								<text class="text">{{griditem.text}}</text>
-								<view v-if="griditem.badge" class="grid-dot">
-									<!-- 角标 -->
-									<uni-badge :text="griditem.badge" :type="griditem.type" />
-								</view>
-							</view>
-						</uni-grid-item>
-					</uni-grid>
-				</swiper-item>
-
-
-			</swiper>
-
-		</uni-section>
-
-
-
-		<uni-card title="目标列表">
-			<!-- <uni-collapse> -->
-			<!-- <uni-collapse-item title="目标列表" :open="true"> -->
-			<view class="swipeBox">
-				<uni-swipe-action ref="swipeAction">
-					<uni-swipe-action-item class="test" v-for="(item, index) in swipeList" :left-options="item.options"
-						:key="item.id" @change="swipeChange($event, index)" @click="swipeClick($event, index)">
-						<view class="content-box">
-							<view class="content-text-time">
-								<text class="content-text">{{ item.content }}</text>
-								<view v-if="item.timetype0" class="content-time">
-									<text>开始:{{ item.starttime }}</text>
-									<text>结束:{{ item.endttime }}</text>
-								</view>
-
-								<view v-if="item.timetype1" class="content-time-cycle">
-
-									<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex"
-										:key="dayindex">{{ day }}</text>
-
-								</view>
-							</view>
-							<view class="showDown" v-if="item.isdone">
-								<image :src="'/static/done1.png'" class="doneimage" mode="aspectFill" />
+		<swiper class="swiper" :indicator-dots="true">
+			<!-- 尝试把这三个放一起，行得通 -->
+			<swiper-item v-if="boolGetPlayEvent" v-for="(item ,index) in Two_dimensional_array" :index="item.id"
+				:key="item.list">
+				<uni-grid :column="3" :show-border="false" :square="false">
+					<uni-grid-item v-for="(griditem ,gridindex) in item.list" :index="index" :key="index"
+						@longpress="del(item.id,gridindex)" @click="changeTwo_dimen(item.id,gridindex)"
+						@dblclick="minusBadge(item.id,gridindex)">
+						<view class="grid-item-box">
+							<!-- grid里的图片、标题、角标显示 -->
+							<image class="image" :src="griditem.url" mode="aspectFill" />
+							<text class="text">{{griditem.text}}</text>
+							<view v-if="griditem.badge" class="grid-dot">
+								<!-- 角标 -->
+								<uni-badge :text="griditem.badge" :type="griditem.type" />
 							</view>
 						</view>
-					</uni-swipe-action-item>
-				</uni-swipe-action>
+					</uni-grid-item>
+				</uni-grid>
+			</swiper-item>
+
+
+		</swiper>
+
+
+
+		<!-- <uni-card title="目标列表"> -->
+		<!-- <uni-collapse> -->
+		<!-- <uni-collapse-item title="目标列表" :open="true"> -->
+		<view class="target_header">
+			<view class="header-text">我的目标</view>
+			<view class="wenhao">!</view>
+		</view>
+		<view class="target-box">
+			<view class="content-box" :class="{'targetDone': item.isdone}" v-for="(item, index) in swipeList"
+				:key="item.id">
+				<view class="content-title">
+					{{ item.title }}
+					<view class="pop_select" @touchstart.stop @click="popup(index)"> <!--弹出-->
+						<uni-icons type="more" size="20" color="#009688"
+							style="position: absolute; right: 9%;"></uni-icons>
+					</view>
+				</view>
+				<view class="content-time">
+					<view v-if="item.timetype0" class="content-time-time">
+						<text>开始：{{ item.starttime }}</text>
+						<text>结束：{{ item.endttime }}</text>
+						<image v-if="item.isNotStart" src="../../../../static/未开始.png"
+							style="height: 25px;width: 50px;justify-content: end"></image>
+						<image v-if="item.istargetDate" src="../../../../static/待完成2.png"
+							style="height: 25px;width: 50px;justify-content: end"></image>
+						<image v-if="item.isoverdue" src="../../../../static/已过期.png"
+							style="height: 25px;width: 25px;justify-content: end"></image>
+
+					</view>
+
+					<view v-if="item.timetype1" class="content-time-cycle">
+						<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex" :key="dayindex">{{ day }},
+						</text>
+						<image v-if="item.istargetDate&&!item.isTodayDone" src="../../../../static/待完成2.png"
+							style="height: 25px;width: 25px;justify-content: end"></image>
+
+						<image v-if="item.isTodayDone" src="../../../../static/今日已完成.png"
+							style="height: 25px;width: 25px;justify-content: end"></image>
+
+					</view>
+				</view>
+				<view class="more_list" v-if="item.pop_flag" @touchstart.stop>
+					<view v-for="(option_item, option_index) in item.options" :key="option_item.text"
+						class="more_list_item" @click.stop="swipeClick(option_item, index, item)">
+						{{option_item.text}}
+					</view>
+				</view>
+				<view class="showDown" v-if="item.isdone">
+					<image src="/static/小红花.png" class="doneimage" mode="aspectFill" />
+				</view>
 			</view>
-			<!-- </uni-collapse-item> -->
-			<!-- </uni-collapse> -->
-		</uni-card>
+			<!-- <uni-swipe-action ref="swipeAction">
+				<uni-swipe-action-item  :left-options="item.options"
+					 @change="swipeChange($event, index)" @click="swipeClick($event, index)">
+					
+				</uni-swipe-action-item>
+			</uni-swipe-action> -->
+		</view>
+		<!-- </uni-collapse-item> -->
+		<!-- </uni-collapse> -->
+		<!-- </uni-card> -->
 
 
 
@@ -74,27 +103,11 @@
 		<!-- <button type="primary" @click="inputModalToggle"><text class="button-text">添加新项目</text>
 			</button> -->
 
-
-
-
 		<uni-popup ref="inputModal" type="dialog">
 			<uni-popup-dialog ref="inputClose" mode="input" title="输入事件名称" value="烧烤" placeholder="请输入内容"
 				@confirm="dialogInputConfirm">
 			</uni-popup-dialog>
 		</uni-popup>
-
-		<!-- 设定目标的弹出框 ：目前弃用 -->
-		<uni-popup ref="inputPlayGoal" type="dialog">
-			<uni-popup-dialog ref="inputClose" mode="input" title="输入目标名称" value="游泳" placeholder="请输入内容"
-				@confirm="confirmAddNewPlayGoal">
-
-			</uni-popup-dialog>
-			<uni-easyinput errorMessage v-model="start" focus placeholder="开始时间(格式2023-7-23-3am)"
-				@input="inputStartTime"></uni-easyinput>
-			<uni-easyinput errorMessage v-model="end" focus placeholder="结束时间(格式2023-7-23-3pm)"
-				@input="inputEndTime"></uni-easyinput>
-		</uni-popup>
-
 
 
 		<!-- 悬浮按钮 -->
@@ -113,6 +126,7 @@
 				<uni-popup-message :type="msgType" :message="messageText" :duration="2000"></uni-popup-message>
 			</uni-popup>
 		</view>
+		<view class="br"></view>
 	</view>
 </template>
 
@@ -130,7 +144,20 @@
 
 		data() {
 			return {
+				week: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+				today: '',
+				today_year: '',
+				today_date: '',
+				today_week: '',
+				nowtime: [{
+					hour: ''
+				}, {
+					minute: ''
+				}],
+				clickTimeout: null, // 单击延迟任务的标识符
+				doubleClickDelay: 200, // 定义双击事件的时间间隔阈值（单位：毫秒）
 				// 2023-10-21新增
+				boolGetPlayEvent: true,
 				playGoalSuccessList: [],
 				playGoalSuccessListID: 0,
 				Current_Two_dimen_array_index: 0,
@@ -141,62 +168,66 @@
 						list: [{
 								listindex: 0,
 
-								url: '/static/Game.png',
+								url: '/static/c22.png',
 								text: '打游戏',
 								badge: '0',
-
 								type: "primary"
 							},
 							{
 								listindex: 1,
-								url: '/static/烧烤.png',
+								url: '/static/c23.png',
 								text: '露营烧烤',
 								badge: '0',
 								type: "success"
 							},
 							{
 								listindex: 2,
-								url: '/static/k歌.png',
+								url: '/static/c20.png',
 								text: 'k歌',
 								badge: '0',
 								type: "warning"
 							},
 							{
 								listindex: 3,
-								url: '/static/游乐园.png',
+								url: '/static/c24.png',
 								text: '游园',
 								badge: '0',
 								type: "error" //type是角标的类型，比如errors红色的
 							},
 							{
 								listindex: 4,
-								url: '/static/摄影.png',
+								url: '/static/c25.png',
 								text: '摄影',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 5,
-								url: '/static/艺术品.png',
+								url: '/static/c27.png',
 								text: '看展',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 6,
-								url: '/static/14-企业团建.png',
+								url: '/static/c26.png',
 								text: '团建',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 7,
 								url: '/static/密室预订.png',
 								text: '密室逃脱',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 8,
 								url: '/static/旅游.png',
 								text: '旅游',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							}
 						]
 					},
@@ -209,7 +240,6 @@
 								url: '/static/综合素质评价.png',
 								text: '素拓',
 								badge: '0',
-
 								type: "primary"
 							},
 							{
@@ -237,31 +267,36 @@
 								listindex: 4,
 								url: '/static/购物车空.png',
 								text: '购物',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 5,
 								url: '/static/画画.png',
 								text: '画画',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 6,
 								url: '/static/美食.png',
 								text: '品尝美食',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 7,
 								url: '/static/跳舞.png',
 								text: '跳舞',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							},
 							{
 								listindex: 8,
 								url: '/static/桌球.png',
 								text: '桌球',
-								badge: '0'
+								badge: '0',
+								type: "primary"
 							}
 						],
 					},
@@ -278,7 +313,7 @@
 							},
 							{
 								listindex: 1,
-								url: '/static/骑行.png',
+								url: '/static/c21.png',
 								text: '骑行',
 								badge: '0',
 								type: "success"
@@ -314,6 +349,7 @@
 								url: '/static/DIY手工.png',
 								text: 'DIY手工',
 								badge: '0',
+								type: "primary"
 
 							},
 							{
@@ -321,12 +357,14 @@
 								url: '/static/玩手机.png',
 								text: '玩手机',
 								badge: '0',
+								type: "primary"
 
 							}, {
 								listindex: 8,
 								url: '/static/演出.png',
 								text: '演出',
 								badge: '0',
+								type: "primary"
 
 							},
 						],
@@ -338,60 +376,7 @@
 
 				// 2023-7-31新增
 				testList: [],
-				swipeList: [{
-						id: 0,
-						options: [{
-								text: '删除',
-								style: {
-									backgroundColor: 'rgb(255,58,49)'
-								}
-							},
-
-							{
-								text: '完成',
-								style: {
-									backgroundColor: 'rgb(254,156,1)'
-								}
-							}, {
-								text: '置顶'
-							}
-
-						],
-						content: '例:去一次livehouse',
-						starttime: '2023-7-21',
-						endttime: '2023-7-22',
-						timetype0: true,
-						timetype1: false,
-						isdone: false,
-						checkbox2: []
-					},
-					{
-						id: 1,
-						options: [{
-								text: '删除',
-								style: {
-									backgroundColor: 'rgb(255,58,49)'
-								}
-							},
-
-							{
-								text: '完成',
-								style: {
-									backgroundColor: 'rgb(254,156,1)'
-								}
-							}, {
-								text: '置顶'
-							}
-						],
-						content: '例:散散步',
-						starttime: '2023-7-23',
-						endttime: '2023-7-25',
-						timetype0: false,
-						timetype1: true,
-						isdone: false,
-						checkbox2: ["每周一", "每周二", "每周三"]
-					}
-				],
+				swipeList: [],
 
 				// 2023-7-31新增结束
 
@@ -400,8 +385,8 @@
 				fabpattern: {
 					color: '#7A7E83',
 					backgroundColor: '#fff',
-					selectedColor: '#007AFF',
-					buttonColor: '#007AFF',
+					selectedColor: '#009688',
+					buttonColor: '#009688',
 					iconColor: '#fff'
 				},
 				fabcontent: [{
@@ -450,56 +435,342 @@
 		// 所以要到self-management.vue那里写
 		onShow() {
 
-			// uni.getStorage({
-			// 	key: 'playGoalDATA',
-			// 	success(res) {
-
-			// 		console.log('获取playGoalDATA成功', res.data);
-			// 		that.swipeList=res.data.PlayGoalList
-			// 		console.log('swipeList:',that.swipeList);
-			// 	}
-
-			// });
-
 		},
-		
-		// onLoad() {
-		// 	// 监听事件
-		// 	uni.$on('SendToPlaySwipetList', function(data) {
-		// 		this.swipeList = data
-		// 		console.log('A页面传的值为:' + data);
-		// 	});
-		// },
-		// onUnload() {
-		// 	// 移除监听事件
-		// 	uni.$off('SendToPlaySwipetList');
-		// },
-		// onLoad() {
-		// 	// 监听事件  
+		onPageScroll: function(e) {
+			console.log("???")
+			this.swipeList.forEach(v => {
+				v.pop_flag = false
+			})
+		},
 
-		// 	uni.$on('addnewGoal', (data) => {
-		// 		console.log('收到数据' + data)
-		// 		that.uitem = data;
-		// 	})
-
-		// },
-		// onUnload() {
-		// 	// 移除监听事件  
-		// 	uni.$off('addnewGoal');
-		// },
-		// 2023-7-30添加结束
 		// // 钩子：
 		mounted() {
-		    uni.$on('updateSwipeList', (list) => {
-		      this.swipeList = list;
-			  console.log('play页面监听到self-management传来的值了！');
-		    });
-			// 移除监听事件
-				uni.$off('addnewGoal');
-		  },
-		methods: {
-			//2023-9-10添加
+			console.log('这是play页面的mounted监听函数');
 
+			// 移除监听事件
+			// uni.$off('addnewGoal');
+		},
+		beforeMount() {
+			console.log('这是play页面的beforeMount监听函数');
+
+		},
+		created() {
+			var that = this;
+			console.log('这是play页面的created监听函数');
+			console.log('当前swipeList:', this.swipeList);
+			//能获取成功，但报别的错误
+			var that = this;
+			let List = uni.getStorageSync('update_playEvent');
+			if (List) {
+				console.log('获取娱乐事件数组成功', List);
+				//swiper一定要先销毁，不然报错
+				that.boolGetPlayEvent = false;
+				that.Two_dimensional_array = List;
+				that.boolGetPlayEvent = true;
+				console.log('获取后的Two_dimensional_array：', that.Two_dimensional_array);
+			}
+			// uni.getStorage({
+			// 	key:'update_playEvent',
+			// 	success(res) {
+			// 		console.log('获取娱乐事件数组成功',res.data);
+			// 				//swiper一定要先销毁，不然报错
+			// 				that.boolGetPlayEvent=false;
+			// 		that.Two_dimensional_array=res.data;
+			// 				that.boolGetPlayEvent=true;
+			// 		console.log('获取后的Two_dimensional_array：',that.Two_dimensional_array);
+			// 	}
+			// }),
+			uni.getStorage({
+				key: 'playGoalDATA',
+				success(res) {
+					if (res != null) {
+						that.swipeList = res.data.PlayGoalList;
+						console.log('uni.getTorage接收后的swipeList:', that.swipeList);
+						that.swipeList.forEach(v => {
+							v.pop_flag = false;
+						})
+						that.getNowTime()
+
+					}
+				},
+				fail() {
+					console.log('获取失败');
+					that.swipeList = [{
+							id: 0,
+							options: [{
+									text: '删除',
+									style: {
+										backgroundColor: 'rgb(255,58,49)'
+									}
+								},
+
+								{
+									text: '完成',
+									style: {
+										backgroundColor: 'rgb(254,156,1)'
+									}
+								}, {
+									text: '置顶'
+								}
+
+							],
+							title: '例:去一次livehouse',
+							content: '五月的帆布小镇或者六月的棱镜都可以！',
+							starttime: '2023-7-21',
+							endttime: '2023-7-22',
+							timetype0: true,
+							timetype1: false,
+							isdone: false, //整个目标是否结束
+							isTodayDone: false, //今日是否已做
+							currentWeekDone: false, //当前周是否完成
+							istargetDate: false,
+							isoverdue: false,
+							isNotStart: false,
+							checkbox2: [],
+							weeklyDone: [], //用于记录该目标在当前周已完成的天数
+							askedForNextWeek: false,
+							weeklyDoneWeek: Number, //记录weeklyDone对应的周数，以便识别新的一周并重置状态
+							completedWeeks: [], //完成的周数以及内容
+							pop_flag: false,
+						},
+						{
+							id: 1,
+							options: [{
+									text: '删除',
+									style: {
+										backgroundColor: 'rgb(255,58,49)'
+									}
+								},
+
+								{
+									text: '完成',
+									style: {
+										backgroundColor: 'rgb(254,156,1)'
+									}
+								}, {
+									text: '置顶'
+								}
+							],
+							title: '例:散散步',
+							content: '每天晚上饭后走一走',
+							starttime: '2023-7-23',
+							endttime: '2023-7-25',
+							timetype0: false,
+							timetype1: true,
+							isdone: false, //整个目标是否结束
+							isTodayDone: false, //今日是否已做
+							currentWeekDone: false, //当前周是否完成
+							istargetDate: false,
+							isoverdue: false,
+							isNotStart: false,
+							checkbox2: ["每周一", "每周二", "每周三"],
+							weeklyDone: [],
+							askedForNextWeek: false,
+							weeklyDoneWeek: Number,
+							completedWeeks: [], //完成的周数以及内容
+							pop_flag: false,
+						}
+					]
+
+				}
+
+			});
+
+
+
+			//用uni.$emit发射，play页面uni.$on接收总是有延迟，每次都得uni.$emit 娱乐页面才有数据，所以弃用
+			// uni.$on('updateSwipeList', (list) => {
+			// 	if(list!=null){
+			//   this.swipeList = list;
+			//   console.log('play页面监听到self-management传来的值了！',list);
+			//   }
+			// });
+		},
+		methods: {
+			addTimes(m) {
+				return m < 10 ? '0' + m : m
+			},
+			// 用于判断今天是年内的第几周
+			getWeekNumber(d) {
+				// 复制日期，因此不会修改原始日期
+				d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+				// 设置为最近的星期四：当前日期 + 4 - 当前星期数
+				// 将星期日的星期数设置为7
+				d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+				// 获取年份的第一天
+				let yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+				// 计算到最近的星期四的完整周数
+				let weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+				return weekNo;
+			},
+			getNowTime() { //获取当前时间
+				var time = new Date(new Date().getTime());
+				let y = time.getFullYear();
+				let m = time.getMonth() + 1;
+				let d = time.getDate();
+				let h = time.getHours();
+				let mi = time.getMinutes();
+				let day = time.getDay();
+
+				this.today = y + '年' + this.addTimes(m) + '月' + this.addTimes(d) + '日' + ' ' + this.week[day];
+				this.today_year = y + '年';
+				var date = this.addTimes(m) + '月' + this.addTimes(d) + '日';
+				if (this.today_date != date) {
+					this.today_date = date;
+				}
+				this.today_week = this.week[day]
+				this.nowtime.hour = this.addTimes(h);
+				this.nowtime.minute = this.addTimes(mi);
+				console.log(this.today);
+
+				// 以下是新增的部分，用于更新swipeList中的istargetDate
+				let formattedToday = `${y}-${this.addTimes(m)}-${this.addTimes(d)}`; // YYYY-MM-DD格式的今天日期
+				console.log('formattedToday', formattedToday)
+				let todayDate = new Date(formattedToday);
+				console.log('todayDate', todayDate)
+				let todayDay = todayDate.getDay(); // 获取今天是星期几，0代表星期日，1代表星期一，以此类推
+				console.log('todayDay', todayDay)
+				// 星期数组，用于匹配周期性目标的checkbox2
+				const weekDays = ["每周日", "每周一", "每周二", "每周三", "每周四", "每周五", "每周六"];
+
+				console.log('this.swipeList', this.swipeList)
+				// 遍历swipeList
+				for (let item of this.swipeList) {
+					// console.log('item', item)
+					item.istargetDate = false; // 默认设置为false
+					// 如果是具有确定开始和结束日期的目标
+					if (item.timetype0) {
+						console.log('这是范围性目标', item.title)
+						// console.log('item.starttime',item.starttime)
+						let startDate = new Date(item.starttime);
+						// console.log('startDate',startDate)
+						// console.log('item.endttime',item.endttime)
+						let endDate = new Date(item.endttime);
+						// console.log('endDate',endDate)
+
+						// 检查今天的日期是否在开始和结束日期之间
+						if ((item.isdone == false) && (todayDate >= startDate && todayDate <= endDate)) {
+							item.istargetDate = true
+							// console.log('范围性目标' + item.title + 'istargetDate已经设置为true')
+						} else if ((item.isdone == false) && todayDate >= endDate) {
+							item.isoverdue = true;
+							// console.log('范围性目标' + item.title + 'isoverdue已经设置为true')
+						} else if ((item.isdone == false) && todayDate <= startDate) {
+							item.isNotStart = true;
+							// console.log('范围性目标' + item.isNotStart + 'isNotStart已经设置为true')
+						}
+					}
+
+					// 如果是周期性目标
+					if (item.timetype1) {
+						// console.log('这是周期性目标', item.title)
+						let currentWeek = this.getWeekNumber(new Date());
+						// console.log('当前周', currentWeek)
+						// 如果已经询问过用户，用户确认下周继续则跳过
+						if (item.askedForNextWeek && item.weeklyDoneWeek === currentWeek) continue;
+						let todayDay = (new Date()).getDay();
+						let todayWeekDay = weekDays[todayDay];
+						// 检查今天是否在目标的周期内
+						if (item.checkbox2.includes(weekDays[todayDay]) && (item
+								.isdone == false) && ((item
+								.isTodayDone == false))) {
+							// 如果这是新的一周，重置weeklyDone和askedForNextWeek
+							if (item.weeklyDoneWeek !== currentWeek) {
+								// 如果上周没有达到预定次数，提示用户本周未完成
+								if (item.checkbox2.length !== item.weeklyDone.length) {
+									console.log(`目标"${item.title}"上周未完成。`);
+									let content = '目标' + item.title + '上周未完成'
+									this.judgeGoOn(item, content)
+								} else if (item.checkbox2.length === item.weeklyDone.length && !item.askedForNextWeek) {
+									// 如果上周达到预定次数且未询问过用户是否继续
+									console.log(`目标"${item.title}"上周已完成。`);
+									let content = '目标' + item.title + '上周已完成'
+									// 记录完成情况
+									if (!item.completedWeeks) {
+										item.completedWeeks = [];
+									}
+									item.completedWeeks.push({
+										week: currentWeek - 1,
+										days: item.weeklyDone.slice(), //浅拷贝
+									}); // 记录上周完成的周数和天数
+									this.judgeGoOn(item, content)
+								}
+								//重置状态
+								item.weeklyDone = [];
+								item.askedForNextWeek = false;
+								item.weeklyDoneWeek = currentWeek;
+								item.currentWeekDone = false; // 新的一周开始，重置当前周完成状态
+								console.log('新的一周，已经重置')
+							}
+							item.istargetDate = true;
+							// console.log('周期性istargetDate已经设置为true')
+
+
+
+						}
+					}
+				}
+
+			},
+			judgeGoOn(item, content) {
+				var that = this
+				uni.showModal({
+					title: content,
+					content: `是否本周继续执行该目标？`,
+					success: function(res) {
+						if (res.confirm) {
+							console.log('用户点击确定本周继续执行该目标');
+							item.currentWeekDone = false; // 重置当前周完成状态
+							item.isdone = false; // 目标继续，未完成
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+							item.currentWeekDone = true; // 标记当前周完成
+							item.isdone = true; // 目标不再继续，完成
+							console.log(
+								`完成的周数：${item.completedWeeks.length}周，执行日：${item.completedWeeks.map(w => `第${w.week}周: ${w.days.join(", ")}`).join("; ")}`
+							);
+							let obj = {
+								doneWeekCount: item.completedWeeks.length,
+								completedWeeks: item.completedWeeks,
+							}
+							uni.setStorage({
+								key: 'doneWeekMessage',
+								data: obj,
+								success() {
+									console.log('上一周的娱乐目标完成情况存储成功')
+								}
+							})
+
+						}
+					}
+				})
+			},
+			handleClick(id, gridindex) {
+				if (this.clickTimeout) {
+					// 取消单击延迟任务，并执行双击操作
+					clearTimeout(this.clickTimeout)
+					this.clickTimeout = null
+					this.minusBadge(id, gridindex)
+				} else {
+					// 设置单击延迟任务
+					this.clickTimeout = setTimeout(() => {
+						this.clickTimeout = null
+						this.plusOne(id, gridindex)
+					}, this.doubleClickDelay)
+				}
+			},
+			plusOne(listID, listIndex) {
+				console.log(listID);
+				console.log('单击了第', listIndex, '个宫格');
+				this.Two_dimensional_array[listID].list[listIndex].badge++;
+			},
+			//2023-9-10添加
+			minusBadge(listID, listIndex) {
+				console.log(listID);
+				console.log('双击了第', listIndex, '个宫格');
+				this.Two_dimensional_array[listID].list[listIndex].badge && this
+					.Two_dimensional_array[listID].list[listIndex].badge--;
+			},
 			messageToggle(type) {
 				this.msgType = type
 				this.messageText = `成功完成一个目标`
@@ -523,12 +794,10 @@
 				console.log('当前索引：', index);
 
 			},
-			swipeClick(e, index) {
-				let {
-					content
-				} = e;
 
-				if (content.text === '置顶') {
+			swipeClick(e, index, item) {
+				item.pop_flag = false;
+				if (e.text === '置顶') {
 					// uni.showModal({
 					// 	title: '提示',
 					// 	content: '是否置顶',
@@ -564,54 +833,94 @@
 
 						},
 					});
-					uni.setStorage({ //存入Storage
-						key: 'playGoalDATA', //自己取个名字
-						data: { //存的数据可以是很多条
-
-							PlayGoalList: this.swipeList
+					this.savePlayGoalList();
 
 
-						},
 
-						success() {
-							console.log('playGoalDATA储存成功');
+				} else if (e.text === '完成') {
+					//确保在执行时间内
+					if (item.istargetDate) {
+						if (this.swipeList[index].timetype0) {
+							this.swipeList[index].isdone = true;
+							this.swipeList[index].istargetDate = false;
+							// 成功弹窗
+							this.messageToggle("success");
+							var that = this;
+							//2023-10-21添加
+							this.saveGoalSuccess(item);
+
+						} else if (this.swipeList[index].timetype1) {
+							//如果是周期类型
+							this.swipeList[index].istargetDate = false;
+							this.swipeList[index].isTodayDone = true;
+							let todayDay = (new Date()).getDay();
+							const weekDays = ["每周日", "每周一", "每周二", "每周三", "每周四", "每周五", "每周六"];
+							let todayWeekDay = weekDays[todayDay];
+							// if (!item.weeklyDone.includes(todayWeekDay)) 
+							item.weeklyDone.push(todayWeekDay);
+							console.log('item.weeklyDone', item.weeklyDone)
+							this.saveGoalSuccess(item);
+							// 如果这周的目标都完成了
+							if (item.checkbox2.length === item.weeklyDone.length) {
+								item.currentWeekDone = true;
+
+								var that = this
+								uni.showModal({
+									title: '目标' + item.title + '提醒',
+									content: `是否在下一周继续执行该目标？`,
+									success: function(res) {
+										if (res.confirm) {
+											console.log('用户点击确定下一周继续执行该目标');
+											item.isdone = false; //目标未结束，继续
+											item.askedForNextWeek = true;
+											that.saveGoalSuccess(item);
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+											item.isdone = true; //目标结束
+											console.log('that.swipeList[index].isdone:', that.swipeList[index]
+												.isdone)
+											console.log('item.isdone', item.isdone)
+											item.askedForNextWeek = false;
+											let currentWeek = that.getWeekNumber(new Date());
+											item.completedWeeks.push({
+												week: currentWeek - 1,
+												days: item.weeklyDone.slice(), //浅拷贝
+											});
+											console.log('item.completedWeeks', item.completedWeeks)
+											console.log(
+												`完成的周数：${item.completedWeeks.length}周，执行日：${item.completedWeeks.map(w => `第${w.week}周: ${w.days.join(", ")}`).join("; ")}`
+											);
+											let weekDoneobj = {
+												title: item.title,
+												doneWeekCount: item.completedWeeks.length,
+												completedWeeks: item.completedWeeks,
+											}
+											uni.setStorage({
+												key: 'doneWeekMessage',
+												data: weekDoneobj,
+												success() {
+													console.log('本周的娱乐目标完成情况存储成功')
+												}
+											})
+											//2023-10-21添加
+											//存储成功数组，让self-record接收到
+											that.saveGoalSuccess(item);
+
+										}
+									}
+								})
+								console.log("提示用户是否下周还要执行该目标");
+							}
+							//2023-10-21添加结束
+
 						}
-					});
-
-
-
-				} else if (content.text === '完成') {
-
-					this.swipeList[index].isdone = true;
-					// 成功弹窗
-					this.messageToggle("success");
-
-					var that = this;
-					//2023-10-21添加
-					let obj = {
-						id: that.playGoalSuccessListID + 1,
-						content: that.swipeList[index].content,
-
+					}else{
+						uni.showModal({
+							title:'注意',
+							content:'今日不是执行时间'
+						});
 					}
-					console.log(obj);
-
-					that.playGoalSuccessList.push(obj);
-					uni.setStorage({ //存入Storage
-						key: 'playGoalSuccess', //自己取个名字
-						data: { //存的数据可以是很多条
-
-							content: that.swipeList[index].content,
-
-						},
-
-						success() {
-							console.log('playGoalSuccess储存成功');
-						}
-					});
-					//2023-10-21添加结束
-
-
-				} else if (content.text === '删除') {
+				} else if (e.text === '删除') {
 					var that = this
 					uni.showModal({
 						title: '提示',
@@ -620,19 +929,7 @@
 							if (res.confirm) {
 								that.swipeList.splice(index, 1);
 
-								uni.setStorage({ //存入Storage
-									key: 'playGoalDATA', //自己取个名字
-									data: { //存的数据可以是很多条
-
-										PlayGoalList: that.swipeList
-
-
-									},
-
-									success() {
-										console.log('playGoalDATA储存成功');
-									}
-								});
+								that.savePlayGoalList();
 							} else if (res.cancel) {
 								console.log('用户点击取消');
 							}
@@ -727,34 +1024,32 @@
 														text: '置顶'
 													}
 												],
-												content: data.title,
+												title: data.title,
+												content: data.content,
 												timetype0: data.timetype0,
 												timetype1: data.timetype1,
 												starttime: data.startDate,
 												endttime: data.endDate,
 												checkbox2: data.checkbox2,
-												isdone: false
-
+												isdone: false, //整个目标是否结束
+												isTodayDone: false, //今日是否已做
+												currentWeekDone: false, //当前周是否完成
+												istargetDate: false,
+												isoverdue: false,
+												isNotStart: false,
+												weeklyDone: [],
+												askedForNextWeek: false,
+												weeklyDoneWeek: Number,
+												completedWeeks: [], //完成的周数以及内容
+												pop_flag: false,
 											}
 											that.swipeList.push(obj);
 											console.log(obj);
 											// 上一句不加分号的话下面这个就执行不了
 											console.log('查看数组：', that.swipeList);
-											uni.setStorage({ //存入Storage
-												key: 'playGoalDATA', //自己取个名字
-												data: { //存的数据可以是很多条
-
-													PlayGoalList: that.swipeList
-
-
-												},
-
-												success() {
-													console.log('playGoalDATA储存成功');
-												}
-											});
+											that.savePlayGoalList();
 											console.log('play页面成功接收到add_playgoal的数据');
-
+											that.$set(that, 'swipeList', that.swipeList);
 										},
 
 									}
@@ -780,6 +1075,52 @@
 
 
 			},
+			saveGoalSuccess(item) {
+				var that = this
+				let obj = {
+					id: that.playGoalSuccessListID + 1,
+					title: item.title,
+
+				}
+				console.log(obj);
+
+				that.playGoalSuccessList.push(obj);
+				that.savePlayGoalList();
+
+				uni.setStorage({ //存入Storage
+					key: 'playGoalSuccess', //自己取个名字
+					data: { //存的数据可以是很多条
+
+						title: item.title,
+						timetype0: item.timetype0,
+						timetype1: item.timetype1,
+						isdone: item.isdone,
+
+
+					},
+
+					success() {
+						console.log('playGoalSuccess储存成功');
+					}
+				});
+			},
+			savePlayGoalList() {
+				var that = this
+				console.log("当前playGoal：", that.swipeList)
+				uni.setStorage({ //存入Storage
+					key: 'playGoalDATA', //自己取个名字
+					data: { //存的数据可以是很多条
+
+						PlayGoalList: that.swipeList
+
+
+					},
+
+					success() {
+						console.log('playGoalDATA储存成功');
+					}
+				});
+			},
 			fabClick() {
 				console.log('用户点击了悬浮按钮')
 
@@ -798,12 +1139,24 @@
 			dialogInputConfirm(val) {
 				this.value = val
 				//调用add方法
+
 				this.add(),
+
 					// 关闭窗口后，恢复默认内容
-					this.$refs.inputModal.close()
+					this.$refs.inputModal.close();
+
 
 			},
-
+			savePlayEvent() {
+				var that = this;
+				uni.setStorage({
+					key: 'update_playEvent',
+					data: that.Two_dimensional_array,
+					success: function() {
+						console.log('娱乐事件的二维数组存储成功！');
+					}
+				})
+			},
 			changeTwo_dimen(listID, listIndex) {
 				console.log(listID);
 				console.log('点击了第', listIndex, '个宫格');
@@ -820,16 +1173,19 @@
 							that.Two_dimensional_array[listID].list[listIndex].badge && that
 								.Two_dimensional_array[listID].list[listIndex].badge++;
 
+							that.savePlayEvent();
+
 							let Indexobj = {
 								ListID: listID,
-								ListIndex: listIndex
+								ListIndex: listIndex,
+								ListImage: that.Two_dimensional_array[listID].list[listIndex].url,
 							};
 
 							uni.setStorage({ //存入Storage
 								key: 'CurrentTitle', //自己取个名字
 								data: { //存的数据可以是很多条
-									TitleName: that.Two_dimensional_array[listID].list[listIndex].text
-
+									TitleName: that.Two_dimensional_array[listID].list[listIndex].text,
+									iconUrl: that.Two_dimensional_array[listID].list[listIndex].url,
 
 								},
 
@@ -852,13 +1208,16 @@
 										let obj = {
 											title: data.title,
 											Content_value: data.Content_value,
-											url: data.url
+											url: data.iconUrl
 										}
 										that.testList.push(obj);
 										// 改变后的名称覆盖过去
 										that.Two_dimensional_array[listID].list[listIndex].text = data
 											.title;
+										that.Two_dimensional_array[listID].list[listIndex].url = data
+											.iconUrl;
 
+										that.savePlayEvent();
 										console.log(obj);
 										// 上一句不加分号的话下面这个就执行不了
 										console.log('查看数组：', that.Two_dimensional_array[listID].list[
@@ -927,6 +1286,7 @@
 
 
 						});
+
 						console.log('添加后最新二维数组的一维数组长度' + this.Two_dimensional_array[Two_dimensional_arrayLength - 1].list
 							.length);
 
@@ -936,27 +1296,15 @@
 						console.log('当前第' + i2 + '个数组的isfull为：' + this.Two_dimensional_array[i2].isfull)
 						// 一旦找到一个数组了，那就跳出for循环
 						// i=Two_dimensional_arrayLength;
+						this.savePlayEvent();
 						break;
+
 
 
 					}
 
 				}
 
-				// this.dynamicList.push({
-
-				// 	// url: `/static/c${this.dynamicList.length+1}.png`,
-				// 	// url: `/static/c${(this.dynamicList.length)%12+1}.png`,
-				// 	// 随机函数产生1-12之间的随机数Math.floor(Math.random() * (max - min + 1)) + min
-				// 	url: `/static/c${Math.floor(Math.random() * (12 - 1 + 1)) + 1}.png`,
-
-				// 	// url: `/static/c6.png`,
-				// 	text: this.value,
-				// 	badge: '0',
-				// 	type: "primary",
-				// 	// color: this.dynamicList.length % 2 === 0 ? '#f5f5f5' : "#fff"
-
-				// })
 
 
 			},
@@ -971,7 +1319,8 @@
 
 							console.log("(下标从0开始)删除第" + index + "个")
 							that.Two_dimensional_array[index].list.splice(listindex, 1);
-							that.Two_dimensional_array[index].isfull = false
+							that.Two_dimensional_array[index].isfull = false;
+							that.savePlayEvent();
 							// that.dynamicList.splice(index, 1)
 
 
@@ -982,23 +1331,84 @@
 
 				})
 			},
-
+			popup(index) {
+				this.swipeList.forEach(v => {
+					if (v.id != this.swipeList[index].id) {
+						v.pop_flag = false;
+					}
+				})
+				if (this.swipeList[index].pop_flag) {
+					this.swipeList[index].pop_flag = false
+				} else {
+					this.swipeList[index].pop_flag = true;
+				}
+			},
+			closePop() {
+				this.swipeList.forEach(v => {
+					v.pop_flag = false;
+				})
+			}
 		}
 	}
 </script>
 
 
 <style lang="scss">
+	.header {
+		display: flex;
+		text-align: left;
+		font-size: 23px;
+		font-weight: 800;
+		margin: 25px 0 0 30px;
+	}
+
+	.target_header {
+		display: flex;
+		text-align: left;
+		font-size: 23px;
+		font-weight: 800;
+		margin: 5px 0 0 30px;
+	}
+
+	.header-text {
+		background: -webkit-linear-gradient(top, #000000, #aeaeae);
+		/*设置线性渐变*/
+		/*为了支持更多的浏览器*/
+		-webkit-background-clip: text;
+		/*背景被裁剪到文字*/
+		-webkit-text-fill-color: transparent;
+		/*设置文字的填充颜色*/
+	}
+
+	.wenhao {
+		font-size: 15px;
+		font-weight: 800;
+		font-family: 'Courier New', Courier, monospace;
+		width: 20px;
+		height: 20px;
+		background-color: #009688;
+		color: #f6f6f6;
+		border-radius: 20px 100px 80px 120px;
+		margin: 20px 0 10px 8px;
+		text-align: center;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
+
 	.image {
 		width: 25px;
 		height: 25px;
 	}
 
 	.doneimage {
-		width: 30px;
-		height: 30px;
-
+		width: 80px;
+		height: 80px;
 		margin: 30px auto;
+		filter: alpha(opacity=80);
+		-moz-opacity: 0.85;
+		-khtml-opacity: 0.85;
+		opacity: 0.85;
 		/* 设置左右外边距为auto，实现水平居中 */
 		// text-align: center;
 		// /* 设置文本居中，以修复可能的对齐问题 */
@@ -1051,17 +1461,13 @@
 
 	.grid-dot {
 		position: absolute;
-		top: 5px;
+		top: -5px;
 		right: 15px;
 	}
 
 	.swiper {
-		height: 420px;
-	}
-
-	.swipeBox {
-		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
-		border-radius: 20px;
+		margin-top: 20px;
+		height: 380px;
 	}
 
 	// 2023-7-2新增
@@ -1103,80 +1509,134 @@
 	}
 
 	/* #endif */
-
-	.content-box {
-		// background-color: antiquewhite;
-		// border-radius: 20px;
-		border: 10px solid salmon;
-		border-radius: 20px;
+	.target-box {
+		margin: 20px;
 		display: flex;
-		flex-direction: row;
-		flex-wrap: wrapl;
-		// 固定高度
-		height: 90px;
-
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 	}
 
-	.content-text-time {
+	.content-box {
+		position: relative;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		width: 88%;
+		margin: 10px 0;
+	}
+
+	.targetDone {
+		position: relative;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		width: 88%;
+		margin: 10px 0;
+		color: #989898;
+	}
+
+	.content-title {
+		width: 90%;
+		font-size: 20px;
+		font-weight: 700;
+		margin: 15px 0 10px 20px;
+		display: flex;
+		justify-content: space-between;
+		border-width: 0 0 2px 0;
+		border-style: dashed;
+		border-color: #989898;
+	}
+
+	.pop_select {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		// margin-right: -15px;
+	}
+
+	.content-time {
 		// background-color: rebeccapurple;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		margin: 0 0 10px 20px;
 	}
 
-	.content-text {
-
-		display: flex;
-		flex-direction: row;
-		// background-color: #18a0c2;
-
-
-		text-align: center;
-		justify-content: center;
-		flex-direction: column;
-	}
-
-	.content-time {
-		// 取消缩放的
-		// flex-shrink: 0;
-		border-radius: 10px;
-		background-color: rgb(227, 239, 205);
+	.content-time-time {
 		// 跟外边的间距上、左右、下
-		margin: 5rpx 30rpx 0rpx;
 		display: flex;
 		flex-direction: column;
-		text-align: center;
-		font-size: 10px;
+		font-size: 15px;
+		align-items: flex-start;
 	}
 
 	.content-time-cycle {
-		background-color: rgb(193, 232, 246);
-		border-radius: 10px;
 		display: flex;
-		flex-direction: row;
-		font-size: 10px;
-		margin: 5rpx 30rpx 0rpx;
-		text-align: center;
-		justify-content: space-between;
-
+		font-size: 15px;
+		// margin: 5rpx 30rpx 0rpx;
+		// text-align: center;
+		justify-content: flex-start;
+		align-items: center;
 	}
 
+	.more_list {
+		z-index: 10;
+		position: absolute;
+		right: -15px;
+		top: 52px;
+		background: white;
+		border-radius: 4px;
+		width: 80px;
+		box-shadow: 0px 0px 4px rgba(30, 30, 30, 0.1);
+		padding: 8px 8px 2px 8px;
+		border: 1px solid #ccc;
+	}
 
+	.more_list_item {
+		color: white;
+		font-size: 14px;
+		z-index: 3;
+		padding: -5px 0;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		background-color: #009688;
+		// box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 8px;
+		height: 40px;
+	}
 
 	.test {
 		// background-color: #18a0c2;
+		margin: 15px;
 	}
 
 	.showDown {
+		position: absolute;
 		justify-content: flex-end;
 		margin-left: auto;
-
-		width: 50px;
+		width: 100px;
+		top: -50px;
+		left: -40px;
 		// background-color:crimson;
+	}
+
+	.warp {
+		z-index: 100;
 	}
 
 	// .custom-modal{
 	// 	//提示框圆角设计
 	// 	border-radius: 30px;
 	// }
+	.br {
+		/*留空*/
+		height: 200px;
+	}
 </style>
