@@ -867,7 +867,10 @@
 							//如果是周期类型
 							this.swipeList[index].istargetDate = false;
 							this.swipeList[index].isTodayDone = true;
+							
 							let todayDay = (new Date()).getDay();
+							//记录今天已经做了
+							uni.setStorageSync('lastCheckDate',todayDay);
 							const weekDays = ["每周日", "每周一", "每周二", "每周三", "每周四", "每周五", "每周六"];
 							let todayWeekDay = weekDays[todayDay];
 							// if (!item.weeklyDone.includes(todayWeekDay)) 
