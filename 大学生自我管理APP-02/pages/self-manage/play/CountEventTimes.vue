@@ -8,7 +8,8 @@
 				<uni-collapse-item :show-animation="true" :border="false" titleBorder="none">
 					<template v-slot:title>
 						<uni-list :border="false">
-							<uni-list-item :title="item.title" :note="item.Today" :thumb="item.ListImage">
+							<!-- <uni-list-item :title="item.title" :note="item.Today" :thumb="item.ListImage"> -->
+							<uni-list-item :title="item.title" :note="item.Today" :thumb="item.iconUrl">
 							</uni-list-item>
 						</uni-list>
 					</template>

@@ -52,7 +52,7 @@
 							style="position: absolute; right: 9%;"></uni-icons>
 					</view>
 				</view>
-				<view class="content-time">
+				<view class="content-time" @click="showGoalDetail()">
 					<view v-if="item.timetype0" class="content-time-time">
 						<text>开始：{{ item.starttime }}</text>
 						<text>结束：{{ item.endttime }}</text>
@@ -66,7 +66,7 @@
 					</view>
 
 					<view v-if="item.timetype1" class="content-time-cycle">
-						<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex" :key="dayindex">{{ day }},
+						<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex" :key="dayindex" >{{ day }},
 						</text>
 						<image v-if="item.istargetDate&&!item.isTodayDone" src="../../../../static/待完成2.png"
 							style="height: 25px;width: 25px;justify-content: end"></image>
@@ -587,6 +587,9 @@
 			// });
 		},
 		methods: {
+			showGoalDetail(){
+				console.log("点击查看目标详情")
+			},
 			addTimes(m) {
 				return m < 10 ? '0' + m : m
 			},
@@ -1592,7 +1595,7 @@
 
 	.content-time-cycle {
 		display: flex;
-		font-size: 15px;
+		font-size: 11px;
 		// margin: 5rpx 30rpx 0rpx;
 		// text-align: center;
 		justify-content: flex-start;

@@ -204,14 +204,20 @@
 					success: function(res) {
 						if (res.confirm) {
 							console.log('用户点击确定')
-							if(that.selectIndex.length==7){
-								that.item.checkbox2.push('每天');
-							}
-							else{
-								that.selectIndex.forEach(v=>{
-									that.item.checkbox2.push(that.weeks[v].value)
-								})
-							}
+							// if(that.selectIndex.length==7){
+							// 	that.item.checkbox2.push('每天');
+							// }
+							// else{
+							// 	that.selectIndex.forEach(v=>{
+							// 		that.item.checkbox2.push(that.weeks[v].value)
+							// 	})
+							// }
+						
+							that.selectIndex.forEach(v=>{
+								that.item.checkbox2.push(that.weeks[v].value)
+							})
+							
+							
 							const eventChannel = that.getOpenerEventChannel();
 							let EventObj={
 								timetype0: that.item.timetype0,
