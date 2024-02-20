@@ -195,6 +195,15 @@
 					
 				}
 			})
+			
+			// let finishList=uni.getStorageSync('plus_finishTime').finishList
+			// let list=uni.getStorageSync('plus_finishTime').list
+			// if(List){
+			// 	console.log('更新ListData')
+			// 	that.list=list;
+			// 	that.finish_list=finishList;
+			// }
+			
 		},
 		methods:{
 			addTimes(m){return m<10?'0'+m:m },
@@ -320,17 +329,13 @@
 									i.finish_times=i.finish_times+1;
 									i.all_finish_times=i.all_finish_times+1;
 									console.log('完成项',i);
-									uni.setStorage({
-										key:'plus_finishTime',
-										data:{
-											all_finish_times:i.all_finish_times
-										}
-									})
+									// that.saveSportList();
 								}
 								else{
 									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
 									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 									that.finish_list.push(that.now_list[index]);
+									// that.saveSportList();
 									
 								}
 								that.run(item,index);
@@ -357,15 +362,18 @@
 										i.finish_times=i.finish_times+1;
 										i.all_finish_times=i.all_finish_times+1;
 										console.log('完成项',i);
+										// that.saveSportList();
 									}
 									else{
 										that.now_list[index].finish_times=that.now_list[index].finish_times+1;
 										that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 										that.finish_list.push(that.now_list[index]);
+										// that.saveSportList();
 									}
 									console.log('完成表',that.finish_list);
 									console.log(that.now_list[index].all_finish_times);
 									console.log(that.now_list[index].timesForAward);
+									
 									if(that.now_list[index].timesForAward!=null){
 										var Divisor_result=(that.now_list[index].all_finish_times)/(that.now_list[index].timesForAward);
 										var differNUM=that.now_list[index].timesForAward-that.now_list[index].all_finish_times;
@@ -403,6 +411,19 @@
 						})
 					}
 				}
+			},
+			saveSportList(){
+				var that=this
+				uni.setStorage({
+					key:'plus_finishTime',
+					data:{
+						list:that.list,
+						finishList:that.finish_list
+					},
+					success() {
+						console.log('次数更新后的数组存储成功！')
+					}
+				})
 			},
 			delete_sport(index){
 				var that=this;

@@ -571,7 +571,7 @@
 							pop_flag: false,
 						}
 					]
-
+					
 				}
 
 			});
@@ -670,6 +670,8 @@
 						if (item.askedForNextWeek && item.weeklyDoneWeek === currentWeek) continue;
 						let todayDay = (new Date()).getDay();
 						let todayWeekDay = weekDays[todayDay];
+						//重设isToday的状态
+						this.resetDailyStatus(item);
 						// 检查今天是否在目标的周期内
 						if (item.checkbox2.includes(weekDays[todayDay]) && (item
 								.isdone == false) && ((item
@@ -711,6 +713,18 @@
 					}
 				}
 
+			},
+			resetDailyStatus(item) {
+			    const today = new Date().toDateString(); // 获取当前日期，忽略时间部分
+			    const lastCheckDate = uni.getStorageSync('lastCheckDate'); // 获取上次检查日期
+			
+			    if (lastCheckDate !== today) {
+			        // 如果不是同一天，则重置isTodayDone为false
+					console.log('新的一天了，isTodayDone要设为false')
+			            item.isTodayDone = false;
+			        // 更新lastCheckDate
+			        uni.setStorageSync('lastCheckDate', today);
+			    }
 			},
 			judgeGoOn(item, content) {
 				var that = this
@@ -873,7 +887,7 @@
 											console.log('用户点击确定下一周继续执行该目标');
 											item.isdone = false; //目标未结束，继续
 											item.askedForNextWeek = true;
-											that.saveGoalSuccess(item);
+											// that.saveGoalSuccess(item);
 										} else if (res.cancel) {
 											console.log('用户点击取消');
 											item.isdone = true; //目标结束
@@ -1080,6 +1094,9 @@
 				let obj = {
 					id: that.playGoalSuccessListID + 1,
 					title: item.title,
+					timetype0: item.timetype0,
+					timetype1: item.timetype1,
+					isdone: item.isdone,
 
 				}
 				console.log(obj);
@@ -1091,10 +1108,7 @@
 					key: 'playGoalSuccess', //自己取个名字
 					data: { //存的数据可以是很多条
 
-						title: item.title,
-						timetype0: item.timetype0,
-						timetype1: item.timetype1,
-						isdone: item.isdone,
+						playGoalSuccessList:that.playGoalSuccessList
 
 
 					},
