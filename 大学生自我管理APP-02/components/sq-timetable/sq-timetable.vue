@@ -19,10 +19,10 @@
     <view>
       <view class="top">
         <view :style="{ height: statusBarHeight +'px' }"></view>
-        <view class="week" @click="changeWeek(0)">
-          <view>第{{ nowWeek }}周</view>
-          <image style="width: 45rpx; height: 45rpx;" src="../../static/sq-timetable/down.png"></image>
-        </view>
+		  <view class="week" @click="changeWeek(0)">
+		    <view>第{{ nowWeek }}周</view>
+		    <image style="width: 45rpx; height: 45rpx;" src="../../static/sq-timetable/down.png"></image>
+		  </view>
         <view style="display: flex; flex-direction: row;">
           <view class="top-text" :style="'width:' + (width / 8 - 14) + 'px;'">节</view>
           <view class="top-text" :style="'width:' + (width / 8 + 2) + 'px;'"
@@ -35,9 +35,11 @@
         <view>
           <view class="left" :style="'width:' + (width / 8 - 14) + 'px; height: 160rpx; color:' + timeColor + ';'"
             v-for="(item, index) in time.length" :key="index">
-            <view style="font-size: 30rpx">{{ index+1 }}</view>
-            <view style="font-size: 20rpx">{{ time[index][0] }}</view>
-            <view style="font-size: 20rpx">{{ time[index][1] }}</view>
+			<view style="font-size: 30rpx">{{ index+1 }}</view>
+            <view @click="getTime(item)">
+            	<view style="font-size: 20rpx">{{ time[index][0] }}</view>
+            	<view style="font-size: 20rpx">{{ time[index][1] }}</view>
+            </view>
           </view>
         </view>
         <view v-for="(item, index) in time.length" :key="index">
@@ -82,7 +84,7 @@
   import dao from '@/pages/index/dao/dao.js'
 
   const name = 'SqTimetable';
-  const emit = defineEmits(['click']);
+  const emit = defineEmits(['click', 'getTime']);
   const props = defineProps({
     showNotWeek: {
       type: Boolean,
@@ -148,6 +150,10 @@
   const getCourse = (item) => {
     emit('click', item);
   };
+  
+  const getTime = (item) => {
+	  emit('getTime', item)
+  }
 
   const changeWeek = (week) => {
     if (week) {

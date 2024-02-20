@@ -8,7 +8,7 @@ export default {
 		let m = time.getMonth() + 1; //对于getMonth，实际上第i月返回值是i-1,所以getmonth之后还要+1
 		let d = time.getDate();
 		let h = time.getHours();
-		let min = time.getMinutes();
+		let min =  time.getMinutes();
 		let s = time.getSeconds();
 		return y+'-'+this.addTimes(m)+'-'+this.addTimes(d)+' '+this.addTimes(h)+':'+this.addTimes(min)+":"+this.addTimes(s);
 	}

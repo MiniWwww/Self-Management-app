@@ -252,6 +252,22 @@ const db = {
         }
       })
     })
+  },
+  
+  // 清空表里的所有数据
+  truncateTable(dbTable) {
+    return new Promise((resolve, reject) => {
+      plus.sqlite.selectSql({
+        name: this.dbName,
+        sql: `DROP TABLE ${dbTable}`,
+        success(e) {
+          resolve(e);
+        },
+        fail(e) {
+          reject(e);
+        }
+      })
+    })
   }
 }
 export default db
