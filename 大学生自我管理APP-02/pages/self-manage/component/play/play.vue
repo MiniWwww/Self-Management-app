@@ -159,7 +159,6 @@
 				// 2023-10-21新增
 				boolGetPlayEvent: true,
 				playGoalSuccessList: [],
-				playGoalSuccessListID: 0,
 				Current_Two_dimen_array_index: 0,
 				testLIst: this.SendTOplay_SwipeList,
 				Two_dimensional_array: [{
@@ -720,13 +719,15 @@
 			resetDailyStatus(item) {
 			    const today = new Date().toDateString(); // 获取当前日期，忽略时间部分
 			    const lastCheckDate = uni.getStorageSync('lastCheckDate'); // 获取上次检查日期
-			
-			    if (lastCheckDate !== today) {
+			console.log("上次完成的日期：",lastCheckDate)
+			console.log("今天：",today)
+			    if (lastCheckDate != today) {
 			        // 如果不是同一天，则重置isTodayDone为false
 					console.log('新的一天了，isTodayDone要设为false')
 			            item.isTodayDone = false;
 			        // 更新lastCheckDate
-			        uni.setStorageSync('lastCheckDate', today);
+					uni.setStorageSync('lastCheckDate',today);
+			      
 			    }
 			},
 			judgeGoOn(item, content) {
@@ -870,10 +871,10 @@
 							//如果是周期类型
 							this.swipeList[index].istargetDate = false;
 							this.swipeList[index].isTodayDone = true;
-							
+							const today = new Date().toDateString()
 							let todayDay = (new Date()).getDay();
 							//记录今天已经做了
-							uni.setStorageSync('lastCheckDate',todayDay);
+							// uni.setStorageSync('lastCheckDate',today);
 							const weekDays = ["每周日", "每周一", "每周二", "每周三", "每周四", "每周五", "每周六"];
 							let todayWeekDay = weekDays[todayDay];
 							// if (!item.weeklyDone.includes(todayWeekDay)) 
@@ -1098,7 +1099,7 @@
 			saveGoalSuccess(item) {
 				var that = this
 				let obj = {
-					id: that.playGoalSuccessListID + 1,
+					id: that.playGoalSuccessList.length + 1,
 					title: item.title,
 					timetype0: item.timetype0,
 					timetype1: item.timetype1,
@@ -1121,6 +1122,7 @@
 
 					success() {
 						console.log('playGoalSuccess储存成功');
+						console.log('playGoalSuccess内容：',that.playGoalSuccessList)
 					}
 				});
 			},
