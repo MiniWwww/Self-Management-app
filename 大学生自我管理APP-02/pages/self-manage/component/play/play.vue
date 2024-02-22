@@ -718,6 +718,7 @@
 			},
 			resetDailyStatus(item) {
 			    const today = new Date().toDateString(); // 获取当前日期，忽略时间部分
+				// const today = new Date(2024, 2, 23).toDateString();//指定一个日期来测试
 			    const lastCheckDate = uni.getStorageSync('lastCheckDate'); // 获取上次检查日期
 			console.log("上次完成的日期：",lastCheckDate)
 			console.log("今天：",today)
@@ -726,7 +727,7 @@
 					console.log('新的一天了，isTodayDone要设为false')
 			            item.isTodayDone = false;
 			        // 更新lastCheckDate
-					uni.setStorageSync('lastCheckDate',today);
+					
 			      
 			    }
 			},
@@ -874,7 +875,7 @@
 							const today = new Date().toDateString()
 							let todayDay = (new Date()).getDay();
 							//记录今天已经做了
-							// uni.setStorageSync('lastCheckDate',today);
+							uni.setStorageSync('lastCheckDate',today);
 							const weekDays = ["每周日", "每周一", "每周二", "每周三", "每周四", "每周五", "每周六"];
 							let todayWeekDay = weekDays[todayDay];
 							// if (!item.weeklyDone.includes(todayWeekDay)) 
