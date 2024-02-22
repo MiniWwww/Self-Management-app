@@ -16,8 +16,8 @@
 			<view class="clock_box">	<!--打卡-->
 				<view>
 					<view v-if="getup">
-						<image v-if="!DayTimeJudge" class="img" src="../../static/moon.png" mode="heightFix"></image>
-						<image v-if="DayTimeJudge" class="img" src="../../static/sun.png" mode="heightFix"></image>
+						<image v-if="!DayTimeJudge" class="img_1" src="../../static/moon.png" mode="heightFix"></image>
+						<image v-if="DayTimeJudge" class="img_1" src="../../static/sun.png" mode="heightFix"></image>
 						<button class="clock_button" @click="sleep_clock">睡觉</button>
 						
 					</view>
@@ -550,6 +550,21 @@
 		width: 200px;
 		height: 45px;
 		text-align: center;
+	}
+	@keyframes img_1 {
+		from {
+			transform: translate(0, -15rpx)
+		}
+
+		to {
+			transform: translate(0, 15rpx)
+		}
+	}
+	.img_1{
+		height:200px;
+		align-items: center;
+		justify-content: center;
+		animation: img_1 1.5s ease-in-out 0s infinite alternate;
 	}
 	.img{
 		height:200px;

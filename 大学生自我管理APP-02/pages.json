@@ -11,6 +11,7 @@
 			"path": "pages/todolist/todolist",
 			"style": {
 				"navigationBarTitleText": "ToDoList",
+				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
 

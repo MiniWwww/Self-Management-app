@@ -40,7 +40,8 @@
 							<view>{{item.day}}</view>
 							<view>{{item.weekday}}</view>
 						</view>
-						<uni-icons type="smallcircle" size="20" color="#cccccc" :color="{'#518268':(item.year==today_year && item.day==today_day)}" class="todo-time_icon"></uni-icons>
+						<uni-icons v-if="!(item.year==today_year && item.day==today_day)" type="smallcircle" size="20" color="#cccccc" class="todo-time_icon"></uni-icons>
+						<uni-icons v-if="item.year==today_year && item.day==today_day" type="smallcircle" size="20" color="#009688" class="todo-time_icon"></uni-icons>
 					</view>
 				</view>
 				<view class="todo-list-outside">
@@ -213,7 +214,7 @@
 		},
 		data() {
 			return {
-				option_color: ['#c2efee', '#7f9d8b', '#1a7482', '#66c0a4', '#e95d54', '#f9cfc8', '#f9e9a0'],
+				option_color: ['#c2efee', '#009688', '#1a7482', '#66c0a4', '#e95d54', '#f9cfc8', '#f9e9a0'],
 				option: 'deadline', // 默认选项为截止日期
 				activeInput: false,
 				tabIndex: 0,
@@ -236,8 +237,8 @@
 						mark: '图书馆',
 						select: true,
 						color: '#1a7482',
-						cycletime: '周一, 周三, 周五',
-						cycles: ["周一", "周三", "周五"],
+						cycletime: '周一, 周二, 周五',
+						cycles: ["周一", "周二", "周五"],
 						time: '09:00',
 						day:'01月26日',
 						weekday: '周五',
@@ -259,7 +260,7 @@
 					},
 					{
 						year:'2024',
-						date:'2024-02-10 19:30',
+						date:'2024-02-25 19:30',
 						title: '打篮球',
 						mark: '一期操场',
 						select: false,
@@ -267,7 +268,7 @@
 						// cycletime: '每日',
 						// cycles: ["每日"],
 						time: '19:30',
-						day: '02月10日',
+						day: '02月25日',
 						weekday: '周二',
 						flag_day: false,
 						flag_year: false,
@@ -388,12 +389,15 @@
 				today_year:'',
 				today_day:'',
 				nowtime: '',
+				nowtime_day: '',
 				todayWeekday:'',
 				listAfterSort:[], //排序后的列表
 			};
 		},
 
 		onLoad() {
+			var that=this;
+			this.getNowTime();
 			this.getList()
 			if(this.listAfterSort.length==0){
 				this.listAfterSort=this.sort_list();
@@ -428,29 +432,12 @@
 			listData() {
 				var that=this;
 				let list = JSON.parse(JSON.stringify(that.listAfterSort)); //拷贝对象
-				//console.log(list);
-				const date = new Date();
-				const year = date.getFullYear();
-				const month = date.getMonth() + 1;
-				const day = date.getDate();
-				const hour = date.getHours();
-				const minute = date.getMinutes();
-				const today = (month < 10 ? '0' + month : month) + '月' + (day < 10 ? '0' + day : day) + '日';
-				const todayWeekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date().getDay()];
-				const nowtime_day = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
-				const time = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute)
-				const nowtime = nowtime_day + ' ' + time;
-				that.today_year=year;
-				that.today_day=today;
-				that.nowtime = nowtime;
 				//对新建表项的数据进行修改，使得在用户仅填写标题时这些数据不会为空
-				that.buttonText = nowtime;
-				that.selectedDate = nowtime;
-				that.day = today;
-				that.year = `${year}`;
-				that.weekday = todayWeekday;
-				that.time = time;
-				that.todayWeekday = todayWeekday
+				that.buttonText = that.nowtime;
+				that.selectedDate = that.nowtime;
+				that.day = that.today_day;
+				that.year = `${that.today_year}`;
+				that.weekday = that.todayWeekday;
 				
 				//点击全部
 				if (this.tabIndex == 0) {
@@ -461,7 +448,7 @@
 				} else if (this.tabIndex == 2) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#1a7482') {
+						if (v.color == '#1a7482'||(v.year==that.today_year&&v.day==today_day)) {
 							newList.push(v);
 						}
 					});
@@ -472,7 +459,7 @@
 				} else if (this.tabIndex == 3) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#66c0a4') {
+						if (v.color == '#66c0a4'||(v.year==that.today_year&&v.day==today_day)) {
 							newList.push(v);
 						}
 					});
@@ -483,7 +470,7 @@
 				} else if (this.tabIndex == 4) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#e95d54') {
+						if (v.color == '#e95d54'||(v.year==that.today_year&&v.day==today_day)) {
 							newList.push(v);
 						}
 					});
@@ -491,7 +478,7 @@
 					newList = that.judge_year_day(newList);
 					console.log(newList);
 					return newList;
-				} else if (this.tabIndex == 5) {
+				} else if (this.tabIndex == 5||(v.year==that.today_year&&v.day==today_day)) {
 					let newList = [];
 					list.forEach(v => {
 						if (v.color == '#f9cfc8') {
@@ -502,7 +489,7 @@
 					newList = that.judge_year_day(newList);
 					console.log(newList);
 					return newList;
-				} else if (this.tabIndex == 6) {
+				} else if (this.tabIndex == 6||(v.year==that.today_year&&v.day==today_day)) {
 					let newList = [];
 					list.forEach(v => {
 						if (v.color == '#f9e9a0') {
@@ -517,17 +504,18 @@
 				} else if (this.tabIndex == 1) {
 					let newList = [];
 					list.forEach(v => {
-						if (!v.cycles && v.year==year && v.day == today) {
+						if (!v.cycletime && v.year==that.today_year && v.day == that.today_day) {
 							newList.push(v);
 						}
-						if (v.cycles && v.cycles.includes("每日") && v.year==year && v.day == today) {
+						if (v.cycletime && v.cycles.includes("每日") && v.year==that.today_year && v.day == that.today_day) {
 							newList.push(v);
 						}
 
-						if (v.cycles && v.cycles.includes(todayWeekday) && v.year==year && v.day == today) {
+						if (v.cycletime && v.cycles.includes(that.todayWeekday) && v.year==that.today_year && v.day == that.today_day) {
 							newList.push(v);
 						}
 					});
+					console.log(newList);
 					that.nowlist = JSON.parse(JSON.stringify(newList));
 					newList = that.judge_year_day(newList);
 					console.log(newList);
@@ -546,6 +534,27 @@
 					key: 'todolist_sorted',
 					data: this.listAfterSort
 				})
+			},
+			getNowTime(){
+				var that = this;
+				const date = new Date();
+				const year = date.getFullYear();
+				const month = date.getMonth() + 1;
+				const day = date.getDate();
+				const hour = date.getHours();
+				const minute = date.getMinutes();
+				const today = (month < 10 ? '0' + month : month) + '月' + (day < 10 ? '0' + day : day) + '日';
+				const todayWeekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date().getDay()];
+				const nowtime_day = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
+				const time = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute)
+				const nowtime = nowtime_day + ' ' + time;
+				that.today_year=year;
+				that.today_day=today;
+				that.nowtime_day = nowtime_day;
+				that.nowtime = nowtime;
+				that.todayWeekday = todayWeekday;
+				that.time = time;
+				console.log(that.today_year,that.today_day)
 			},
 		    getList() {
 				let res = uni.getStorageSync('todolist')
@@ -573,13 +582,16 @@
 					}
 				})
 				//console.log(list_sort);
+				//截止日期类型的先排序
 				list_sort.sort((a,b)=>{
 					return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
 				})
 				var date1 = list_sort[0].date;
 				var date2 = list_sort[list_sort.length-1].date;
 				let i = new Date(date1).setHours(0,0,0,0);
-				let last = new Date(date2).setHours(0,0,0,0) + 86400000 - 1000;
+				let j = new Date(date2).setHours(0,0,0,0) + 86400000 - 1000;//最后一个截止日期那天的23：59：59
+				let k = new Date().getTime() + 14*86400000 - 1000;//'今天'往后两周
+				let last = j>k?j:k;
 				for( i ; i <= last; i += 86400000){//一天的时间戳为86400秒
 					var i_year = new Date(i).getFullYear();
 					var i_month = new Date(i).getMonth() + 1;
@@ -610,6 +622,25 @@
 						}
 					})
 				}
+				//如果'今天'没有的话
+				let obj={
+						year: that.today_year,
+						title: '今天也要加油哦',
+						mark: '',
+						select: false,
+						color: '#009688',
+						cycletime: '',
+						cycles: [],
+						time: '09:00',
+						day: that.today_day,
+						date: that.nowtime_day+' 08:59',
+						weekday: that.todayWeekday,
+						flag_day: false,
+						flag_year: false,
+				};
+				console.log(obj);
+				list_sort.push(obj);
+				
 				list_sort.sort((a,b)=>{
 					return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
 				})
@@ -764,6 +795,7 @@
 									// 使用 $set 更新 list 数组
 									this.$set(this, 'list', this.list);
 								}
+								this.saveList();
 							}
 						}
 					});
@@ -776,26 +808,28 @@
 						cancelText: '删除所有周期项',
 						success:function(res){
 							if(res.confirm){
+								const eventIndex = that.list.findIndex(event => event.title === item.title);
+								if (eventIndex !== -1) {
+									// 从listAfterSort数组中删除该事件
+									that.list.splice(eventIndex, 1);
+									// 使用 $set 更新 list 数组
+									that.$set(that, 'list', that.list);
+								}
 								that.listAfterSort.splice(index, 1);
 								that.$set(that, 'listAfterSort', that.listAfterSort);
+								that.saveList();
 							}
-							if(res.cancel){//删除所有周期项
-								var j=that.listAfterSort.length;
-								for(var i=0; i<j; i++){
-									if(that.listAfterSort[i].title == item.title){
-										that.listAfterSort.splice(i, 1);
-									}
-								}
-								console.log(that.listAfterSort);
-								that.$set(that, 'listAfterSort', that.listAfterSort);
-								
+							if(res.cancel){//删除所有周期项								
 								const eventIndex2 = that.list.findIndex(event => event.title === item.title);
 								if (eventIndex2 !== -1) {
 									// 从list数组中删除该事件
 									that.list.splice(eventIndex2, 1);
+									that.listAfterSort = that.sort_list();
 									// 使用 $set 更新 list 数组
 									that.$set(that, 'list', that.list);
+									that.$set(that, 'listAfterSort', that.listAfterSort);
 								}
+								that.saveList();
 							}
 						}
 					})
@@ -947,7 +981,7 @@
 				const query = uni.createSelectorQuery()
 				query.select('.first').boundingClientRect((data) => {
 					//console.log("第一个", data);
-					let height = Math.abs(data.top)+25;
+					let height = Math.abs(data.top)+15;
 					uni.pageScrollTo({
 						scrollTop: height, //滚动的距离
 						duration: 0, //过渡时间
@@ -965,7 +999,7 @@
 	.todo-header {
 		display: flex;
 		align-items: center;
-		padding: 0 15px;
+		padding: 30px 15px 0 15px;
 		font-size: 12px;
 		color: #333333;
 		height: 70px;
@@ -1060,7 +1094,7 @@
 
 	.todo-content-outside{
 		position: relative;
-		top: 80px;
+		top: 90px;
 		margin-top: 5%;
 		margin-left: 25%;
 		border-width: 0 0 0 2px;
@@ -1078,7 +1112,7 @@
 		position: relative;
 	}
 	.todo-time{
-		margin-top: 20px;
+		margin-top: 25px;
 		position: relative;
 		left: -30%;
 		width: 30%;
@@ -1088,7 +1122,7 @@
 		position: relative;
 		left: -30%;
 		width: 30%;
-		color: #518268;
+		color: #009688;
 	}
 	.todo-time_year{
 		display: flex;

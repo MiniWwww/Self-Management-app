@@ -50,12 +50,9 @@
 			</uni-swipe-action>
 		</view>
 		<view class="select_pop">
-			<view class="select_box" v-if="activePopUp">
-				<view class="select_item_1" @click="to_add">添加</view> <!--添加计划/记录-->
-				<view class="select_item_2" @click="to_achieve">奖励</view>
-				<!--<view class="select_item_3" @click="to_analyse">统计</view>-->
-			</view>
-			<view class="button" @click="popUp"></view>
+			<uni-fab ref="fab" :pattern="fabpattern" :content="fabcontent" :horizontal="'right'" :vertical="'bottom'"
+				:direction="'horizontal'" @trigger="fabtrigger" @fabClick="fabClick" />
+				
 		</view>
 		<view class="br"></view>
 	</view>
@@ -88,11 +85,38 @@
 				week:["周日","周一","周二","周三","周四","周五","周六"],
 				change: false,		//是否到新的一天
 				activePopUp: false,
+				tetxShow: false,//控制打开按钮的动画
 				today:'',
 				today_weekday: '',
 				text: '全部',
 				tabList: ['全部','今天'],
 				tabIndex: 1,
+				fabpattern: {
+					color: '#7A7E83',
+					backgroundColor: '#fff',
+					selectedColor: '#009688',
+					buttonColor: '#009688',
+					iconColor: '#fff'
+				},
+				fabcontent: [{
+						iconPath: '/static/addevent.png',
+						selectedIconPath: '/static/addeventSelected.png',
+						text: '添加',
+						active: false
+					},
+					{
+						iconPath: '/static/addgoal.png',
+						selectedIconPath: '/static/addgoalSelected.png',
+						text: '奖励',
+						active: false
+					},/* 
+					{
+						iconPath: '/static/统计.png',
+						selectedIconPath: '/static/addgoalSelected.png',
+						text: '统计',
+						active: false
+					} */
+				],
 				list:[{
 						title: '跳绳', 
 						period_free: false, 
@@ -181,7 +205,13 @@
 				
 			}
 		},
-		
+		onBackPress() {
+			if (this.$refs.fab.isShow) {
+				this.$refs.fab.close()
+				return true
+			}
+			return false
+		},
 		created() {
 			console.log("这是sport页面的created函数");
 			var that=this;
@@ -252,13 +282,16 @@
 					that.delete_sport(index);
 				}
 			},
-			popUp(){//弹出
-				if(this.activePopUp){
-					this.activePopUp=false;
+			fabtrigger(e) {
+				var that = this;
+				this.fabcontent[e.index].active = !e.item.active
+				if (e.index == 0){
+					this.to_add()
 				}
-				else{
-					this.activePopUp=true;
+				else if(e.index == 1){
+					this.to_achieve();
 				}
+				this.fabcontent[e.index].active = !e.item.active;
 			},
 			to_add(){//添加新项目
 				var that=this;
@@ -338,8 +371,14 @@
 									// that.saveSportList();
 									
 								}
-								that.run(item,index);
-								console.log('完成表',that.finish_list);
+								if(item.all_finish_times<=item.timesForAward){
+									item.run_img = "../../../../static/run.gif";
+									that.$set(that,'now_list', that.now_list);
+									setTimeout(()=>{
+										that.run(item,index);
+									},200)
+									console.log('完成表',that.finish_list);
+								}
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
@@ -400,8 +439,12 @@
 										
 										
 									}
-									that.run(item,index);
-									item.run_img = "../../../../static/run.png";
+									if(item.all_finish_times<=item.timesForAward){
+										item.run_img = "../../../../static/run.gif";
+										setTimeout(()=>{
+											that.run(item,index);
+										},200)
+									}
 									uni.showToast({
 										title:'今天的'+that.now_list[index].title+'已完成！',
 										icon:'none',
@@ -461,6 +504,7 @@
 			//小人奔跑动画
 			run(item,index){
 				var that=this;
+				let percent_before = (item.all_finish_times-1)/item.timesForAward;
 				let percent = item.all_finish_times/item.timesForAward;
 				if(percent>=1){
 					percent=1
@@ -469,25 +513,25 @@
 				let query = uni.createSelectorQuery();
 				query.select('.todo_item').boundingClientRect(rect => {
 					let item_width = rect.width;
-					let l = item_width*percent*0.84;//要移动的距离
+					let before = item_width*percent_before*0.84;//移动之前的位置
+					let l = item_width*percent*0.84-before;//要移动的距离
 					const animation = uni.createAnimation();
 					animation
-						.translateX(0) // 0%
-						.translateX(l*0.2) // 20%
-						.step({duration: 100,});
-					animation.translateX(l*0.3).step({duration: 100,}); // 30%
-					animation.translateX(l*0.4).step({duration: 100,}); // 40%
-					animation.translateX(l*0.5).step({duration: 100,}); // 50%
-					animation.translateX(l*0.6).step({duration: 100,}); // 60%
-					animation.translateX(l*0.7).step({duration: 100,}); // 70%
-					animation.translateX(l*0.8).step({duration: 100,}); // 80%
-					animation.translateX(l*0.9).step({duration: 100,}); // 90%
-					animation.translateX(l).step(); // 100%
-					item.run_img = "../../../../static/run.gif";
+						.translateX(before) // 0%
+						.translateX(l*0.2+before) // 20%
+						.step({duration: 0,});
+					animation.translateX(l*0.3+before).step({duration: 200,}); // 30%
+					animation.translateX(l*0.4+before).step({duration: 200,}); // 40%
+					animation.translateX(l*0.5+before).step({duration: 200,}); // 50%
+					animation.translateX(l*0.6+before).step({duration: 200,}); // 60%
+					animation.translateX(l*0.7+before).step({duration: 200,}); // 70%
+					animation.translateX(l*0.8+before).step({duration: 200,}); // 80%
+					animation.translateX(l*0.9+before).step({duration: 200,}); // 90%
+					animation.translateX(l+before).step(); // 100%
 					item.run_animationData = animation.export();
 					setTimeout(()=>{
 						that.run_recover(item);
-					},1000);
+					},2000);
 					item.position_left = item.run_animationData.actions[item.run_animationData.actions.length-1].animates[0].args[0]
 					//console.log(item.run_animationData)
 					//console.log(item.run_animationData.actions[item.run_animationData.actions.length-1].animates[0].args[0]);
@@ -642,18 +686,6 @@
 		flex-direction: column;
 		justify-content: center;
 	}
-	
-	.todo_checkbox{
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background: #ffffff;
-		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
-		margin-right: 10px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
 	.todo_item_right{
 		border-width: 0 0 0 7upx;
 		border-style: dotted;
@@ -722,37 +754,30 @@
 	.todo_finish .todo_title {
 		color: #999;
 	}
-	.todo_finish .todo_checkbox {
-		position: relative;
-		background: #eee;
+	.todo_finish .todo_item_cycle{
+		color: #999;
 	}
-	.todo_finish .todo_checkbox::after {
-		content: '';
-		position: absolute;
-		width: 10px;
-		height: 10px;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		border-radius: 50%;
-		margin: auto;
-		background: #8c8c8c;
-		box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.2) inset;
+	.todo_finish .todo_item_right_text{
+		color: #999;
 	}
-	/* .todo_finish.todo_item:before {
+	.todo_finish .todo_item_right_number{
+		color: #999;
+	}
+	.todo_finish::before {
 		content: '';
 		position: absolute;
 		top: 0;
 		bottom: 0;
 		left: 40px;
-		right: 10px;
+		right: 25px;
 		height: 2px;
 		margin: auto 0;
-		background: #8c8c8c;
-	} */
-	.todo_finish.todo_item:after {
+		background: #bdcdd8;
+	}
+	
+	.todo_finish::after {
 		background: #ccc;
+		color: #999;
 	}
 	.select_pop{
 		display: flex;

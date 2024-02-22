@@ -326,8 +326,8 @@
 		right: 0;
 		bottom: 0;
 		left: 0; //撑开
-		filter: blur; //模糊
-		opacity: 0.5; //透明度
+		/* filter: blur; //模糊
+		opacity: 0.9; //透明度 */
 		height: 280px;
 		image {
 			width: 100%;
