@@ -14,7 +14,7 @@
 		</view>
 		<view class="todo_box">
 			<uni-swipe-action v-for="(item,index) in ListData" :key="item.title" > <!--左滑完成、删除√，点击查看详情√，详情可修改-->	<!--可计时,计时结束时完成一次该运动-->
-				<view class="run">
+				<view class="run" v-if="item.timesForAward">
 					<image class="run_img" :style="{left: item.position_left}"
 							:src="item.run_img" mode="aspectFill" :animation="item.run_animationData"></image>
 					<image class="dst_img" src="../../../../static/flag.png" mode="aspectFill"></image>
@@ -313,6 +313,9 @@
 								finish_day: '',
 								timesForAward:data.timesForAward,
 								award:data.award,
+								run_animationData: {},
+								position_left: 20,
+								run_img: "../../../../static/run.png"
 							}
 							that.list.push(obj);
 							uni.setStorage({
