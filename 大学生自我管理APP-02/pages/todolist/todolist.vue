@@ -69,8 +69,10 @@
 						</view>
 						<!-- 新增删除按钮 -->
 					</view>
-					<uni-icons type="closeempty" size="13" color="#cccccc" class="delete-btn" @click="deleteEvent(item, index)"></uni-icons>
-				
+					
+				<view class="delete-btn" color="#7e7e7e" @click="deleteEvent(item, index)">
+				   <image src="../../static/delete.png" mode="aspectFit" class="delete-image"></image>
+				</view>
 				</view>
 			</view>
 		</view>
@@ -775,64 +777,67 @@
 			deleteEvent(item, index) {
 				var that=this
 				if(!item.cycles){
-					uni.showModal({
-						title: '提示',
-						content: '确定要删除该事件吗？',
-						success: res => {
-							if (res.confirm) {
+					uni.showActionSheet({
+						itemList: ['确认删除'],
+						itemColor: '#007AFF', // 设置选项文本颜色为蓝色
+						success: function(res) {
+						     if (res.tapIndex == 0) {
 								// 找到需要删除的事件
-								const eventIndex = this.listAfterSort.findIndex(event => event.title === item.title);
+								const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title);
 								if (eventIndex !== -1) {
-									// 从listAfterSort数组中删除该事件
-									this.listAfterSort.splice(eventIndex, 1);
-									// 使用 $set 更新 list 数组
-									this.$set(this, 'listAfterSort', this.listAfterSort);
+								// 从listAfterSort数组中删除该事件
+								that.listAfterSort.splice(eventIndex, 1);
+								// 使用 $set 更新 list 数组
+								that.$set(that, 'listAfterSort', that.listAfterSort);
 								}
-								const eventIndex2 = this.list.findIndex(event => event.title === item.title);
+								const eventIndex2 = that.list.findIndex(event => event.title === item.title);
 								if (eventIndex2 !== -1) {
-									// 从list数组中删除该事件
-									this.list.splice(eventIndex2, 1);
-									// 使用 $set 更新 list 数组
-									this.$set(this, 'list', this.list);
+								// 从list数组中删除该事件
+								that.list.splice(eventIndex2, 1);
+								// 使用 $set 更新 list 数组
+								that.$set(that, 'list', that.list);
 								}
-								this.saveList();
+								that.saveList();
 							}
 						}
 					});
 				}
 				else{
-					uni.showModal({
-						title: '提示',
-						content: '删除当前项还是删除所有周期项？',
-						confirmText: '删除当前项',
-						cancelText: '删除所有周期项',
-						success:function(res){
-							if(res.confirm){
-								const eventIndex = that.list.findIndex(event => event.title === item.title);
-								if (eventIndex !== -1) {
-									// 从listAfterSort数组中删除该事件
-									that.list.splice(eventIndex, 1);
-									// 使用 $set 更新 list 数组
-									that.$set(that, 'list', that.list);
-								}
-								that.listAfterSort.splice(index, 1);
-								that.$set(that, 'listAfterSort', that.listAfterSort);
-								that.saveList();
-							}
-							if(res.cancel){//删除所有周期项								
-								const eventIndex2 = that.list.findIndex(event => event.title === item.title);
-								if (eventIndex2 !== -1) {
-									// 从list数组中删除该事件
-									that.list.splice(eventIndex2, 1);
-									that.listAfterSort = that.sort_list();
-									// 使用 $set 更新 list 数组
-									that.$set(that, 'list', that.list);
+					
+					uni.showActionSheet({
+					    itemList: ['删除当前项', '删除所有周期项'],
+					    itemColor: '#007AFF', // 设置选项文本颜色为蓝色
+					    success: function(res) {
+					            if (res.tapIndex == 0) {
+					                // 用户选择了删除当前项
+					                // 执行删除当前项的逻辑
+									const eventIndex = that.list.findIndex(event => event.title === item.title);
+									if (eventIndex !== -1) {
+										// 从listAfterSort数组中删除该事件
+										that.list.splice(eventIndex, 1);
+										// 使用 $set 更新 list 数组
+										that.$set(that, 'list', that.list);
+									}
+									that.listAfterSort.splice(index, 1);
 									that.$set(that, 'listAfterSort', that.listAfterSort);
+									that.saveList();
+					            }  else if (res.tapIndex == 1){
+					          const eventIndex2 = that.list.findIndex(event => event.title === item.title);
+								if (eventIndex2 !== -1) {
+								// 从list数组中删除该事件
+								that.list.splice(eventIndex2, 1);
+								that.listAfterSort = that.sort_list();
+								// 使用 $set 更新 list 数组
+								that.$set(that, 'list', that.list);
+								that.$set(that, 'listAfterSort', that.listAfterSort);
 								}
 								that.saveList();
-							}
-						}
-					})
+								 }
+									
+					        
+					    }
+					});
+					
 				}
 			},
 			Allday(){
@@ -1582,22 +1587,25 @@
 	}
 
 	.delete-btn {
-		position: absolute;
-		right: 15px;
-		top: 50%;
-		width: 20px;
-		height: 20px;
-		transform: translateY(-50%);
-		color: #494d45;
-		cursor: pointer;
-		transition: transform 0.3s;
-		z-index: 3;
-	}
-
-	.delete-btn:hover {
-		color: #81c0ab;
-		transform: scale(1.2) translateY(-50%);
-	}
+			position: absolute;
+			right: 15px;
+			top: 50%;
+			width: 20px;
+			height: 20px;
+			transform: translateY(-50%);
+			
+			cursor: pointer;
+			transition: transform 0.3s;
+			z-index: 3;
+			
+		}
+.delete-image {
+	opacity: 0.5; /* 设置图片透明度为 50% */
+    width: 20px; /* 图片宽度自适应 */
+    height: 20px; /* 图片高度自适应 */
+   
+}
+	
 	
 	/*.todo-list_date {
 		position: absolute;
