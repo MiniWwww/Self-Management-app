@@ -42,9 +42,9 @@
 							<view class="decoration"></view>
 						</template>
 					</uni-section>
-					<view class="form-item_content">
+					<view class="time-picker">
 						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至"
-							 :end="item.Today" :picker-options="pickerOptions" />
+							 :end="item.Today" :picker-options="pickerOptions" style="width: 255px;"/>
 					</view>
 				</view>
 				<!-- <uni-card title="选择时间范围"> -->
@@ -415,7 +415,11 @@
 		width: 113%;
 		margin: 10px 0 20px -20px;
 	}
-
+	
+	.time-picker{
+		margin: 12px 0 15px 20px;
+	}
+	
 	.form-item_content {
 		margin: 12px 20px 15px;
 	}

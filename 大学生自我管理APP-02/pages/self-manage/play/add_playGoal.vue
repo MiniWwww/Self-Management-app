@@ -8,7 +8,7 @@
 					</template>
 				</uni-section>
 				<view class="form-item_content">
-					<textarea :maxlength="20" v-model="item.title" auto-height placeholder="请输入"></textarea>
+					<textarea v-model="item.title" auto-height placeholder="请输入" style="width: 260px;"></textarea>
 				</view>
 			</view>
 			<view class="form-item_outside">
@@ -18,7 +18,7 @@
 					</template>
 				</uni-section>
 				<view class="form-item_content">
-					<textarea :maxlength="20" v-model="item.content" auto-height placeholder="请输入"></textarea>
+					<textarea v-model="item.content" auto-height placeholder="请输入" style="width: 260px;"></textarea>
 				</view>
 			</view>
 			<view class="form-item_outside">
@@ -30,7 +30,7 @@
 				<view class="form-item_content">
 					<uni-data-checkbox v-model="baseFormData.time" :localdata="time_type" @change="choosetimetype" selectedColor="#009688" />
 					<view v-if="item.timetype0" class="time-picker">
-						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" start-placeholder="开始时间" rangeSeparator="至" end-placeholder="结束时间" />
+						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" start-placeholder="开始时间" rangeSeparator="至" end-placeholder="结束时间" style="width: 240px;"/>
 					</view>
 					<!-- 2023-10-24添加结束 -->
 					<!-- 周期时间选择器 -->				
@@ -295,7 +295,7 @@
 	.FormPage {
 		/* 表单页面颜色:浅灰*/
 		width: 100%;
-		padding: 20px;
+		padding: 20px 10px;
 		background-color: rgb(245, 245, 245);
 		display: flex;
 		flex-direction: column;
@@ -308,8 +308,8 @@
 		background-color: white;
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
 		border-radius: 10px;
-		width: 75%;
-		margin: 10px 0 20px 40px;
+		width: 95%;
+		margin: 10px 0 20px;
 	}
 	.decoration{
 		width: 4px;
@@ -322,7 +322,8 @@
 		margin: 12px 20px 15px;
 	}
 	.time-picker{
-		margin: 10px;
+		margin: 10px 0px 10px 10px;
+		width: 90%;
 	}
 	.list-box {
 		display: flex;

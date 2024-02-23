@@ -401,8 +401,35 @@
 			var that=this;
 			this.getNowTime();
 			this.getList()
-			if(this.listAfterSort.length==0){
-				this.listAfterSort=this.sort_list();
+			let obj={
+					year: that.today_year,
+					title: '今天也要加油哦',
+					mark: '',
+					select: false,
+					color: '#009688',
+					cycletime: '',
+					cycles: [],
+					time: '',
+					day: that.today_day,
+					date: that.nowtime_day+' 00:00',
+					weekday: that.todayWeekday,
+					flag_day: false,
+					flag_year: false,
+			};
+			if(!this.listAfterSort.includes(obj)){
+				const eventIndex = this.listAfterSort.findIndex(event => event.title === obj.title);
+				if (eventIndex !== -1) {
+					this.listAfterSort.splice(eventIndex,1);
+				}
+				this.listAfterSort.push(obj);
+				if(this.listAfterSort.length==1){
+					this.listAfterSort=this.sort_list();
+				}
+				else{
+					this.listAfterSort.sort((a,b)=>{
+						return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
+					})
+				}
 			}
 		},
 		onReady() {
@@ -624,24 +651,6 @@
 						}
 					})
 				}
-				//如果'今天'没有的话
-				let obj={
-						year: that.today_year,
-						title: '今天也要加油哦',
-						mark: '',
-						select: false,
-						color: '#009688',
-						cycletime: '',
-						cycles: [],
-						time: '09:00',
-						day: that.today_day,
-						date: that.nowtime_day+' 08:59',
-						weekday: that.todayWeekday,
-						flag_day: false,
-						flag_year: false,
-				};
-				console.log(obj);
-				list_sort.push(obj);
 				
 				list_sort.sort((a,b)=>{
 					return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
@@ -776,7 +785,7 @@
 			},
 			deleteEvent(item, index) {
 				var that=this
-				if(!item.cycles){
+				if(!item.cycles.length!=0){
 					uni.showActionSheet({
 						itemList: ['确认删除'],
 						itemColor: '#007AFF', // 设置选项文本颜色为蓝色
@@ -1066,7 +1075,7 @@
 
 	.options {
 		position: absolute;
-		top: 60px;
+		top: 90px;
 		right: 45px;
 		background: #fff;
 		box-shadow: 0px 0px 4px rgba(30, 30, 30, 0.1);

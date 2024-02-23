@@ -21,8 +21,10 @@
 						<button class="clock_button" @click="sleep_clock">睡觉</button>
 						
 					</view>
-					<view v-if="sleep" >
-						<image class="img" src="../../static/sleeping_zzz.jpg" mode="heightFix"></image>
+					<view v-if="sleep" style="position: relative;">
+						<view class="wave_1"></view>
+						<view class="wave_2"></view>
+						<image class="img" src="../../static/moon.png" mode="heightFix"></image>
 						<button class="clock_button" @click="clickSprink()" @touchend="touchend" @touchstart="touchstart">起床</button>
 						<view style="font-size: 12px; color: #9e9e9e; margin-top: -8px;" >轻触取消就寝状态，长按起床</view>
 					</view>
@@ -403,7 +405,7 @@
 			//手指触摸动作开始
 			touchstart(){
 				this.start_time = new Date().getTime();
-				console.log(this.start_time);
+				/* console.log(this.start_time); */
 				this.timer = setTimeout(()=>{
 					this.longpress();
 				},200)//触发倒计时
@@ -412,7 +414,7 @@
 			touchend(){
 				clearTimeout(this.timer);
 				this.end_time = new Date().getTime();
-				console.log(this.end_time);
+				/* console.log(this.end_time); */
 				//延时执行为了防止 click() 还未判断 islongPress 的值就被置为 fasle
 				setTimeout(() => {
 					this.islongPress = false
@@ -566,10 +568,56 @@
 		justify-content: center;
 		animation: img_1 1.5s ease-in-out 0s infinite alternate;
 	}
+	.wave_1{
+		position: absolute;
+		top: -25px;
+		left: -50px;
+		width: 300px;
+		height: 300px;
+		/* outline: 2px dashed gray; */
+		--c: #0000;
+		--w1: radial-gradient(100% 57% at top ,#0000 100%,#b8b8b8 4px,var(--c) 101.5%) no-repeat;
+		--w2: radial-gradient(100% 57% at bottom, var(--c) 100%,#b8b8b8 4px,#0000 101.5%) no-repeat;
+		background: var(--w1),var(--w2),var(--w1),var(--w2);
+		background-position-x: -200%, -100%, 0%, 100%;
+		background-position-y: 100%;
+		background-size: 50.5% 100%;
+		animation: m 2s infinite -0.5s linear;
+	}
+	.wave_2{
+		position: absolute;
+		top: -15px;
+		left: -50px;
+		width: 300px;
+		height: 300px;
+		/* outline: 2px dashed gray; */
+		--c: #0000;
+		--w1: radial-gradient(100% 57% at top ,#0000 100%,#b8b8b8 4px,var(--c) 101.5%) no-repeat;
+		--w2: radial-gradient(100% 57% at bottom, var(--c) 100%,#b8b8b8 4px,#0000 101.5%) no-repeat;
+		background: var(--w1),var(--w2),var(--w1),var(--w2);
+		background-position-x: -200%, -100%, 0%, 100%;
+		background-position-y: 100%;
+		background-size: 50.5% 100%;
+		animation: m 3s infinite -0s linear;
+	}
+	@keyframes m {
+		0%  {background-position-x:-200%, -100%, 0%, 100%}
+		100%{background-position-x:  0%, 100%, 200%, 300%}
+	}
 	.img{
 		height:200px;
 		align-items: center;
 		justify-content: center;
+		animation: img 3s ease-in-out 0s infinite alternate;
+	}
+	@keyframes img {
+		from {
+			transform: translate(0, 15rpx) rotate(-10deg) scale(0.95)
+		}
+	
+		to {
+			transform: translate(0, -15rpx) rotate(10deg) scale(1.05)
+		}
 	}
 	.clockTime_box{
 		/* display: flex; */
