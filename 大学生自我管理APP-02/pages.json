@@ -19,7 +19,7 @@
 			"path": "pages/self-record/self-record",
 			"style": {
 				"navigationBarTitleText": "记录",
-				"enablePullDownRefresh": true,
+				// "enablePullDownRefresh": true,
 				"app-plus": {
 					"bounce": "none",
 					"titleNView": {
