@@ -645,19 +645,23 @@
 						console.log('这是范围性目标', item.title)
 						// console.log('item.starttime',item.starttime)
 						let startDate = new Date(item.starttime);
-						// console.log('startDate',startDate)
+						console.log('startDate',startDate)
 						// console.log('item.endttime',item.endttime)
 						let endDate = new Date(item.endttime);
-						// console.log('endDate',endDate)
-
+						console.log('endDate',endDate)
+						//这是固定的8点
+						console.log('todayDate',todayDate)
+						
+						let currenTime = new Date();
+						console.log('currenTime',currenTime)
 						// 检查今天的日期是否在开始和结束日期之间
-						if ((item.isdone == false) && (todayDate >= startDate && todayDate <= endDate)) {
+						if ((item.isdone == false) && (currenTime >= startDate && currenTime <= endDate)) {
 							item.istargetDate = true
 							// console.log('范围性目标' + item.title + 'istargetDate已经设置为true')
-						} else if ((item.isdone == false) && todayDate >= endDate) {
+						} else if ((item.isdone == false) && currenTime > endDate) {
 							item.isoverdue = true;
 							// console.log('范围性目标' + item.title + 'isoverdue已经设置为true')
-						} else if ((item.isdone == false) && todayDate <= startDate) {
+						} else if ((item.isdone == false) && currenTime < startDate) {
 							item.isNotStart = true;
 							// console.log('范围性目标' + item.isNotStart + 'isNotStart已经设置为true')
 						}
