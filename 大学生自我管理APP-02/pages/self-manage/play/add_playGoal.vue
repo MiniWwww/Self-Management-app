@@ -30,7 +30,7 @@
 				<view class="form-item_content">
 					<uni-data-checkbox v-model="baseFormData.time" :localdata="time_type" @change="choosetimetype" selectedColor="#009688" />
 					<view v-if="item.timetype0" class="time-picker">
-						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" start-placeholder="开始时间" rangeSeparator="至" end-placeholder="结束时间" style="width: 240px;"/>
+						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" start-placeholder="开始时间" rangeSeparator="至" end-placeholder="结束时间" hide-second="true" style="width: 240px;" />
 					</view>
 					<!-- 2023-10-24添加结束 -->
 					<!-- 周期时间选择器 -->				
@@ -198,6 +198,28 @@
 			},
 			SubmitEvent() {
 				var that = this
+				console.log('选择的开始时间',that.datetimeRange[0]);
+				console.log('选择的结束时间',that.datetimeRange[1]);
+				if(that.datetimeRange[0]===that.datetimeRange[1]){
+					console.log("时间相等")
+					// 分离日期和时间
+					var datePart = that.datetimeRange[0].split(' ')[0]; // 2024-02-26
+					var timePart = that.datetimeRange[0].split(' ')[1]; // 23:09
+					
+					// 修改时间部分
+					timePart = '00:00'; // 将时间修改为00:00
+					
+					// 更新datetimeRange[0]
+					that.datetimeRange[0] = datePart + ' ' + timePart;
+					
+					// 同样的操作修改结束时间的时间部分
+					var endDatePart = that.datetimeRange[1].split(' ')[0];
+					var endTimePart = that.datetimeRange[1].split(' ')[1];
+					endTimePart = '23:59';
+					that.datetimeRange[1] = endDatePart + ' ' + endTimePart;
+					console.log('修改后的开始时间',that.datetimeRange[0]);
+					console.log('修改后的结束时间',that.datetimeRange[1]);
+				}
 				uni.showModal({
 					title: '提示',
 					content: `您确认要提交吗？`,
@@ -219,6 +241,7 @@
 							
 							
 							const eventChannel = that.getOpenerEventChannel();
+							
 							let EventObj={
 								timetype0: that.item.timetype0,
 								timetype1: that.item.timetype1,
