@@ -1,19 +1,34 @@
 <template>
-	<view id="moments">
+	<view id="moments" :class="{ 'hidden': cover }">
 
-		<view class="home-pic">
-			<view class="home-pic-base">
-				<!-- “我”的用户名和用户头像 -->
-				<view class="top-pic">
-					<image class="header" mode="aspectFill" :src="userhead"></image>
+		<view class="home-pic" @click="show()" :style="{ backgroundImage: 'url(' + bg + ')' }">
+			<!-- <image src='../../static/self-record/index/test/bgi02.jpg'></image> -->
+			<!-- <div class="cover" v-if="showCover"></div> --> 
+			<view class="mask" v-if="cover">
+				<!--  @touchmove.prevent阻止滚动事件 -->
+				<view class="content">
+					<view class="mask_title">
+						<div class="left"> <p>切换背景图</p> </div>
+						<div class="right" @click.stop="hide()">X</div> 
+						
+					</view>
+					<ul class="bg_content">
+						<li v-for="item in bg_lis" :key="item.id" @click="end(item)"> <image :src="'../../static/bg/' + item.src" mode="aspectFill"></image> </li>
+					</ul>
+				</view>  
+			</view> 
+			<view class="home-pic-base">   
+				<!-- “我”的用户名和用户头像 --> 
+				<view class="top-pic"> 
+					<image class="header" mode="aspectFill" :src="userhead"></image> 
 				</view>
-				<view class="top-name">{{username}}</view>
+				<view class="top-name">{{username}}</view>  
 				<view class="top-sig">{{userMotto}}</view>
-			</view>
-		</view>
-
+			</view>  
+		</view> 
+ 
 		<!-- 记录数据posts -->
-		<view class="moments__post" v-for="(post,index) in posts" :key="index" :id="'post-'+index">
+		<view class="moments__post" v-for="(post,index) in posts" :key="index" :id="'post-'+index" >
 
 			<view class="post-top-outside">
 				<view class="post-top">
@@ -50,11 +65,11 @@
 					</view>
 					<view class="comment" @tap="comment(index)">
 						<!--<image src="../../static/self-record/index/comment.png"></image>-->
-						<uni-icons type="chatbubble" color="white" size="22"></uni-icons>
+						<uni-icons type="chatbubble" color="white" size="22"></uni-icons> 
 					</view>
 				</view>
 				<!-- 点赞与评论 -->
-				<view class="post-footer">
+				<view class="post-footer"> 
 					<view class="footer_content">
 						<image class="liked" src="../../static/self-record/index/liked.png"></image>
 						<text class="nickname" v-for="(user,index_like) in post.like"
@@ -86,7 +101,7 @@
 	import chatInput from './component/chatinput/chatinput.vue'; //评论区的input框
 	import sysMsg from '../../common/self-record/system-courage.js'; //系统发送的鼓励的话
 	import mytime from './mytime.js'; //得到所需的时间格式
-
+  
 	export default {
 
 		components: {
@@ -95,9 +110,26 @@
 
 		data() {
 			return {
-				sleep_success_Count: Number,
+				bg_lis : [
+					{ id : 0, src: 'bg_0.jpg' },
+					{ id : 1, src: 'bg_1.jpg' },
+					{ id : 2, src: 'bg_2.jpg' },
+					{ id : 3, src: 'bg_3.jpg' },
+					{ id : 4, src: 'bg_4.jpg' },
+					{ id : 5, src: 'bg_5.jpg' },
+					{ id : 6, src: 'bg_6.jpg' }, 
+					{ id : 7, src: 'bg_7.png' },
+					{ id : 8, src: 'bg_8.jpg' }, 
+					{ id : 9, src: 'bg_9.jpg' },
+					{ id : 10, src: 'bg_10.jpg' },
+					{ id : 11, src: 'bg_11.jpg' },
+				], 
+				sleep_success_Count: Number, 
 				getup_success_Count: Number,
 				days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+				showCover : false,
+				 bg: uni.getStorageSync('bg'),
+				cover : false,
 
 				//每条记录数据，注意每发布一条新的就插入数组头部
 				posts: [{
@@ -187,7 +219,7 @@
 			}
 		},
 
-		onLoad() {
+		onLoad() { 
 			uni.getSystemInfo({ //获取设备信息
 				success: (res) => {
 					this.screenHeight = res.screenHeight;
@@ -365,8 +397,60 @@
 		computed: {
 
 		},
+		
+		created() {
+			this.bg = uni.getStorageSync('bg')
+			console.log("背景为:",uni.getStorageSync('bg'))
+		},
 
 		methods: {
+				show(){
+				    uni.chooseImage({
+				        count:1,
+				        sizeType:["compressed"],
+				        sourceType: ["album", "camera"],
+				        success: (res) => {
+				            console.log(res);
+				            this.userpic = res.tempFilePaths[0];
+				            var TempFilePath=res.tempFilePaths[0];
+				            uni.saveFile({
+				                 tempFilePath: TempFilePath,
+				                success: (res) => { 
+				                    uni.setStorageSync('bg', res.savedFilePath);
+				                    this.bg = res.savedFilePath; 
+				                },
+				                fail: (err) => {
+				                    console.error("保存图片失败", err);
+				                }
+				            }); 
+				        }
+				    });
+				},
+				
+				// hide() { 
+				// 	this.cover = false
+					 
+				//    },
+				 
+				end(item){
+					uni.showModal({
+					        title: '提示',
+					        content: '确认选择这个照片为背景嘛？', 
+					        showCancel: true, 
+					        cancelText: '取消',
+					        confirmText: '确定',
+					        success: (res) => {
+					          if (res.confirm) {
+								uni.setStorageSync('bg', item.src)
+								this.bg = item.src
+								console.log(this.bg)
+								this.cover = false
+					          } else if (res.cancel) {
+					            console.log('用户点击取消');
+					          }
+					        }
+					      });
+				},
 
 			//用于跳转页面的函数
 			navigateTo(url) {
