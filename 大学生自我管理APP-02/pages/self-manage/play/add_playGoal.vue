@@ -198,6 +198,7 @@
 			},
 			SubmitEvent() {
 				var that = this
+				if(that.item.timetype0){
 				console.log('选择的开始时间',that.datetimeRange[0]);
 				console.log('选择的结束时间',that.datetimeRange[1]);
 				if(that.datetimeRange[0]===that.datetimeRange[1]){
@@ -219,6 +220,7 @@
 					that.datetimeRange[1] = endDatePart + ' ' + endTimePart;
 					console.log('修改后的开始时间',that.datetimeRange[0]);
 					console.log('修改后的结束时间',that.datetimeRange[1]);
+				}
 				}
 				uni.showModal({
 					title: '提示',
