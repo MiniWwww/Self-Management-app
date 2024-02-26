@@ -277,6 +277,7 @@
 							console.log('sportGoalSuccess储存成功');
 						}
 					});
+					
 				}
 				if(e.content.text=="删除"){
 					that.delete_sport(index);
@@ -386,6 +387,13 @@
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
 								})
+								uni.setStorage({
+									key:'sportList',
+									data:that.list,
+									success() {
+										console.log('运动数组存储成功！');
+									}
+								});
 							}
 						}
 					})
@@ -452,6 +460,13 @@
 										title:'今天的'+that.now_list[index].title+'已完成！',
 										icon:'none',
 									})
+									uni.setStorage({
+										key:'sportList',
+										data:that.list,
+										success() {
+											console.log('运动数组存储成功！');
+										}
+									});
 								}
 							}
 						})

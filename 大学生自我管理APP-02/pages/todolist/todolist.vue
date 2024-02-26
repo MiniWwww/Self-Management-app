@@ -253,6 +253,8 @@
 						mark: '电影院',
 						select: true,
 						color: '#f9cfc8',
+						cycles: [],
+						cycletime: '',
 						date: '2024-01-24 13:00',
 						day:'01月24日',
 						time: '13:00',
@@ -267,8 +269,8 @@
 						mark: '一期操场',
 						select: false,
 						color: '#e95d54',
-						// cycletime: '每日',
-						// cycles: ["每日"],
+						cycles: [],
+						cycletime: '',
 						time: '19:30',
 						day: '02月25日',
 						weekday: '周二',
@@ -297,6 +299,8 @@
 						date: '2024-01-22 10:30',
 						select: false,
 						color: '#66c0a4',
+						cycles: [],
+						cycletime: '',
 						day: '01月22日',
 						time:'10:30',
 						weekday:'周一',
@@ -310,6 +314,8 @@
 						date: '2024-01-28 19:00',
 						select: false,
 						color: '#f9cfc8',
+						cycles: [],
+						cycletime: '',
 						day: '01月28日',
 						time:'19:00',
 						weekday:'周日',
@@ -323,6 +329,8 @@
 						date: '2023-12-31 10:00',
 						select: false,
 						color: '#1a7482',
+						cycles: [],
+						cycletime: '',
 						day: '12月31日',
 						time:'10:00',
 						weekday:'周日',
@@ -401,6 +409,7 @@
 			var that=this;
 			this.getNowTime();
 			this.getList()
+			console.log(this.listAfterSort);
 			let obj={
 					year: that.today_year,
 					title: '今天也要加油哦',
@@ -424,6 +433,10 @@
 				this.listAfterSort.push(obj);
 				if(this.listAfterSort.length==1){
 					this.listAfterSort=this.sort_list();
+					this.listAfterSort.push(obj);
+					this.listAfterSort.sort((a,b)=>{
+						return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
+					})
 				}
 				else{
 					this.listAfterSort.sort((a,b)=>{
@@ -467,7 +480,6 @@
 				that.day = that.today_day;
 				that.year = `${that.today_year}`;
 				that.weekday = that.todayWeekday;
-				
 				//点击全部
 				if (this.tabIndex == 0) {
 					let newList = JSON.parse(JSON.stringify(list));
@@ -476,8 +488,9 @@
 					return newList;
 				} else if (this.tabIndex == 2) {
 					let newList = [];
+					console.log(list);
 					list.forEach(v => {
-						if (v.color == '#1a7482'||(v.year==that.today_year&&v.day==today_day)) {
+						if (v.color == '#1a7482'||(v.year==that.today_year&&v.day==that.today_day)) {
 							newList.push(v);
 						}
 					});
@@ -488,7 +501,7 @@
 				} else if (this.tabIndex == 3) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#66c0a4'||(v.year==that.today_year&&v.day==today_day)) {
+						if (v.color == '#66c0a4'||(v.year==that.today_year&&v.day==that.today_day)) {
 							newList.push(v);
 						}
 					});
@@ -499,7 +512,7 @@
 				} else if (this.tabIndex == 4) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#e95d54'||(v.year==that.today_year&&v.day==today_day)) {
+						if (v.color == '#e95d54'||(v.year==that.today_year&&v.day==that.today_day)) {
 							newList.push(v);
 						}
 					});
@@ -507,7 +520,7 @@
 					newList = that.judge_year_day(newList);
 					console.log(newList);
 					return newList;
-				} else if (this.tabIndex == 5||(v.year==that.today_year&&v.day==today_day)) {
+				} else if (this.tabIndex == 5||(v.year==that.today_year&&v.day==that.today_day)) {
 					let newList = [];
 					list.forEach(v => {
 						if (v.color == '#f9cfc8') {
@@ -518,7 +531,7 @@
 					newList = that.judge_year_day(newList);
 					console.log(newList);
 					return newList;
-				} else if (this.tabIndex == 6||(v.year==that.today_year&&v.day==today_day)) {
+				} else if (this.tabIndex == 6||(v.year==that.today_year&&v.day==that.today_day)) {
 					let newList = [];
 					list.forEach(v => {
 						if (v.color == '#f9e9a0') {
@@ -532,6 +545,7 @@
 					return newList;
 				} else if (this.tabIndex == 1) {
 					let newList = [];
+					console.log(list);
 					list.forEach(v => {
 						if (!v.cycletime && v.year==that.today_year && v.day == that.today_day) {
 							newList.push(v);
