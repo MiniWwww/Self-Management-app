@@ -37,6 +37,11 @@
 	import sleep from './component/sleep/sleep.vue'
 	import play from './component/play/play.vue'
 	export default {
+		provide () {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。                                             
+			return {
+				reload: this.reload
+			}
+		},
 		components:{sleep, sport, play},
 		//在play.vue那里onshow不起作用，因为play.vue是被引入到self-management.vue界面了
 		//实际上根本不能到达play.vue界面
@@ -96,6 +101,12 @@
 				uni.navigateTo({
 					url:'/pages/self-manage/component/PersonCenter/PersonCenter'
 				})
+			},
+			reload () {
+			    this.play = false;            //先关闭，
+			    this.$nextTick(function () {
+			        this.play = true;         //再打开
+			    }) 
 			}
 		}
 	}

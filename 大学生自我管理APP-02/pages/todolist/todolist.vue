@@ -520,10 +520,10 @@
 					newList = that.judge_year_day(newList);
 					console.log(newList);
 					return newList;
-				} else if (this.tabIndex == 5||(v.year==that.today_year&&v.day==that.today_day)) {
+				} else if (this.tabIndex == 5) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#f9cfc8') {
+						if (v.color == '#f9cfc8'||(v.year==that.today_year&&v.day==that.today_day)) {
 							newList.push(v);
 						}
 					});
@@ -531,10 +531,10 @@
 					newList = that.judge_year_day(newList);
 					console.log(newList);
 					return newList;
-				} else if (this.tabIndex == 6||(v.year==that.today_year&&v.day==that.today_day)) {
+				} else if (this.tabIndex == 6) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#f9e9a0') {
+						if (v.color == '#f9e9a0'||(v.year==that.today_year&&v.day==that.today_day)) {
 
 							newList.push(v);
 						}

@@ -132,6 +132,7 @@
 
 <script>
 	export default {
+		inject:['reload'],
 		// props:["SendTOplay_SwipeList"],
 		components: {},
 		//钩子
@@ -1081,7 +1082,7 @@
 											console.log('查看数组：', that.swipeList);
 											that.savePlayGoalList();
 											console.log('play页面成功接收到add_playgoal的数据');
-											that.$set(that, 'swipeList', that.swipeList);
+											that.reload();
 										},
 
 									}
