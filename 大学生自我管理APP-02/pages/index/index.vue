@@ -30,7 +30,7 @@
 			</uni-card>
 		</uni-popup>
 		<!-- 输入框 -->
-		<view class="create-content" style="z-index: 1" v-if="activeInput" :class="{ 'create-show': textShow }">
+		<view class="create-content" style="z-index: 999998" v-if="activeInput" :class="{ 'create-show': textShow }">
 			<view class="create-content-box">
 				<uni-forms ref="form" :modelValue="formData" :rules="rules" label-width="80px">
 					<uni-forms-item required label="起始节" name="begin">
@@ -68,9 +68,12 @@
 						<uni-easyinput type="number" v-model="formData.credit" placeholder="请填写学分" />
 					</uni-forms-item>
 				</uni-forms>
+				
 				<view class="creat-button" v-if="creatButtonShow" @click="submit">创建</view>
-				<view class="creat-button" v-if="updateButtonShow" @click="update">更新</view>
-				<view class="remove-button" v-if="updateButtonShow" @click="remove">删除</view>
+				<view class="button-box" v-if="updateButtonShow">
+					<view class="creat-button"  @click="update">更新</view>
+					<view class="remove-button" @click="remove">删除</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -393,6 +396,7 @@
 </script>
 
 <style>
+	@import './icon.css';
 	.truncate {
 		position: fixed;
 		bottom: 80rpx;
@@ -429,7 +433,7 @@
 		border-radius: 50%;
 		color: #fff;
 		font-size: 50rpx;
-		z-index: 999997;
+		z-index: 999999;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -444,7 +448,7 @@
 	}
 
 	.create-todo-active {
-		padding-top: 100px;
+		transform: scale(1) rotate(45deg);
 	}
 
 	.create-content {
@@ -481,7 +485,14 @@
 		opacity: 1;
 		transform: scale(1) translateY(0);
 	}
-
+	.button-box {
+		width: 80%;
+		padding: 1% 5%;
+		display: flex;
+		justify-content: space-between;
+		margin-top: -20px;
+		margin-left: 20px;
+	}
 	.creat-button {
 		display: flex;
 		justify-content: center;
@@ -496,7 +507,7 @@
 		margin-left: auto;
 		margin-right: auto;
 		margin-top: 40rpx;
-		width: 80%;
+		width: 100px;
 	}
 	.remove-button {
 		display: flex;
@@ -512,6 +523,6 @@
 		margin-left: auto;
 		margin-right: auto;
 		margin-top: 40rpx;
-		width: 80%;
+		width: 100px;
 	}
 </style>

@@ -15,9 +15,10 @@
 		<view class="todo_box">
 			<uni-swipe-action v-for="(item,index) in ListData" :key="item.title" > <!--左滑完成、删除√，点击查看详情√，详情可修改-->	<!--可计时,计时结束时完成一次该运动-->
 				<view class="run" v-if="item.timesForAward">
-					<image class="run_img" :style="{left: item.position_left}"
+					<image v-if="!item.getAward" class="run_img" :style="{left: item.position_left}"
 							:src="item.run_img" mode="aspectFill" :animation="item.run_animationData"></image>
-					<image class="dst_img" src="../../../../static/flag.png" mode="aspectFill"></image>
+					<image v-if="!item.getAward" class="dst_img" src="../../../../static/flag.png" mode="aspectFill"></image>
+					<image v-if="item.getAward" class="dst_img" src="../../../../static/getAward.png" mode="aspectFill"></image>
 				</view>
 				<uni-swipe-action-item :right-options="options" :show="right" :auto-close="false"  @click="bindClick($event,item,index)">
 					<view class="todo_item" :class="{'todo_finish':item.finish}" @click="to_detail(index)">
@@ -133,7 +134,8 @@
 						award:'吃火锅！',
 						run_animationData: {},
 						position_left: 20,
-						run_img: "../../../../static/run.png"
+						run_img: "../../../../static/run.png",
+						getAward: false,
 						}, 
 						{title: '跑步',
 						period_free: true, 
@@ -150,10 +152,11 @@
 						award:'吃烤肉',
 						run_animationData: {},
 						position_left: 20,
-						run_img: "../../../../static/run.png"
+						run_img: "../../../../static/run.png",
+						getAward: false,
 						},
-						{title: '打球', period_free: false, period:true, note:'',intensity:'高', times:1, finish: false, finish_times:0, all_finish_times:5, finish_day:'', cycle:'周日 周二 周四 周六',timesForAward:10, award:'吃烧烤！', run_animationData: {}, position_left: 20, run_img: "../../../../static/run.png"},
-						{title: '仰卧起坐', period_free: false, period:true, note:'一次50个',intensity:'中', times:2, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'每天',timesForAward:30, award:'喝奶茶！', run_animationData: {}, position_left: 20, run_img: "../../../../static/run.png"}],
+						{title: '打球', period_free: false, period:true, note:'',intensity:'高', times:1, finish: false, finish_times:0, all_finish_times:5, finish_day:'', cycle:'周日 周二 周四 周六',timesForAward:10, award:'吃烧烤！', run_animationData: {}, position_left: 20, run_img: "../../../../static/run.png",getAward: false,},
+						{title: '仰卧起坐', period_free: false, period:true, note:'一次50个',intensity:'中', times:2, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'每天',timesForAward:30, award:'喝奶茶！', run_animationData: {}, position_left: 20, run_img: "../../../../static/run.png",getAward: false,}],
 				now_list:[//{title: '跳绳', period_free: false, period:true, note:'',intensity:'', times:2, finish: false, finish_times:0, cycle:'周一 周三 周五',},
 				// 	{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:1, finish: false, finish_times:0, cycle:''}
 				],
@@ -316,7 +319,8 @@
 								award:data.award,
 								run_animationData: {},
 								position_left: 20,
-								run_img: "../../../../static/run.png"
+								run_img: "../../../../static/run.png",
+								getAward: false,
 							}
 							that.list.push(obj);
 							uni.setStorage({
@@ -354,7 +358,51 @@
 			finish_sport(item,index){  //完成项目
 				var that=this;
 				console.log(index);
-				if(that.now_list[index].period_free||(that.now_list[index].times>1&&that.now_list[index].finish_times<that.now_list[index].times-1)){
+				if(that.now_list[index].period&&that.now_list[index].finish){
+					uni.showModal({
+						title:'提示',
+						content: '您今天的'+that.now_list[index].title+'已经完成啦！是否又完成了一次'+that.now_list[index].title+'呢？请注意休息哦',
+						success: function(res){
+							if(res.confirm){
+								that.now_list[index].finish_day=that.today;
+								var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
+								if(i){
+									i.finish_times=i.finish_times+1;
+									i.all_finish_times=i.all_finish_times+1;
+									console.log('完成项',i);
+									// that.saveSportList();
+								}
+								else{
+									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
+									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
+									that.finish_list.push(that.now_list[index]);
+									// that.saveSportList();
+									
+								}
+								if(item.all_finish_times<=item.timesForAward){
+									item.run_img = "../../../../static/run.gif";
+									that.$set(that,'now_list', that.now_list);
+									setTimeout(()=>{
+										that.run(item,index);
+									},200)
+									console.log('完成表',that.finish_list);
+								}
+								uni.showToast({
+									title:'完成一次'+that.now_list[index].title+'！',
+									icon:'none',
+								})
+								uni.setStorage({
+									key:'sportList',
+									data:that.list,
+									success() {
+										console.log('运动数组存储成功！');
+									}
+								});
+							}
+						}
+					})
+				}
+				else if(that.now_list[index].period_free||(that.now_list[index].times>1&&that.now_list[index].finish_times<that.now_list[index].times-1)){
 					uni.showModal({
 						title:'提示',
 						content: '是否完成一次'+that.now_list[index].title+'？',
@@ -558,6 +606,10 @@
 			},
 			run_recover(item){
 				item.run_img = "../../../../static/run.png";
+				if(item.all_finish_times>=item.timesForAward){
+					item.getAward=true
+				}
+				this.$set(this, 'now_list', this.now_list)
 			}
 		}
 	}

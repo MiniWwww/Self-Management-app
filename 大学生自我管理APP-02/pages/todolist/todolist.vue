@@ -490,7 +490,7 @@
 					let newList = [];
 					console.log(list);
 					list.forEach(v => {
-						if (v.color == '#1a7482'||(v.year==that.today_year&&v.day==that.today_day)) {
+						if (v.color == '#1a7482'||(v.year==that.today_year&&v.day==that.today_day&&v.title=='今天也要加油哦')) {
 							newList.push(v);
 						}
 					});
@@ -501,7 +501,7 @@
 				} else if (this.tabIndex == 3) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#66c0a4'||(v.year==that.today_year&&v.day==that.today_day)) {
+						if (v.color == '#66c0a4'||(v.year==that.today_year&&v.day==that.today_day&&v.title=='今天也要加油哦')) {
 							newList.push(v);
 						}
 					});
@@ -512,7 +512,7 @@
 				} else if (this.tabIndex == 4) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#e95d54'||(v.year==that.today_year&&v.day==that.today_day)) {
+						if (v.color == '#e95d54'||(v.year==that.today_year&&v.day==that.today_day&&v.title=='今天也要加油哦')) {
 							newList.push(v);
 						}
 					});
@@ -523,7 +523,7 @@
 				} else if (this.tabIndex == 5) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#f9cfc8'||(v.year==that.today_year&&v.day==that.today_day)) {
+						if (v.color == '#f9cfc8'||(v.year==that.today_year&&v.day==that.today_day&&v.title=='今天也要加油哦')) {
 							newList.push(v);
 						}
 					});
@@ -534,7 +534,7 @@
 				} else if (this.tabIndex == 6) {
 					let newList = [];
 					list.forEach(v => {
-						if (v.color == '#f9e9a0'||(v.year==that.today_year&&v.day==that.today_day)) {
+						if (v.color == '#f9e9a0'||(v.year==that.today_year&&v.day==that.today_day&&v.title=='今天也要加油哦')) {
 
 							newList.push(v);
 						}
