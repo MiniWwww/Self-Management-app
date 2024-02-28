@@ -425,24 +425,16 @@
 					flag_day: false,
 					flag_year: false,
 			};
-			if(!this.listAfterSort.includes(obj)){
-				const eventIndex = this.listAfterSort.findIndex(event => event.title === obj.title);
+			if(!this.list.includes(obj)){
+				const eventIndex = this.list.findIndex(event => event.title === obj.title);
 				if (eventIndex !== -1) {
-					this.listAfterSort.splice(eventIndex,1);
+					this.list.splice(eventIndex,1);
 				}
-				this.listAfterSort.push(obj);
-				if(this.listAfterSort.length==1){
-					this.listAfterSort=this.sort_list();
-					this.listAfterSort.push(obj);
-					this.listAfterSort.sort((a,b)=>{
-						return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
-					})
-				}
-				else{
-					this.listAfterSort.sort((a,b)=>{
-						return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
-					})
-				}
+				this.list.push(obj);
+				this.listAfterSort=this.sort_list();
+			}
+			if(this.listAfterSort.length==0){
+				this.listAfterSort=this.sort_list();
 			}
 		},
 		onReady() {
@@ -912,7 +904,7 @@
 				}
 				this.activeInput = false;
 				let obj={
-					year: this.year,
+					year: this.year.slice(0,4),
 					title: this.InputValue,
 					mark: this.remark,
 					date: this.selectedDate,
