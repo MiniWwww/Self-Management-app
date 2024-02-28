@@ -161,9 +161,10 @@
 				// 	{title: '跑步',period_free: false, period:true, note:'', intensity:'', times:1, finish: false, finish_times:0, cycle:''}
 				],
 				today_list: [],
-				finish_list:[{title: '跳绳', period_free: false, period:true, note:'',intensity:'低', times:3, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'周一 周二 周五',timesForAward:50, award:'吃火锅！'}, 
+				//finish_list把一天所有完成的放进去，包括同一项在不同一天完成
+				finish_list:[/* {title: '跳绳', period_free: false, period:true, note:'',intensity:'低', times:3, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'周一 周二 周五',timesForAward:50, award:'吃火锅！'}, 
 					{title: '打球', period_free: false, period:true, note:'',intensity:'高', times:1, finish: false, finish_times:0, all_finish_times:13, finish_day:'', cycle:'周日 周二 周四 周六',timesForAward:10, award:'吃烧烤！'},
-					{title: '仰卧起坐', period_free: false, period:true, note:'一次50个',intensity:'中', times:2, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'每天',timesForAward:30, award:'喝奶茶！'}],
+					{title: '仰卧起坐', period_free: false, period:true, note:'一次50个',intensity:'中', times:2, finish: false, finish_times:0, all_finish_times:10, finish_day:'', cycle:'每天',timesForAward:30, award:'喝奶茶！'} */],
 			};
 		},
 		computed:{
@@ -177,6 +178,7 @@
 					
 					if(that.change){
 						v.finish_times=0;
+						v.finish=false;
 					}
 					if(v.cycle=='每天'||v.period_free){
 						flag=1;
@@ -228,7 +230,13 @@
 					
 				}
 			})
-			
+			uni.getStorage({
+				key:'plus_finishTime',
+				success(res) {
+					console.log('finishList',res.data.finishList);
+					that.finish_list=res.data.finishList;
+				}
+			})
 			// let finishList=uni.getStorageSync('plus_finishTime').finishList
 			// let list=uni.getStorageSync('plus_finishTime').list
 			// if(List){
@@ -358,6 +366,7 @@
 			finish_sport(item,index){  //完成项目
 				var that=this;
 				console.log(index);
+				//finish标记的是今天是否完成
 				if(that.now_list[index].period&&that.now_list[index].finish){
 					uni.showModal({
 						title:'提示',
@@ -370,14 +379,11 @@
 									i.finish_times=i.finish_times+1;
 									i.all_finish_times=i.all_finish_times+1;
 									console.log('完成项',i);
-									// that.saveSportList();
 								}
 								else{
 									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
 									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 									that.finish_list.push(that.now_list[index]);
-									// that.saveSportList();
-									
 								}
 								if(item.all_finish_times<=item.timesForAward){
 									item.run_img = "../../../../static/run.gif";
@@ -398,6 +404,7 @@
 										console.log('运动数组存储成功！');
 									}
 								});
+								that.saveFinishList();
 							}
 						}
 					})
@@ -414,13 +421,11 @@
 									i.finish_times=i.finish_times+1;
 									i.all_finish_times=i.all_finish_times+1;
 									console.log('完成项',i);
-									// that.saveSportList();
 								}
 								else{
 									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
 									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 									that.finish_list.push(that.now_list[index]);
-									// that.saveSportList();
 									
 								}
 								if(item.all_finish_times<=item.timesForAward){
@@ -442,6 +447,7 @@
 										console.log('运动数组存储成功！');
 									}
 								});
+								that.saveFinishList();
 							}
 						}
 					})
@@ -460,13 +466,11 @@
 										i.finish_times=i.finish_times+1;
 										i.all_finish_times=i.all_finish_times+1;
 										console.log('完成项',i);
-										// that.saveSportList();
 									}
 									else{
 										that.now_list[index].finish_times=that.now_list[index].finish_times+1;
 										that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 										that.finish_list.push(that.now_list[index]);
-										// that.saveSportList();
 									}
 									console.log('完成表',that.finish_list);
 									console.log(that.now_list[index].all_finish_times);
@@ -495,8 +499,6 @@
 												}
 											});
 										}
-										
-										
 									}
 									if(item.all_finish_times<=item.timesForAward){
 										item.run_img = "../../../../static/run.gif";
@@ -515,18 +517,18 @@
 											console.log('运动数组存储成功！');
 										}
 									});
+									that.saveFinishList();
 								}
 							}
 						})
 					}
 				}
 			},
-			saveSportList(){
+			saveFinishList(){
 				var that=this
 				uni.setStorage({
 					key:'plus_finishTime',
 					data:{
-						list:that.list,
 						finishList:that.finish_list
 					},
 					success() {

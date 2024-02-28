@@ -316,7 +316,7 @@
 	}
 	.active-text {
 		font-size: 14px;
-		color: #3ebf69;
+		color: #009688;
 		padding-right: 10px;
 		font-weight: bold;
 	}
@@ -355,7 +355,7 @@
 		height: 40px;
 	}
 	.active-tab {
-		color: #3ebf69;
+		color: #009688;
 		font-weight: bold;
 		font-size: 18px;
 	}
