@@ -634,7 +634,7 @@
 					var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
 					var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
 					list_cycles.forEach(v=>{
-						if(v.cycles.includes(i_weekday)||v.cycles.includes("每日")){
+						if(new Date().setHours(0, 0, 0, 0)<=i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
 							let obj={
 									year: i_year,
 									//date:'01-27',
