@@ -368,9 +368,71 @@
 					}
 				})
 			},
+			finish_sport_action(item,index){//完成项目时执行的动作
+				var that=this;
+				that.now_list[index].finish_day=that.today;
+				that.now_list[index].finish_times=that.now_list[index].finish_times+1;
+				that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
+				const eventIndex = that.finish_list.findIndex(event => (event.title === that.now_list[index].title)
+															&&(event.finish_day===that.now_list[index].finish_day)
+															&&(event.award===that.now_list[index].award));
+				if (eventIndex !== -1) {
+					that.finish_list[eventIndex].finish_times = that.now_list[index].finish_times;
+					that.finish_list[eventIndex].all_finish_times = that.now_list[index].all_finish_times;
+				}
+				else{
+					that.finish_list.push(that.now_list[index]);
+				}
+				if(item.all_finish_times<=item.timesForAward){
+					item.run_img = "../../../../static/run.gif";
+					that.$set(that,'now_list', that.now_list);
+					setTimeout(()=>{
+						that.run(item,index);
+					},200)
+					console.log('完成表',that.finish_list);
+				}
+				else{
+					uni.setStorage({
+						key:'sportList',
+						data:that.list,
+						success() {
+							console.log('运动数组存储成功！');
+						}
+					});
+					that.saveFinishList();
+				}
+				//差1/5时
+				//console.log('完成表',that.finish_list);
+				//console.log(that.now_list[index].all_finish_times);
+				//console.log(that.now_list[index].timesForAward);
+				if(that.now_list[index].timesForAward!=null){
+					var Divisor_result=(that.now_list[index].all_finish_times)/(that.now_list[index].timesForAward);
+					var differNUM=that.now_list[index].timesForAward-that.now_list[index].all_finish_times;
+					console.log("累计完成次数与目标次数占比："+Divisor_result);
+					if(Divisor_result>=0.8){
+						console.log("还差1/5就可以实现目标！");
+						
+						uni.setStorage({ //存入Storage
+							key: 'GoingToAchieveGoal', //自己取个名字
+							data: { //存的数据可以是很多条
+									
+									
+									differnumber:differNUM,
+									timesForAward:that.now_list[index].timesForAward,
+									content:that.now_list[index].title,
+						
+							},
+						
+							success() {
+								console.log('GoingToAchieveGoal储存成功');
+							}
+						});
+					}
+				}
+			},
 			finish_sport(item,index){  //完成项目
 				var that=this;
-				console.log(index);
+				//console.log(index);
 				//finish标记的是今天是否完成
 				if(that.now_list[index].period&&that.now_list[index].finish){
 					uni.showModal({
@@ -378,38 +440,7 @@
 						content: '您今天的'+that.now_list[index].title+'已经完成啦！是否又完成了一次'+that.now_list[index].title+'呢？请注意休息哦',
 						success: function(res){
 							if(res.confirm){
-								that.now_list[index].finish_day=that.today;
-								that.now_list[index].finish_times=that.now_list[index].finish_times+1;
-								that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
-								var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
-								console.log(i);
-								if(i){
-									i.finish_times=i.finish_times+1;
-									i.all_finish_times=i.all_finish_times+1;
-									console.log('完成项',i);
-								}
-								else{
-									that.finish_list.push(that.now_list[index]);
-								}
-								if(item.all_finish_times<=item.timesForAward){
-									item.run_img = "../../../../static/run.gif";
-									that.$set(that,'now_list', that.now_list);
-									setTimeout(()=>{
-										that.run(item,index);
-									},200)
-									console.log('完成表',that.finish_list);
-								}
-								else{
-									uni.setStorage({
-										key:'sportList',
-										data:that.list,
-										success() {
-											console.log('运动数组存储成功！');
-											console.log("2");
-										}
-									});
-									that.saveFinishList();
-								}
+								that.finish_sport_action(item,index);
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
@@ -424,37 +455,7 @@
 						content: '是否完成一次'+that.now_list[index].title+'？',
 						success: function(res){
 							if(res.confirm){
-								that.now_list[index].finish_day=that.today;
-								that.now_list[index].finish_times=that.now_list[index].finish_times+1;
-								that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
-								var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
-								if(i){
-									i.finish_times=i.finish_times+1;
-									i.all_finish_times=i.all_finish_times+1;
-									console.log('完成项',i);
-								}
-								else{
-									that.finish_list.push(that.now_list[index]);
-								}
-								if(item.all_finish_times<=item.timesForAward){
-									item.run_img = "../../../../static/run.gif";
-									that.$set(that,'now_list', that.now_list);
-									setTimeout(()=>{
-										that.run(item,index);
-									},200)
-									console.log('完成表',that.finish_list);
-								}
-								else{
-									uni.setStorage({
-										key:'sportList',
-										data:that.list,
-										success() {
-											console.log('运动数组存储成功！');
-											console.log("2");
-										}
-									});
-									that.saveFinishList();
-								}
+								that.finish_sport_action(item,index);
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
@@ -471,63 +472,7 @@
 							success:function(res){
 								if(res.confirm){
 									that.now_list[index].finish=true;
-									that.now_list[index].finish_day=that.today;
-									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
-									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
-									var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
-									if(i){
-										i.finish_times=i.finish_times+1;
-										i.all_finish_times=i.all_finish_times+1;
-										console.log('完成项',i);
-									}
-									else{
-										that.finish_list.push(that.now_list[index]);
-									}
-									console.log('完成表',that.finish_list);
-									console.log(that.now_list[index].all_finish_times);
-									console.log(that.now_list[index].timesForAward);
-									
-									if(that.now_list[index].timesForAward!=null){
-										var Divisor_result=(that.now_list[index].all_finish_times)/(that.now_list[index].timesForAward);
-										var differNUM=that.now_list[index].timesForAward-that.now_list[index].all_finish_times;
-										console.log("累计完成次数与目标次数占比："+Divisor_result);
-										if(Divisor_result>=0.8){
-											console.log("还差1/5就可以实现目标！");
-											
-											uni.setStorage({ //存入Storage
-												key: 'GoingToAchieveGoal', //自己取个名字
-												data: { //存的数据可以是很多条
-														
-														
-														differnumber:differNUM,
-														timesForAward:that.now_list[index].timesForAward,
-														content:that.now_list[index].title,
-											
-												},
-											
-												success() {
-													console.log('GoingToAchieveGoal储存成功');
-												}
-											});
-										}
-									}
-									if(item.all_finish_times<=item.timesForAward){
-										item.run_img = "../../../../static/run.gif";
-										setTimeout(()=>{
-											that.run(item,index);
-										},200)
-									}
-									else{
-										uni.setStorage({
-											key:'sportList',
-											data:that.list,
-											success() {
-												console.log('运动数组存储成功！');
-												console.log("2");
-											}
-										});
-										that.saveFinishList();
-									}
+									that.finish_sport_action(item,index);
 									uni.showToast({
 										title:'今天的'+that.now_list[index].title+'已完成！',
 										icon:'none',

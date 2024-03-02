@@ -56,12 +56,12 @@
 						</view>
 						<view>
 							<view class="todo-list_title">{{ item.title }}</view>
-							<view class="todo-list_content" v-if="item.mark">
-								<view class="todo-list_content_inside">
+							<view class="todo-list_content" v-if="item.mark||item.cycles.length>0">
+								<view class="todo-list_content_inside" v-if="item.mark">
 									<uni-icons type="compose" size="17" color="#7e7e7e"></uni-icons>
 									<view>{{ item.mark }}</view>
 								</view>
-								<view class="todo-list_content_inside" v-if="item.cycletime">
+								<view class="todo-list_content_inside" v-if="item.cycles.length>0">
 									<uni-icons type="refreshempty" size="17" color="#7e7e7e"></uni-icons>
 									<view>{{item.cycletime}}</view>
 								</view>
@@ -409,31 +409,34 @@
 			var that=this;
 			this.getNowTime();
 			this.getList()
-			console.log(this.listAfterSort);
+			//console.log(this.listAfterSort);
 			let obj={
 					year: that.today_year,
-					title: '今天也要加油哦',
-					mark: '',
+					title: "今天也要加油哦",
+					mark: "",
 					select: false,
-					color: '#009688',
-					cycletime: '',
+					color: "#009688",
+					cycletime: "",
 					cycles: [],
-					time: '',
+					time: "",
 					day: that.today_day,
-					date: that.nowtime_day+' 00:00',
+					date: that.nowtime_day+" 00:00",
 					weekday: that.todayWeekday,
 					flag_day: false,
 					flag_year: false,
 			};
-			if(!this.list.includes(obj)){
+			const eventIndex = this.list.findIndex((event => event.title === obj.title)&&(event => event.date === obj.date));
+			if (eventIndex == -1) {
 				const eventIndex = this.list.findIndex(event => event.title === obj.title);
 				if (eventIndex !== -1) {
 					this.list.splice(eventIndex,1);
 				}
 				this.list.push(obj);
+				
 				this.listAfterSort=this.sort_list();
 			}
 			if(this.listAfterSort.length==0){
+				console.log("2");
 				this.listAfterSort=this.sort_list();
 			}
 		},
@@ -616,7 +619,8 @@
 						list_cycles.push(v);
 					}
 				})
-				//console.log(list_sort);
+				//console.log("list_sort",list_sort);
+				//console.log("list_cycles",list_cycles);
 				//截止日期类型的先排序
 				list_sort.sort((a,b)=>{
 					return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
@@ -634,7 +638,7 @@
 					var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
 					var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
 					list_cycles.forEach(v=>{
-						if(new Date().setHours(0, 0, 0, 0)<=i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
+						if(new Date(v.date).setHours(0, 0, 0, 0)<=i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
 							let obj={
 									year: i_year,
 									//date:'01-27',
@@ -898,9 +902,21 @@
 				}
 				else{
 					selectId = this.selectId;
-					selectId.forEach(v=>{
-						v = '周' + v;
-					})
+					var i=0;
+					for(i=0; i<selectId.length; i++){
+						console.log(selectId[i]);
+						switch(selectId[i]){
+							case '一' : selectId[i]='周一';break;
+							case '二' : selectId[i]='周二';break;
+							case '三' : selectId[i]='周三';break;
+							case '四' : selectId[i]='周四';break;
+							case '五' : selectId[i]='周五';break;
+							case '六' : selectId[i]='周六';break;
+							case '日' : selectId[i]='周日';break;
+							default: selectId[i]="？？？"
+						}
+					}
+					console.log(selectId);
 				}
 				this.activeInput = false;
 				let obj={

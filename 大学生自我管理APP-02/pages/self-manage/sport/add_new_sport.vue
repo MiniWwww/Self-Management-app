@@ -122,7 +122,7 @@
 			},
 			radioChange:function(e){
 				this.item.intensity=e.detail.value;
-				console.log(this.item.intensity);
+				//console.log(this.item.intensity);
 			},
 			jiangli(){
 				if(this.t!=0){
