@@ -35,10 +35,10 @@
 		</view>
 		<view class="card_box">
 			<uni-card title="强度">
-				<radio-group class="intensity_group">
-					<radio color="#009688">低</radio>
-					<radio color="#009688">中</radio>
-					<radio color="#009688">高</radio>
+				<radio-group class="intensity_group" @change="radioChange">
+					<radio value="低" color="#009688">低</radio>
+					<radio value="中" color="#009688">中</radio>
+					<radio value="高" color="#009688">高</radio>
 				</radio-group>
 			</uni-card>
 		</view>

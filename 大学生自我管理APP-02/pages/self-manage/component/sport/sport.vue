@@ -227,7 +227,12 @@
 					console.log('收到sportList',res.data);
 					that.list=res.data;
 					console.log('收到后的List：',that.list);
-					
+					that.list.forEach(v=>{
+						that.run_recover(v);
+						const animation = uni.createAnimation();
+						animation.translateX(v.position_left).step({duration: 0,});
+						v.run_animationData=animation.export()
+					});
 				}
 			})
 			uni.getStorage({
@@ -237,6 +242,7 @@
 					that.finish_list=res.data.finishList;
 				}
 			})
+			
 			// let finishList=uni.getStorageSync('plus_finishTime').finishList
 			// let list=uni.getStorageSync('plus_finishTime').list
 			// if(List){
@@ -277,18 +283,7 @@
 				var that=this;
 				console.log(e);
 				if(e.content.text=="完成"){
-					that.finish_sport(item,index);
-					uni.setStorage({ //存入Storage
-						key: 'sportGoalSuccess', //自己取个名字
-						data: { //存的数据可以是很多条
-								content:that.ListData[index].title,
-						},
-					
-						success() {
-							console.log('sportGoalSuccess储存成功');
-						}
-					});
-					
+					that.finish_sport(item,index);					
 				}
 				if(e.content.text=="删除"){
 					that.delete_sport(index);
@@ -374,15 +369,16 @@
 						success: function(res){
 							if(res.confirm){
 								that.now_list[index].finish_day=that.today;
+								that.now_list[index].finish_times=that.now_list[index].finish_times+1;
+								that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 								var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
+								console.log(i);
 								if(i){
 									i.finish_times=i.finish_times+1;
 									i.all_finish_times=i.all_finish_times+1;
 									console.log('完成项',i);
 								}
 								else{
-									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
-									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 									that.finish_list.push(that.now_list[index]);
 								}
 								if(item.all_finish_times<=item.timesForAward){
@@ -393,18 +389,21 @@
 									},200)
 									console.log('完成表',that.finish_list);
 								}
+								else{
+									uni.setStorage({
+										key:'sportList',
+										data:that.list,
+										success() {
+											console.log('运动数组存储成功！');
+											console.log("2");
+										}
+									});
+									that.saveFinishList();
+								}
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
 								})
-								uni.setStorage({
-									key:'sportList',
-									data:that.list,
-									success() {
-										console.log('运动数组存储成功！');
-									}
-								});
-								that.saveFinishList();
 							}
 						}
 					})
@@ -416,6 +415,8 @@
 						success: function(res){
 							if(res.confirm){
 								that.now_list[index].finish_day=that.today;
+								that.now_list[index].finish_times=that.now_list[index].finish_times+1;
+								that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 								var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
 								if(i){
 									i.finish_times=i.finish_times+1;
@@ -423,10 +424,7 @@
 									console.log('完成项',i);
 								}
 								else{
-									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
-									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 									that.finish_list.push(that.now_list[index]);
-									
 								}
 								if(item.all_finish_times<=item.timesForAward){
 									item.run_img = "../../../../static/run.gif";
@@ -436,18 +434,21 @@
 									},200)
 									console.log('完成表',that.finish_list);
 								}
+								else{
+									uni.setStorage({
+										key:'sportList',
+										data:that.list,
+										success() {
+											console.log('运动数组存储成功！');
+											console.log("2");
+										}
+									});
+									that.saveFinishList();
+								}
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
 								})
-								uni.setStorage({
-									key:'sportList',
-									data:that.list,
-									success() {
-										console.log('运动数组存储成功！');
-									}
-								});
-								that.saveFinishList();
 							}
 						}
 					})
@@ -461,6 +462,8 @@
 								if(res.confirm){
 									that.now_list[index].finish=true;
 									that.now_list[index].finish_day=that.today;
+									that.now_list[index].finish_times=that.now_list[index].finish_times+1;
+									that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 									var i=that.finish_list.find(item=>(item.title==that.now_list[index].title)&&(item.finish_day==that.now_list[index].finish_day));
 									if(i){
 										i.finish_times=i.finish_times+1;
@@ -468,8 +471,6 @@
 										console.log('完成项',i);
 									}
 									else{
-										that.now_list[index].finish_times=that.now_list[index].finish_times+1;
-										that.now_list[index].all_finish_times=that.now_list[index].all_finish_times+1;
 										that.finish_list.push(that.now_list[index]);
 									}
 									console.log('完成表',that.finish_list);
@@ -506,18 +507,22 @@
 											that.run(item,index);
 										},200)
 									}
+									else{
+										uni.setStorage({
+											key:'sportList',
+											data:that.list,
+											success() {
+												console.log('运动数组存储成功！');
+												console.log("2");
+											}
+										});
+										that.saveFinishList();
+									}
 									uni.showToast({
 										title:'今天的'+that.now_list[index].title+'已完成！',
 										icon:'none',
 									})
-									uni.setStorage({
-										key:'sportList',
-										data:that.list,
-										success() {
-											console.log('运动数组存储成功！');
-										}
-									});
-									that.saveFinishList();
+									
 								}
 							}
 						})
@@ -555,6 +560,13 @@
 				}
 				that.list=l2;
 				//console.log('list',that.list);
+				uni.setStorage({
+					key:'sportList',
+					data:that.list,
+					success() {
+						console.log('运动数组存储成功！');
+					}
+				});
 			},
 			to_detail(index){
 				var that=this;
@@ -597,10 +609,21 @@
 					animation.translateX(l*0.9+before).step({duration: 200,}); // 90%
 					animation.translateX(l+before).step(); // 100%
 					item.run_animationData = animation.export();
+					item.position_left = item.run_animationData.actions[item.run_animationData.actions.length-1].animates[0].args[0]
+					//console.log("完成的：",item.title,item.position_left);
+					//console.log("1");
+					uni.setStorage({
+						key:'sportList',
+						data:that.list,
+						success() {
+							console.log('运动数组存储成功！');
+							//console.log("2");
+						}
+					});
+					that.saveFinishList();
 					setTimeout(()=>{
 						that.run_recover(item);
 					},2000);
-					item.position_left = item.run_animationData.actions[item.run_animationData.actions.length-1].animates[0].args[0]
 					//console.log(item.run_animationData)
 					//console.log(item.run_animationData.actions[item.run_animationData.actions.length-1].animates[0].args[0]);
 				})
