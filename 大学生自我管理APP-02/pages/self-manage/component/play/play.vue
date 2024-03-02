@@ -104,7 +104,7 @@
 			</button> -->
 
 		<uni-popup ref="inputModal" type="dialog">
-			<uni-popup-dialog ref="inputClose" mode="input" title="输入事件名称" value="烧烤" placeholder="请输入内容"
+			<uni-popup-dialog ref="inputClose" mode="input"  title="输入事件名称" value="烧烤" placeholder="请输入内容" 
 				@confirm="dialogInputConfirm">
 			</uni-popup-dialog>
 		</uni-popup>
@@ -887,7 +887,7 @@
 							let todayDay = (new Date()).getDay();
 							//记录今天已经做了
 							uni.setStorageSync('lastCheckDate',today);
-							const weekDays = ["每周日", "每周一", "每周二", "每周三", "每周四", "每周五", "每周六"];
+							const weekDays = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 							let todayWeekDay = weekDays[todayDay];
 							// if (!item.weeklyDone.includes(todayWeekDay)) 
 							item.weeklyDone.push(todayWeekDay);
@@ -916,7 +916,7 @@
 											item.askedForNextWeek = false;
 											let currentWeek = that.getWeekNumber(new Date());
 											item.completedWeeks.push({
-												week: currentWeek - 1,
+												week: currentWeek,
 												days: item.weeklyDone.slice(), //浅拷贝
 											});
 											console.log('item.completedWeeks', item.completedWeeks)
@@ -970,35 +970,7 @@
 					});
 				}
 			},
-			// toaddNewGoal() {
-			// 	this.swipeList.push({
-			// 		id: new Date().getTime(),
-			// 		options: [{
-			// 				text: '删除',
-			// 				style: {
-			// 					backgroundColor: 'rgb(255,58,49)'
-			// 				}
-			// 			}, {
-			// 				text: '完成',
-			// 				style: {
-			// 					backgroundColor: 'rgb(254,156,1)'
-			// 				}
-			// 			},
-			// 			{
-			// 				text: '置顶'
-			// 			}
-
-			// 		],
-			// 		content: this.value,
-			// 		starttime: this.startTime,
-			// 		endttime: this.endTime
-			// 	});
-			// 	uni.showToast({
-			// 		title: `添加了一条新目标`,
-			// 		icon: 'none'
-			// 	});
-
-			// },
+			
 			confirmAddNewPlayGoal(val) {
 				this.value = val
 				//调用add方法
@@ -1039,6 +1011,8 @@
 									url: '/pages/self-manage/play/add_playGoal',
 									events: {
 										addplayGoal(data) {
+											let currentWeek = that.getWeekNumber(new Date());
+											
 											let obj = {
 												id: new Date().getTime(),
 												options: [{
@@ -1070,9 +1044,9 @@
 												istargetDate: false,
 												isoverdue: false,
 												isNotStart: false,
-												weeklyDone: [],
+												weeklyDone: [],//当前周有具体几天是做的
 												askedForNextWeek: false,
-												weeklyDoneWeek: Number,
+												weeklyDoneWeek: currentWeek,//当前要做的周
 												completedWeeks: [], //完成的周数以及内容
 												pop_flag: false,
 											}
