@@ -58,6 +58,11 @@
 				</view>
 			</view>
 		</view>
+		<view v-if="gif_show" class="loveyou_outside">
+			<view class="loveyou">
+				<image src="/static/loveyou.gif" mode="heightFix"></image>
+			</view>
+		</view>
 		<uni-list class="assistant_box" :border="false">	<!--睡眠助手-->
 			<uni-collapse class="assistant_item" style="width: 95%;">
 				<uni-collapse-item  title="助眠音乐">
@@ -85,6 +90,7 @@
 		data() {
 			return {
 				//是否长按事件
+				gif_show: false,
 				islongPress:false,
 				timer:null,//长按计时器
 				start_time: 0,
@@ -192,14 +198,14 @@
 			},
 			getup_clock(){
 				var that=this;
-				if(that.nowtime.hour<4||that.nowtime>=12){
+				/* if(that.nowtime.hour<4||that.nowtime>=12){
 					uni.showModal({
 						title:'提示',
 						content:'您只能在早上4点之后至中午12点之前进行起床打卡喔',
 						showCancel:false,
 					})
 				}
-				else{
+				else{ */
 					uni.showModal({
 						title:'提示',
 						content:'进行起床打卡？',
@@ -227,21 +233,29 @@
 											console.log('getup_success_list储存成功');
 										}
 									})
-									uni.showToast({
-										title:'起床时间：'+that.getup_time+'\n起床目标达成，给自己点个赞吧！',
-										icon:'none',
-									})
+									that.gif_show=true;
+									setTimeout(()=>{
+										that.gif_show=false;
+										uni.showToast({
+											title:'起床时间：'+that.getup_time+'\n起床目标达成，给自己点个赞吧！',
+											icon:'none',
+										})
+									},3200)
 								}
 								else{
-									uni.showToast({
-										title:'起床时间：'+that.getup_time,
-										icon:'none',
-									})
+									that.gif_show=true;
+									setTimeout(()=>{
+										that.gif_show=false;
+										uni.showToast({
+											title:'起床时间：'+that.getup_time,
+											icon:'none',
+										})
+									},3200);
 								}
 							}
 						}
 					})
-				}
+				/* } */
 			},
 			achieve_sleep(){	//就寝目标达成
 				var that=this;
@@ -299,14 +313,14 @@
 			},
 			sleep_clock(){
 				var that=this;
-				if(that.nowtime.hour<20&&that.nowtime.hour>=4){
+				/* if(that.nowtime.hour<20&&that.nowtime.hour>=4){
 					uni.showModal({
 						title:'提示',
 						content:'您只能在晚上20点之后至凌晨4点之前进行就寝打卡喔',
 						showCancel:false,
 					})
 				}
-				else{
+				else{ */
 					uni.showModal({
 						title:'提示',
 						content:'进行就寝打卡？',
@@ -341,7 +355,7 @@
 							}
 						}
 					})
-				}
+				/* } */
 			},
 			cancel_sleep(){	//取消就寝状态
 				var that=this;
@@ -697,6 +711,20 @@
 		/* right: px; */
 		/* top: 10px; */
 		margin-left: 5px;
+	}
+	.loveyou_outside{
+		position: fixed;
+		top: 0;
+		height: 800px;
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		z-index: 999;
+	}
+	.loveyou{
+		position: fixed;
+		top: 250px;
+		left: 50px;
+		height: 300px;
 	}
 	.assistant_box{
 		width: 90%;
