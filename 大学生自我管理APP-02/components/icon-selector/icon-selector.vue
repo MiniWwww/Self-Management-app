@@ -1,7 +1,7 @@
 <template>
-	<view class="">
+	<view style="position: relative;">
 	 <!-- <button class="btn btn-primary btn-sm" @click="showIconSelector = !showIconSelector">选择图标</button> -->
-	 <switch  @change="showIconSelector = !showIconSelector" style="transform:scale(0.7)"/>
+	 <switch @change="showIconSelector = !showIconSelector" style="transform:scale(0.7); position: absolute; top: -35px; right: 5px;"/>
   <view class="icon-selector" v-show="showIconSelector">
      <view class="icon-item" v-for="(icon, index) in iconList" :key="index"  
 	  @tap="handleIconSelect(icon)" :style="{width: iconWidth + 'rpx', marginRight: marginRight + 'rpx'}">
@@ -65,7 +65,7 @@ export default {
     },
 	handleIconClick(index) {
 	   this.activeIcon = index;
-	    this.showIconSelector = false; // 选择完毕后隐藏选择器
+	    //this.showIconSelector = false; // 选择完毕后隐藏选择器
 		
 		uni.showToast({
 		         title: "选择成功！",
@@ -101,12 +101,19 @@ export default {
 	
 	
 	.icon-image{
+		padding: 3px;
 		width: 30px;
 		height:30px;
+		margin: 3px;
 	}
 	.active {
 	  /* 定义点击后的样式，例如修改背景颜色 */
-	  background-color: lightgrey;
+	  
+	  background-color: #e9e9e9;
+	  border-radius: 50%;
+	  border-style: solid;
+	  border-width: 2px;
+	  border-color: #009688;
 	}
 	
 </style>

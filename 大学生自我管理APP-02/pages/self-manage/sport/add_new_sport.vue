@@ -1,58 +1,84 @@
 <template>
-	<view>
-		<view class="card_box">
-			<uni-card title="运动项目">
-				<textarea :maxlength="20" v-model="item.title" auto-height placeholder="请输入运动项目"></textarea>
-			</uni-card>
+	<view class="form-box">
+		<view class="form-item_outside">
+			<uni-section style="height: 50px;" title="运动项目" padding>
+				<template v-slot:decoration>
+					<view class="decoration"></view>
+				</template>
+			</uni-section>
+			<view class="form-item_content">
+				<textarea v-model="item.title" :maxlength="20"  auto-height placeholder="请输入运动项目" style="width: 260px;"></textarea>
+			</view>
 		</view>
-		<view class="card_box">
-			<uni-card title="备注">
-				<textarea v-model="item.note" auto-height placeholder="请输入备注"></textarea>
-			</uni-card>
+		<view class="form-item_outside">
+			<uni-section style="height: 50px;" title="备注" padding>
+				<template v-slot:decoration>
+					<view class="decoration"></view>
+				</template>
+			</uni-section>
+			<view class="form-item_content">
+				<textarea v-model="item.note" auto-height placeholder="请输入备注" style="width: 260px;"></textarea>
+			</view>
 		</view>
-		<view class="card_box">
-			<uni-card title="周期">
-				<view class="period_box">
-					<view class="period_item" :class="{ 'period_item_select': item.period_free }" @click="select_period_free">自由</view>
-					<view class="period_item" :class="{ 'period_item_select': item.period }" @click="select_period">定时</view>
-				</view>
-				<view class="peroid" v-if="item.period">
-					<view class="period_cycle">
-						<view style="color: black; font-size: 16px; margin: 12px 0 10px 5px;">重复日期(不选择时默认每天)</view>
-						<view class="period_cycle_item" v-for="(i, index) in weekList" :key="i.time" @click="select_period_time(index)">
-							<view >{{i.time}}</view>
-							<view class="period_checkbox" :class="{'period_checkbox_select': i.check}">
-								<view v-if="i.check">√</view>
-							</view>
+		<view class="form-item_outside">
+			<uni-section style="height: 50px;" title="周期" padding>
+				<template v-slot:decoration>
+					<view class="decoration"></view>
+				</template>
+			</uni-section>
+			<view class="period_box">
+				<view class="period_item" :class="{ 'period_item_select': item.period_free }" @click="select_period_free">自由</view>
+				<view class="period_item" :class="{ 'period_item_select': item.period }" @click="select_period">定时</view>
+			</view>
+			<view class="peroid" v-if="item.period">
+				<view class="period_cycle">
+					<view style="color: black; font-size: 16px; margin: 12px 0 10px 5px;">重复日期(不选择时默认每天)</view>
+					<view class="period_cycle_item" v-for="(i, index) in weekList" :key="i.time" @click="select_period_time(index)">
+						<view >{{i.time}}</view>
+						<view class="period_checkbox" :class="{'period_checkbox_select': i.check}">
+							<view v-if="i.check">√</view>
 						</view>
 					</view>
-					<view class="period_times">
-						<view style="color: black; font-size: 16px; margin: 0 0 10px 5px;">次数</view>
-						<textarea style="margin: 5px 0 5px 25px;" v-model="item.times" auto-height placeholder="请输入每天完成的次数"></textarea>
-					</view>
 				</view>
-			</uni-card>
+				<view class="period_times">
+					<view style="color: black; font-size: 16px; margin: 0 0 10px 5px;">次数</view>
+					<textarea style="margin: 5px 0 5px 25px;" v-model="item.times" auto-height placeholder="请输入每天完成的次数"></textarea>
+				</view>
+			</view>
 		</view>
-		<view class="card_box">
-			<uni-card title="强度">
-				<radio-group class="intensity_group" @change="radioChange">
-					<radio value="低" color="#009688">低</radio>
-					<radio value="中" color="#009688">中</radio>
-					<radio value="高" color="#009688">高</radio>
-				</radio-group>
-			</uni-card>
+		<view class="form-item_outside">
+			<uni-section style="height: 50px;" title="强度" padding>
+				<template v-slot:decoration>
+					<view class="decoration"></view>
+				</template>
+			</uni-section>
+			<radio-group class="intensity_group" @change="radioChange">
+				<radio value="低" color="#009688">低</radio>
+				<radio value="中" color="#009688">中</radio>
+				<radio value="高" color="#009688">高</radio>
+			</radio-group>
 		</view>
-		<view class="card_box">
-			<uni-card title="达成奖励次数:">
-				<textarea v-model="t" auto-height placeholder="您希望在每完成几次该任务时对自己进行奖励呢？" placeholder-style="font-size:13px" inputmode="numeric" @input="jiangli"></textarea>
-			</uni-card>
+		<view class="form-item_outside">
+			<uni-section style="height: 50px;" title="达成奖励次数" padding>
+				<template v-slot:decoration>
+					<view class="decoration"></view>
+				</template>
+			</uni-section>
+			<view class="form-item_content">
+				<textarea v-model="t" auto-height placeholder="您希望在每完成几次该任务时对自己进行奖励呢？"
+				 inputmode="numeric" placeholder-style="font-size:13px" style="width: 260px;" @input="jiangli"></textarea>
+			</view>
 		</view>
-		<view class="card_box">
-			<uni-card title="奖励内容:"> <!--v-if="item.timesForAward" -->
-				<textarea v-model="item.award" auto-height :disabled="!item.timesForAward" :placeholder="text"></textarea>
-			</uni-card>
+		<view class="form-item_outside">
+			<uni-section style="height: 50px;" title="奖励内容" padding>
+				<template v-slot:decoration>
+					<view class="decoration"></view>
+				</template>
+			</uni-section>
+			<view class="form-item_content">
+				<textarea v-model="item.award" auto-height  :disabled="!item.timesForAward" :placeholder="text" style="width: 260px;"></textarea>
+			</view>
 		</view>
-		
 		<view class="save_button" @click="save">√</view>
 		<view class="br"></view>
 	</view>
@@ -143,7 +169,33 @@
 
 <style>
 	page {
-		background-color: #f3f3f3
+		background-color: rgb(245, 245, 245);
+	}
+	.form-box{
+		background-color: rgb(245, 245, 245);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.form-item_outside{
+		padding: 2% 2%;
+		text-align: left;
+		background-color: white;
+		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
+		border-radius: 10px;
+		width: 80%;
+		margin: 10px 0 20px;
+	}
+	.decoration{
+		width: 4px;
+		height: 20px;
+		margin-right: 8px;
+		border-radius: 30%;
+		background-color: #009688;
+	}
+	.form-item_content{
+		margin: 12px 20px 15px;
 	}
 	.card_box{
 		margin: 25px 10px;
@@ -198,6 +250,7 @@
 		margin: 7px 0 20px 0;
 	}
 	.intensity_group{
+		height: 40px;
 		display: flex;
 		align-items: center;
 		justify-content: space-around;

@@ -56,7 +56,7 @@
 				</uni-collapse-item>
 			</uni-collapse>
 		</view>
-		
+		<view class="br"></view>
 	</view>
 </template>
 
@@ -213,5 +213,8 @@
 		position: absolute;
 		right: 10px;
 		top: 10px;
+	}
+	.br{/*留空*/
+		height: 150px;
 	}
 </style>
