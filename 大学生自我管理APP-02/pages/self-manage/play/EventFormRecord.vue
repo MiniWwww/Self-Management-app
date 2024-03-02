@@ -29,12 +29,6 @@
 			<form class="FormPage" @submit="formSubmit" @reset="formReset">
 
 
-				<!-- <view class="uni-form-item-date">
-					<button class="calendar-button" type="button" @click="opencalendar">日期选择</button>
-					<uni-calendar ref="calendar" class="uni-calendar-hook" :clear-date="true" :date="info.date"
-						:insert="info.insert" :lunar="info.lunar" :startDate="item.startDate" :endDate="item.endDate"
-						:range="info.range" @confirm="confirm" @close="close" />
-				</view> -->
 				<!-- 待完成从时间格式化 -->
 				<view class="form-item_outside">
 					<uni-section style="height: 50px;" title="事件时间" subTitle="什么时候做了这件事呢？" padding>
@@ -47,21 +41,7 @@
 							 :end="item.Today" :picker-options="pickerOptions" hide-second="true" style="width: 255px;"/>
 					</view>
 				</view>
-				<!-- <uni-card title="选择时间范围"> -->
-				<!-- <uni-section :title="'日期时间范围用法：' + '[' + datetimeRange + ']' " type="line"></uni-section> -->
-				<!-- </uni-card> -->
-
-				<!-- <uni-card title="选择今日的时间范围">
-
-					<view>
-						<uni-datetime-picker type="datetime" v-model="item.TodaystartTime" />
-					</view>
-
-					<view>
-						<uni-datetime-picker type="datetime" v-model="item.TodayendTime" />
-					</view>
-
-				</uni-card> -->
+				
 				<view class="form-item_outside">
 					<uni-section style="height: 50px;" title="事件内容" subTitle="描述一下发生的趣事吧~" padding>
 						<template v-slot:decoration>
@@ -150,7 +130,7 @@
 					TodaystartTime: '',
 					TodayendTime: '',
 					event_description: '',
-					rank: Number
+					rank: 5
 
 				},
 				EventList: [],
@@ -244,6 +224,13 @@
 			// 2023-7-30添加
 			SubmitEvent() {
 				var that = this;
+				if(that.datetimeRange.length === 0){
+					console.log('未选择时间')
+					uni.showModal({
+						// title:'注意',
+						content:'未选择时间'
+					});
+				}else{
 				uni.showModal({
 					title: '提示',
 					content: `您确认要提交吗？`,
@@ -318,6 +305,7 @@
 						}
 					}
 				})
+				}
 			},
 			iconselect() {
 				this.showicons = true;
