@@ -198,14 +198,14 @@
 			},
 			getup_clock(){
 				var that=this;
-				/* if(that.nowtime.hour<4||that.nowtime>=12){
+				if(that.nowtime.hour<4||that.nowtime>=12){
 					uni.showModal({
 						title:'提示',
 						content:'您只能在早上4点之后至中午12点之前进行起床打卡喔',
 						showCancel:false,
 					})
 				}
-				else{ */
+				else{
 					uni.showModal({
 						title:'提示',
 						content:'进行起床打卡？',
@@ -255,7 +255,7 @@
 							}
 						}
 					})
-				/* } */
+				}
 			},
 			achieve_sleep(){	//就寝目标达成
 				var that=this;
@@ -313,14 +313,14 @@
 			},
 			sleep_clock(){
 				var that=this;
-				/* if(that.nowtime.hour<20&&that.nowtime.hour>=4){
+				if(that.nowtime.hour<20&&that.nowtime.hour>=4){
 					uni.showModal({
 						title:'提示',
 						content:'您只能在晚上20点之后至凌晨4点之前进行就寝打卡喔',
 						showCancel:false,
 					})
 				}
-				else{ */
+				else{
 					uni.showModal({
 						title:'提示',
 						content:'进行就寝打卡？',
@@ -355,7 +355,7 @@
 							}
 						}
 					})
-				/* } */
+				}
 			},
 			cancel_sleep(){	//取消就寝状态
 				var that=this;
