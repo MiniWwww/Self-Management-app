@@ -21,7 +21,7 @@
 					<image v-if="item.getAward" class="dst_img" src="../../../../static/getAward.png" mode="aspectFill"></image>
 				</view>
 				<uni-swipe-action-item :right-options="options" :show="right" :auto-close="false"  @click="bindClick($event,item,index)">
-					<view class="todo_item" :class="{'todo_finish':item.finish}" @click="to_detail(index)">
+					<view class="todo_item" :class="{'todo_finish':item.finish}" @click="to_detail(item,index)">
 						<view class="item-head" :style="[{background:((item.intensity=='高')?'#e9564c':((item.intensity=='中')?'#f6eda4':'#66c0a4'))}]"></view>
 						<view class="item-icon">
 							<uni-icons type="vip-filled" size="24"></uni-icons>
@@ -548,10 +548,44 @@
 					}
 				});
 			},
-			to_detail(index){
+			to_detail(item,index){
 				var that=this;
 				uni.navigateTo({
 					url:'/pages/self-manage/sport/to_detail',
+					events:{
+						changeSportItem(data){
+							//console.log(data);
+							that.now_list[index]=data;
+							if(that.now_list[index].all_finish_times<that.now_list[index].timesForAward){
+								that.now_list[index].getAward=false;
+								//获取节点宽度
+								let percent = that.now_list[index].all_finish_times/that.now_list[index].timesForAward;
+								if(percent>=1){
+									percent=1
+								}
+								let query = uni.createSelectorQuery();
+								query.select('.todo_item').boundingClientRect(rect => {
+									let item_width = rect.width;
+									let l = item_width*percent*0.84;
+									const animation = uni.createAnimation();
+									animation.translateX(l).step({duration: 0,});
+									that.now_list[index].run_animationData=animation.export();
+									that.now_list[index].position_left = that.now_list[index].run_animationData.actions[that.now_list[index].run_animationData.actions.length-1].animates[0].args[0]
+								})
+								.exec();
+							}
+							else{
+								that.now_list[index].getAward=true;
+							}
+							uni.setStorage({
+								key:'sportList',
+								data:that.list,
+								success() {
+									console.log('运动数组存储成功！');
+								}
+							});
+						}
+					},
 					success:function(res){
 						let item=that.now_list[index];
 						//console.log(item);

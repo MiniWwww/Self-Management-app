@@ -141,6 +141,15 @@
 					
 				}
 			})
+			uni.getStorage({
+				key:'getup_sleep_state',
+				success(res) {
+					console.log("获取到睡眠/起床状态",res.data);
+					that.getup=res.data.getup;
+					that.sleep=res.data.sleep;
+					
+				}
+			})
 		},
 		methods:{
 			addTimes(m){return m<10?'0'+m:m },
@@ -198,7 +207,7 @@
 			},
 			getup_clock(){
 				var that=this;
-				if(that.nowtime.hour<4||that.nowtime>=12){
+				if(that.nowtime.hour<4||that.nowtime.hour>=12){
 					uni.showModal({
 						title:'提示',
 						content:'您只能在早上4点之后至中午12点之前进行起床打卡喔',
@@ -270,6 +279,16 @@
 										})
 									},3200);
 								}
+								uni.setStorage({
+									key:'getup_sleep_state',
+									data:{
+										getup:that.getup,
+										sleep:that.sleep
+									},
+									success() {
+										console.log('睡眠/起床状态存储成功！')
+									}
+								})
 							}
 						}
 					})
@@ -406,6 +425,16 @@
 										that.fail_sleep();
 									}
 								}
+								uni.setStorage({
+									key:'getup_sleep_state',
+									data:{
+										getup:that.getup,
+										sleep:that.sleep
+									},
+									success() {
+										console.log('睡眠/起床状态存储成功！')
+									}
+								})
 							}
 						}
 					})
@@ -423,6 +452,16 @@
 							that.sleep_time="--:--";
 							that.sleep_success=false;
 							that.sleep_like=false;
+							uni.setStorage({
+								key:'getup_sleep_state',
+								data:{
+									getup:that.getup,
+									sleep:that.sleep
+								},
+								success() {
+									console.log('睡眠/起床状态存储成功！')
+								}
+							})
 						}
 					}
 				})

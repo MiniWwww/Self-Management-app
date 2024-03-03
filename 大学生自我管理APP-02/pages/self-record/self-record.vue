@@ -708,7 +708,7 @@
 			// todolist事件的提醒
 			todoRemind() {
 				// 读取todolist
-				let list = uni.getStorageSync('todolist')
+				let list = uni.getStorageSync('todolist_sorted')
 				console.log(list);
 				if (list.length != 0) {
 					list.forEach(event => {

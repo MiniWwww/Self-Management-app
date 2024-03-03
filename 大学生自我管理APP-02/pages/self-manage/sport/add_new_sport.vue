@@ -30,7 +30,7 @@
 				<view class="period_item" :class="{ 'period_item_select': item.period_free }" @click="select_period_free">自由</view>
 				<view class="period_item" :class="{ 'period_item_select': item.period }" @click="select_period">定时</view>
 			</view>
-			<view class="peroid" v-if="item.period">
+			<view class="period" v-if="item.period">
 				<view class="period_cycle">
 					<view style="color: black; font-size: 16px; margin: 12px 0 10px 5px;">重复日期(不选择时默认每天)</view>
 					<view class="period_cycle_item" v-for="(i, index) in weekList" :key="i.time" @click="select_period_time(index)">
@@ -97,7 +97,7 @@
 					{time: '周五', check: false},
 					{time: '周六', check: false},
 					],
-				item: {title:'', period_free:true, period:'', note:'', intensity: '低', times: '', cycle: '',timesForAward:0, award:''},
+				item: {title:'', period_free:true, period:'', note:'', intensity: '低', times: '1', cycle: '',timesForAward:0, award:''},
 				t:Number,
 				text:"请先填写上一项",
 			};
@@ -214,7 +214,7 @@
 		font-weight: 700;
 		color: #009688;
 	}
-	.peroid{
+	.period{
 		margin: 5px;
 	}
 	.period_cycle{

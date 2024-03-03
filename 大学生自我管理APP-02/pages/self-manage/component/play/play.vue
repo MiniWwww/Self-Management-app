@@ -52,10 +52,9 @@
 							style="position: absolute; right: 9%;"></uni-icons>
 					</view>
 				</view>
-				<view class="content-time" @click="showGoalDetail()">
-					<view v-if="item.timetype0" class="content-time-time">
-						<text>开始：{{ item.starttime }}</text>
-						<text>结束：{{ item.endttime }}</text>
+				<view class="content" @click="showGoalDetail()">
+					<view v-if="item.timetype0" class="content-time">
+						<text>时间：{{ item.starttime }}——{{ item.endttime }}</text>
 						<!-- <view style="width: 90%;">
 							<text v-if="item.content" style="font-size: 14px; color: grey; word-wrap: break-word;">
 							            {{ item.content }}
@@ -70,8 +69,8 @@
 
 					</view>
 
-					<view v-if="item.timetype1" class="content-time-cycle">
-						<text v-for="(day, dayindex) in item.checkbox2" :index="dayindex" :key="dayindex" >{{ day }},
+					<view v-if="item.timetype1" class="content-cycle">
+						时间：<text decode="true" v-for="(day, dayindex) in item.checkbox2" :index="dayindex" :key="dayindex" >{{day}}&emsp;
 						</text>
 						<image v-if="item.istargetDate&&!item.isTodayDone" src="../../../../static/待完成2.png"
 							style="height: 25px;width: 25px;justify-content: end"></image>
@@ -80,7 +79,11 @@
 							style="height: 25px;width: 25px;justify-content: end"></image>
 
 					</view>
+					<view class="content-content" v-if="item.content">
+						<text>畅想：{{item.content}}</text>
+					</view>
 				</view>
+				
 				<view class="more_list" v-if="item.pop_flag" @touchstart.stop>
 					<view v-for="(option_item, option_index) in item.options" :key="option_item.text"
 						class="more_list_item" @click.stop="swipeClick(option_item, index, item)">
@@ -1583,31 +1586,40 @@
 		// margin-right: -15px;
 	}
 
-	.content-time {
+	.content {
 		// background-color: rebeccapurple;
 		display: flex;
 		flex-direction: column;
-		width: 100%;
+		align-items: flex-start;
+		justify-content: flex-start;
+		text-align: left;
+		width: 90%;
 		margin: 0 0 10px 20px;
+		padding-right: 20px;
 	}
 
-	.content-time-time {
+	.content-time {
 		// 跟外边的间距上、左右、下
 		display: flex;
-		flex-direction: column;
-		font-size: 15px;
+		/* flex-direction: column; */
+		font-size: 13px;
 		align-items: flex-start;
 	}
 
-	.content-time-cycle {
+	.content-cycle {
 		display: flex;
-		font-size: 11px;
+		font-size: 13px;
 		// margin: 5rpx 30rpx 0rpx;
 		// text-align: center;
 		justify-content: flex-start;
 		align-items: center;
 	}
-
+	.content-content{
+		display: flex;
+		font-size: 13px;
+		justify-content: flex-start;
+		text-align: left;
+	}
 	.more_list {
 		z-index: 10;
 		position: absolute;

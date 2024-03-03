@@ -436,7 +436,6 @@
 				this.listAfterSort=this.sort_list();
 			}
 			if(this.listAfterSort.length==0){
-				console.log("2");
 				this.listAfterSort=this.sort_list();
 			}
 		},
@@ -749,7 +748,6 @@
 					that.list1[4].selected = false;
 					that.list1[5].selected = false;
 					that.list1[6].selected = false;
-					that.time = "";
 					that.selectId = [];
 					that.selectList = "";
 				}
@@ -904,7 +902,7 @@
 					selectId = this.selectId;
 					var i=0;
 					for(i=0; i<selectId.length; i++){
-						console.log(selectId[i]);
+						//console.log(selectId[i]);
 						switch(selectId[i]){
 							case '一' : selectId[i]='周一';break;
 							case '二' : selectId[i]='周二';break;
@@ -1006,7 +1004,7 @@
 			onChange(event) {
 				const time = event.detail.value;
 				this.time = time;
-
+				console.log("3");
 			},
 			//定位到“今天”
 			goToToday(){

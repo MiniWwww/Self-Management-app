@@ -23,91 +23,92 @@
 			</view>
 			
 		</view>
-		<uni-fab style="height: 40px;font-size: 8px;line-height: 100px; color: #d9f5db;" horizontal="right" @click="addNewAward"></uni-fab>
-		
-		<view v-for="(item, index) in now_awardList" :key="index" style="z-index: 0;"><!--总点赞数的part（可添加多个奖励-->
-			<view class="allAward_box" >	
-				
-				<view class="awardContent" ><!--奖励内容（可修改-->
-					<image src="../../../static/小红花.png" v-if="item.times<=allAchievement" style="position: absolute; left: 35px; width: 35px; height: 35px; background-color: #fff2e5; " mode="aspectFit"></image>
-					<view style="margin-left: 7px;" @click="changeAward_content(index)">
-						{{item.content}}
-						<image src="../../../static/编辑.png" style="width: 15px; height: 15px; background-color: #fff2e5;" mode="aspectFit"></image>
-					</view>
-					<view class="pop_select">	<!--弹出删除-->
-						<uni-icons  type="more" size="20" @click="popup(index)" style="position: absolute; right: 9%;"></uni-icons>
-						
-					</view>
-				</view>
-				
-				<view class="achieve_times_box">
-					<view class="achieve_times_item" @click="changeAward_times(index)"> <!--目标点赞数（可修改-->
-						<circle-progress-bar :pro="1" :border_back_color="'#cacaca'" :border_color="'#d9f5db'" style="width: 60px;height: 60px;z-index: 0;">
-							{{item.times}}
-						</circle-progress-bar>
-						<view style="margin-top: 5px;">
-							目标数
-							<image src="../../../static/编辑.png" style="width: 12px; height: 12px; " mode="aspectFit"></image>
+		<uni-fab style="height: 40px;font-size: 8px;line-height: 100px; " :pattern="pattern" horizontal="right" @click="addNewAward"></uni-fab>
+		<view style="padding-top: 20px;">
+			<view v-for="(item, index) in now_awardList" :key="index" class="award_outside" ><!--总点赞数的part（可添加多个奖励-->
+				<view class="allAward_box" >	
+					
+					<view class="awardContent" ><!--奖励内容（可修改-->
+						<image src="../../../static/小红花.png" v-if="item.times<=allAchievement" class="doneimage" mode="aspectFit"></image>
+						<view style="margin-left: 7px;" @click="changeAward_content(index)">
+							{{item.content}}
+							<image src="../../../static/编辑.png" style="width: 15px; height: 15px; background-color: #fff2e5;" mode="aspectFit"></image>
+						</view>
+						<view class="pop_select">	<!--弹出删除-->
+							<uni-icons  type="more" size="20" @click="popup(index)" style="position: absolute; right: 9%;"></uni-icons>
+							
 						</view>
 					</view>
-					<view class="achieve_times_item"> <!--已获得点赞数-->
-						<circle-progress-bar :pro="allAchievement/item.times" :border_back_color="'#cacaca'" :border_color="'#d9f5db'" style="width: 60px;height: 60px;">
-							{{allAchievement}}
-						</circle-progress-bar>
-						<view style="margin-top: 5px;">已获得</view>
-					</view>
-					<view class="achieve_times_item"> <!--据获得奖励还差。。。-->
-						<circle-progress-bar :pro="(item.times-allAchievement)/item.times" :border_back_color="'#cacaca'" :border_color="'#d9f5db'" style="width: 60px;height: 60px;">
-							{{item.times-allAchievement}}
-						</circle-progress-bar>
-						<view style="margin-top: 5px;">差距</view>
-					</view>
-				</view>
-				
-				<uni-list  class="more_list" v-if="item.pop">
-					<uni-list-item title="删除" :border="false" clickable class="more_list_item" @click="deleteAward(item, index)"></uni-list-item>
-				</uni-list>
-			</view>
-		</view>
-		<!--单项-->
-		<view v-for="(item, index) in now_list" :key="index" style="margin-top: 10px;">
-			<view class="itemAward_box" >	
-				<view class="item_awardContent" >
-					<image src="../../../static/小红花.png" v-if="item.all_finish_times>=item.timesForAward" style="position: absolute; left: 35px; width: 35px; height: 35px; background-color: #f1ffef; " mode="aspectFit"></image>
-					<view style="margin-left: 7px; display: flex; justify-content: space-evenly; width:80%">
-						{{item.title}}
-						<image src="../../../static/冲.png" style="width: 25px; height: 25px; background-color: #f1ffef;" mode="aspectFit"></image>
-						{{item.award}}
-					</view>
-					<!-- <view class="pop_select">
-						<uni-icons  type="more" size="20"></uni-icons>
-					</view> -->
-				</view>
-				<view class="achieve_times_box">
-					<view class="achieve_times_item">
-						<circle-progress-bar :pro="1" :border_back_color="'#cacaca'" :border_color="'#e9f5ff'" style="width: 50px;height: 50px;">
-							{{item.timesForAward}}
-						</circle-progress-bar>
-						<view style="margin-top: 5px;">
-							目标数
+					
+					<view class="achieve_times_box">
+						<view class="achieve_times_item" @click="changeAward_times(index)"> <!--目标点赞数（可修改-->
+							<circle-progress-bar :pro="1" :border_back_color="'#ebebeb'" :border_color="'#fff2e5'" style="width: 60px;height: 60px;z-index: 0;">
+								{{item.times}}
+							</circle-progress-bar>
+							<view style="margin-top: 5px;">
+								目标数
+								<image src="../../../static/编辑.png" style="width: 12px; height: 12px; " mode="aspectFit"></image>
+							</view>
+						</view>
+						<view class="achieve_times_item"> <!--已获得点赞数-->
+							<circle-progress-bar :pro="allAchievement/item.times" :border_back_color="'#ebebeb'" :border_color="'#fff2e5'" style="width: 60px;height: 60px;">
+								{{allAchievement}}
+							</circle-progress-bar>
+							<view style="margin-top: 5px;">已获得</view>
+						</view>
+						<view class="achieve_times_item"> <!--据获得奖励还差。。。-->
+							<circle-progress-bar :pro="(item.times-allAchievement)/item.times" :border_back_color="'#ebebeb'" :border_color="'#fff2e5'" style="width: 60px;height: 60px;">
+								{{item.times-allAchievement}}
+							</circle-progress-bar>
+							<view style="margin-top: 5px;">差距</view>
 						</view>
 					</view>
-					<view class="achieve_times_item">
-						<circle-progress-bar :pro="item.all_finish_times/item.timesForAward" :border_back_color="'#cacaca'" :border_color="'#e9f5ff'" style="width: 50px;height: 50px;">
-							{{item.all_finish_times}}
-						</circle-progress-bar>
-						<view style="margin-top: 5px;">已获得</view>
+					
+					<uni-list  class="more_list" v-if="item.pop">
+						<uni-list-item title="删除" :border="false" clickable class="more_list_item" @click="deleteAward(item, index)"></uni-list-item>
+					</uni-list>
+				</view>
+			</view>
+			<!--单项-->
+			<view v-for="(item, index) in now_list" :key="index" style="width: 100%;" class="award_outside">
+				<view class="itemAward_box" >	
+					<view class="item_awardContent" >
+						<image src="../../../static/小红花.png" v-if="item.all_finish_times>=item.timesForAward" class="doneimage" mode="aspectFit"></image>
+						<view style="margin-left: 7px; display: flex; justify-content: space-evenly; width:80%">
+							{{item.title}}
+							<image src="../../../static/冲.png" style="width: 25px; height: 25px; background-color: #f1ffef;" mode="aspectFit"></image>
+							{{item.award}}
+						</view>
+						<!-- <view class="pop_select">
+							<uni-icons  type="more" size="20"></uni-icons>
+						</view> -->
 					</view>
-					<view class="achieve_times_item" > 
-						<circle-progress-bar :pro="(item.timesForAward-item.all_finish_times%item.timesForAward)/item.timesForAward" :border_back_color="'#cacaca'" :border_color="'#e9f5ff'" style="width: 50px;height: 50px;">
-							{{item.timesForAward-item.all_finish_times%item.timesForAward}}
-						</circle-progress-bar>
-						<view style="margin-top: 5px;">与下次达成目标差距</view>
+					<view class="achieve_times_box">
+						<view class="achieve_times_item">
+							<circle-progress-bar :pro="1" :border_back_color="'#ebebeb'" :border_color="'#f1ffef'" style="width: 50px;height: 50px;">
+								{{item.timesForAward}}
+							</circle-progress-bar>
+							<view style="margin-top: 5px;">
+								目标数
+							</view>
+						</view>
+						<view class="achieve_times_item">
+							<circle-progress-bar :pro="item.all_finish_times/item.timesForAward" :border_back_color="'#ebebeb'" :border_color="'#f1ffef'" style="width: 50px;height: 50px;">
+								{{item.all_finish_times}}
+							</circle-progress-bar>
+							<view style="margin-top: 5px;">已获得</view>
+						</view>
+						<view class="achieve_times_item" > 
+							<circle-progress-bar :pro="(item.timesForAward-item.all_finish_times%item.timesForAward)/item.timesForAward" :border_back_color="'#ebebeb'" :border_color="'#f1ffef'" style="width: 50px;height: 50px;">
+								{{item.timesForAward-item.all_finish_times%item.timesForAward}}
+							</circle-progress-bar>
+							<view style="margin-top: 5px;">与下次达成目标差距</view>
+						</view>
 					</view>
+					
 				</view>
 				
 			</view>
-			
 		</view>
 		
 		<!--弹窗-->
@@ -136,6 +137,7 @@
 		},
 		data() {
 			return {
+				pattern: {buttonColor: '#009688'},
 				open:false,
 				tabList:['全部','已达成','未达成','总奖励','单项奖励'],
 				text: '全部',
@@ -286,10 +288,19 @@
 </script>
 
 <style>
-	.allAward_box{
+	.award_outside{
 		z-index: 0;
-		width: 90%;
-		margin: 15px 15px 15px 15px;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	.allAward_box{
+		position: relative;
+		z-index: 0;
+		width: 80%;
+		margin: 15px 0;
 		border-radius: 10px;
 		height: 200px;
 		/* background: #fff2e5; */
@@ -370,7 +381,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 25px;
+		font-size: 20px;
 		background: #fff2e5;
 		/* background: #f1fdf2; */
 	}
@@ -403,8 +414,9 @@
 		/* height: 200px; */
 	}
 	.itemAward_box{
-		width: 90%;
-		margin: 15px 15px 15px 15px;
+		position: relative;
+		width: 80%;
+		margin: 15px 0;
 		border-radius: 10px;
 		/* background: #f1ffef; */
 		box-shadow: -1px 1px 5px 1px rgba(0, 0, 0, 0.1), -1px 2px 1px 0 rgba(255, 255, 255) inset;
@@ -417,8 +429,19 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 20px;
+		font-size: 18px;
 		background: #f1ffef;
+	}
+	.doneimage {
+		position: absolute;
+		left: -20px;
+		top: -25px;
+		width: 75px;
+		height: 75px;
+		filter: alpha(opacity=80);
+		-moz-opacity: 0.85;
+		-khtml-opacity: 0.85;
+		opacity: 0.85;	
 	}
 	.more_list{
 		z-index: 99;
