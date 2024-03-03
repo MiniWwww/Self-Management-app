@@ -749,6 +749,8 @@
 						if (item.timetype0 && (item.timetype1 == false)) {
 							let content = '恭喜你！目标： ' + item.title + ` 已完成`
 							this.system_remind(now.getTime(), content);
+							//标记本次已发完，防止下一次又发了上一次的
+							uni.setStorageSync('playActionDone', true);
 							// 清除，否则一直刷新一直发
 							uni.removeStorageSync('playGoalSuccess')
 						} else if (item.timetype1 && (item.timetype0 == false)) {
@@ -757,6 +759,8 @@
 							if (item.isdone == false) {
 								let content = '恭喜你！完成一次目标： ' + item.title
 								this.system_remind(now.getTime(), content);
+								//标记本次已发完，防止下一次又发了上一次的
+								uni.setStorageSync('playActionDone', true);
 								// 清除，否则一直刷新一直发
 								uni.removeStorageSync('playGoalSuccess')
 							} else if (item.isdone == true) {
@@ -781,14 +785,25 @@
 
 				let sportContent = uni.getStorageSync('sportGoalSuccess')
 				console.log(sportContent);
-				if (sportContent.content != null) {
-					let now = new Date()
-					let content = '恭喜你！完成一次' + sportContent.content
-
-					this.system_remind(now.getTime(), content);
+				if (sportContent.contentList) {
+					
+					 // 遍历contentList中的每个content
+					 let now = new Date()
+					        sportContent.contentList.forEach((content) => {
+					            // 构造提醒内容
+					            let remindContent = '恭喜你！完成一次' + content;
+					            // 发出系统提醒
+					            this.system_remind(now.getTime(), remindContent);
+					        });
+						 // 在遍历完之后存储一个标记
+						        uni.setStorageSync('sportActionDone', true);
 					// 清除，否则一直刷新一直发
 					uni.removeStorageSync('sportGoalSuccess')
+					
+					
 				}
+				
+				
 			},
 
 			// 起床睡眠成就达成时
@@ -818,14 +833,28 @@
 
 				console.log(Sportdata);
 				if (Sportdata.content != null) {
-
 					let now = new Date()
+					if(Sportdata.differnumber>0){
+
 					let content = '还差' + Sportdata.differnumber + '个就达成' + Sportdata.timesForAward + '个' + Sportdata
 						.content + '的运动目标了，加油噢！'
 
 					this.system_remind(now.getTime(), content);
 					// 清除，否则一直刷新一直发
 					uni.removeStorageSync('GoingToAchieveGoal')
+					}else if(Sportdata.differnumber==0){
+						
+						let content = '太棒了！' + Sportdata.content + '的运动目标已完成'
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('GoingToAchieveGoal')
+					}else if(Sportdata.differnumber<0){
+						let content = '已经超额完成' +(-Sportdata.differnumber)+'个'+ Sportdata.content + '的运动目标了哦'
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('GoingToAchieveGoal')
+					}
+					
 				}
 			},
 			SleepGoingtoAchiveRemind() {

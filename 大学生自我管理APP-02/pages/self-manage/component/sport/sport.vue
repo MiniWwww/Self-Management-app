@@ -81,6 +81,7 @@
 						}
 					}
 				],
+				successOnceList:[],
 				run_animationData: {},
 				item_width: 0,
 				week:["周日","周一","周二","周三","周四","周五","周六"],
@@ -284,16 +285,8 @@
 				console.log(e);
 				if(e.content.text=="完成"){
 					that.finish_sport(item,index);
-					uni.setStorage({ //存入Storage
-					key: 'sportGoalSuccess', //自己取个名字
-					data: { //存的数据可以是很多条
-							content:that.ListData[index].title,
-					},
-				
-					success() {
-						console.log('sportGoalSuccess储存成功');
-					}
-				});
+					
+					
 				}
 				if(e.content.text=="删除"){
 					that.delete_sport(index);
@@ -441,6 +434,7 @@
 						success: function(res){
 							if(res.confirm){
 								that.finish_sport_action(item,index);
+								that.saveGoalSuccesOnce(item,index);
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
@@ -456,6 +450,7 @@
 						success: function(res){
 							if(res.confirm){
 								that.finish_sport_action(item,index);
+								that.saveGoalSuccesOnce(item,index);
 								uni.showToast({
 									title:'完成一次'+that.now_list[index].title+'！',
 									icon:'none',
@@ -473,6 +468,7 @@
 								if(res.confirm){
 									that.now_list[index].finish=true;
 									that.finish_sport_action(item,index);
+									that.saveGoalSuccesOnce(item,index);
 									uni.showToast({
 										title:'今天的'+that.now_list[index].title+'已完成！',
 										icon:'none',
@@ -483,6 +479,35 @@
 						})
 					}
 				}
+			},
+			saveGoalSuccesOnce(item,index){
+				var that=this;
+				
+				const actionDone = uni.getStorageSync('sportActionDone');
+				console.log('接受到sportActionDone了吗',actionDone)
+				        if (actionDone) {
+				            // 执行需要的动作
+				            	that.successOnceList=[];
+				            	console.log('that.successOnceList是否置空：',that.successOnceList);
+								// 执行完动作后，清除'sportActionDone'标记
+								uni.removeStorageSync('sportActionDone');
+				
+				        }
+						
+				
+				console.log('that.successOnceList前：',that.successOnceList);
+				that.successOnceList.push(that.ListData[index].title);
+				console.log('that.successOnceList后：',that.successOnceList);
+				uni.setStorage({ //存入Storage
+				key: 'sportGoalSuccess', //自己取个名字
+				data: { //存的数据可以是很多条
+						contentList:that.successOnceList,
+				},
+								
+				success() {
+					console.log('sportGoalSuccess储存成功');
+				}
+				});
 			},
 			saveFinishList(){
 				var that=this
