@@ -220,12 +220,19 @@
 								
 								if(time_now<=time_goal){
 									that.getup_success=true;
-									let obj={
-										getup_goal:that.getup_goal,
-										getup_time:that.getup_time,
-										date:that.today,
+									i=that.getup_success_list.find(item=>(item.date==that.today));
+									if(i){
+										i.getup_goal=that.getup_goal;
+										i.getup_time=that.getup_time;
 									}
-									that.getup_success_list.push(obj);
+									else{
+										let obj={
+											getup_goal:that.getup_goal,
+											getup_time:that.getup_time,
+											date:that.today,
+										}
+										that.getup_success_list.push(obj);
+									}
 									uni.setStorage({
 										key:'getup_success_list',
 										data:that.getup_success_list,
@@ -233,6 +240,17 @@
 											console.log('getup_success_list储存成功');
 										}
 									})
+									var GetUp_Success_count=that.getup_success_list.length;
+									uni.setStorage({ //存入Storage
+										key: 'getup_like_Count', //自己取个名字
+										data: { //存的数据可以是很多条
+											
+										getup_like_Count:getup_like_Count,
+										},
+										success() {
+											console.log('getup_like_Count起床达成赞数加一并且储存成功');
+										}
+									});
 									that.gif_show=true;
 									setTimeout(()=>{
 										that.gif_show=false;
@@ -260,14 +278,26 @@
 			achieve_sleep(){	//就寝目标达成
 				var that=this;
 				that.sleep_success=true;
-				let obj={
-					sleep_goal:that.sleep_goal,
-					sleep_time:that.sleep_time,
-					date:that.today,
-				}
-				that.sleep_success_list.push(obj);
-				var i=that.getup_success_list.find(item=>(item.date==obj.date));
+				var i;
+				i=that.sleep_success_list.find(item=>(item.date==that.today));
 				if(i){
+					i.sleep_goal=that.sleep_goal;
+					i.sleep_time=that.sleep_time;
+				}
+				else{
+					let obj={
+						sleep_goal:that.sleep_goal,
+						sleep_time:that.sleep_time,
+						date:that.today,
+					}
+					that.sleep_success_list.push(obj);
+				}
+				i=that.success_list.find(item=>(item.date==that.today));
+				if(i){
+					i.sleep_goal=that.sleep_goal;
+					i.sleep_time=that.sleep_time;
+				}
+				else{
 					let obj={
 						getup_goal:that.getup_goal,
 						getup_time:that.getup_time,
@@ -300,6 +330,30 @@
 					data:that.sleep_success_list,
 					success() {
 						console.log('sleep_success_list储存成功');
+					}
+				});
+				var Sleep_Success_count=that.sleep_success_list.length;
+				uni.setStorage({ //存入Storage
+					key: 'sleep_like_Count', //自己取个名字
+					data: { //存的数据可以是很多条
+						
+					sleep_like_Count:Sleep_Success_count,
+					},
+					success() {
+						console.log('sleep_like_Count睡眠达成赞数加一并且储存成功');
+					}
+				});
+				uni.setStorage({ //存入Storage
+					key: 'Today_getup_sleep_GoalSuccess', //自己取个名字
+					data: { //存的数据可以是很多条
+							
+						getup_goal:that.getup_goal,
+						getup_time:that.getup_time,
+						sleep_goal:that.sleep_goal,
+						sleep_time:that.sleep_time,
+					},
+					success() {
+						console.log('Today_getup_sleep_GoalSuccess储存成功');
 					}
 				});
 			},
