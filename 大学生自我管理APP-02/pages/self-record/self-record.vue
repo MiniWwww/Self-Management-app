@@ -747,7 +747,12 @@
 					for (let item of playContent) {
 						let now = new Date()
 						if (item.timetype0 && (item.timetype1 == false)) {
-							let content = '恭喜你！目标： ' + item.title + ` 已完成`
+							let content = '恭喜你！目标： ' + item.title + " 已完成\n\n";
+							
+							// 如果item.content有内容，则追加到content字符串中
+							if (item.content && item.content.trim() !== '') {
+							    content += '   目标详情：' + item.content;
+							}
 							this.system_remind(now.getTime(), content);
 							//标记本次已发完，防止下一次又发了上一次的
 							uni.setStorageSync('playActionDone', true);
@@ -757,7 +762,11 @@
 							console.log('playContent.isdone==', item.isdone)
 
 							if (item.isdone == false) {
-								let content = '恭喜你！完成一次目标： ' + item.title
+								let content = '恭喜你！完成一次目标： ' + item.title;
+								// 如果item.content有内容，则追加到content字符串中
+								if (item.content && item.content.trim() !== '') {
+								    content += '   目标详情：' + item.content;
+								}
 								this.system_remind(now.getTime(), content);
 								//标记本次已发完，防止下一次又发了上一次的
 								uni.setStorageSync('playActionDone', true);

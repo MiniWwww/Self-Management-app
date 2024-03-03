@@ -56,6 +56,11 @@
 					<view v-if="item.timetype0" class="content-time-time">
 						<text>开始：{{ item.starttime }}</text>
 						<text>结束：{{ item.endttime }}</text>
+						<!-- <view style="width: 90%;">
+							<text v-if="item.content" style="font-size: 14px; color: grey; word-wrap: break-word;">
+							            {{ item.content }}
+							        </text>
+						</view> -->
 						<image v-if="item.isNotStart" src="../../../../static/未开始.png"
 							style="height: 25px;width: 50px;justify-content: end"></image>
 						<image v-if="item.istargetDate" src="../../../../static/待完成2.png"
@@ -1101,6 +1106,7 @@
 					timetype0: item.timetype0,
 					timetype1: item.timetype1,
 					isdone: item.isdone,
+					content: item.content,
 
 				}
 				console.log(obj);
