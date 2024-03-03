@@ -878,6 +878,7 @@
 							var that = this;
 							//2023-10-21添加
 							this.saveGoalSuccess(item);
+							
 
 						} else if (this.swipeList[index].timetype1) {
 							//如果是周期类型
@@ -1083,7 +1084,17 @@
 
 			},
 			saveGoalSuccess(item) {
-				var that = this
+					var that = this
+				const actionDone = uni.getStorageSync('playActionDone');
+				console.log('接受到playActionDone了吗',actionDone)
+				        if (actionDone) {
+				            // 执行需要的动作
+				            	that.playGoalSuccessList=[];
+				            	console.log('that.playGoalSuccessList是否置空：',that.playGoalSuccessList);
+								// 执行完动作后，清除'playActionDone'标记
+								uni.removeStorageSync('playActionDone');
+				
+				        }
 				let obj = {
 					id: that.playGoalSuccessList.length + 1,
 					title: item.title,
@@ -1111,6 +1122,7 @@
 						console.log('playGoalSuccess内容：',that.playGoalSuccessList)
 					}
 				});
+				
 			},
 			savePlayGoalList() {
 				var that = this
