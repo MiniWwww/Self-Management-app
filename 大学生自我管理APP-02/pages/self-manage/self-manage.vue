@@ -72,6 +72,25 @@
 				
 			});
 		},
+		onHide() {
+			//存储退出时的时间
+			var time=new Date(new Date().getTime());
+			let y=time.getFullYear();
+			let m=time.getMonth()+1;
+			let d=time.getDate();
+			let h=time.getHours();
+			let mi=time.getMinutes();
+			let day=time.getDay();
+			let livetime=y+'/'+this.addTimes(m)+'/'+this.addTimes(d);
+			console.log(livetime);
+			uni.setStorage({
+				key:'liveTime',
+				data:livetime,
+				success() {
+					console.log("存储时间成功！")
+				}
+			});
+		},
 		data() {
 			return {
 				sport:true,
@@ -81,6 +100,7 @@
 			}
 		},
 		methods: {
+			addTimes(m){return m<10?'0'+m:m },
 			goToSport(){
 				this.sport=true;
 				this.sleep=false;

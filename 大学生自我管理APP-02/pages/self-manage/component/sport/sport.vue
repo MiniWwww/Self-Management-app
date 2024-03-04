@@ -173,7 +173,7 @@
 				var that=this;
 				let list=[];
 				that.getNowTime();
-				console.log("change:",this.change);
+				//console.log("change:",this.change);
 				that.activePopUp=false;
 				that.list.forEach(v=>{
 					let flag=0;
@@ -266,17 +266,30 @@
 				let day=time.getDay();
 				
 				let cc=y+'/'+this.addTimes(m)+'/'+this.addTimes(d);
-				console.log(cc);
-				if(this.today!=cc){
-					this.change=true;
-					this.today_weekday=this.week[day];
-					this.today=y+'/'+this.addTimes(m)+'/'+this.addTimes(d);
-				}
-				else{
-					this.change=false;
-				}
-				console.log("change:",this.change);
-				console.log(this.today,this.today_weekday);
+				//console.log(cc);
+				let livetime='';
+				let that=this;
+				uni.getStorage({
+					key:'liveTime',
+					success(res) {
+						livetime=res.data;
+						console.log('liveTime',livetime);
+						if(cc!=livetime){
+							that.change=true;
+							that.today_weekday=that.week[day];
+							that.today=y+'/'+that.addTimes(m)+'/'+that.addTimes(d);
+						}
+						else{
+							that.change=false;
+							that.today_weekday=that.week[day];
+							that.today=y+'/'+that.addTimes(m)+'/'+that.addTimes(d);
+						}
+						console.log("change:",that.change);
+						console.log(that.today,that.today_weekday);
+					}
+				})
+				
+				
 			},
 			tabClick(item, index) {
 				this.text = item;
