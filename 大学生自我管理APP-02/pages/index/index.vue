@@ -40,7 +40,7 @@
 						<uni-easyinput type="number" v-model="formData.end" placeholder="这门课第几节结束？" />
 					</uni-forms-item>
 					<uni-forms-item required label="星期" name="week">
-						<uni-easyinput required type="number" v-model="formData.week" placeholder="这门课星期几上？" />
+						<uni-easyinput required type="number" v-model="formData.week" placeholder="这门课星期几上？" />                      
 					</uni-forms-item>
 					<uni-forms-item required label="课程名" name="name">
 						<uni-easyinput type="text" v-model="formData.name" placeholder="请填写课程名" />

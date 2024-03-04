@@ -54,7 +54,7 @@
 			                (((item.week - 1) * (width - (width / 8 - 14))) / 7 + 2) + 'px; margin-top:' +
 			                ((item.begin - 1) * 160 + 5) + 'rpx; width:' +
 			                ((width - (width / 8 - 14)) / 7 - 4) + 'px; height: ' + ((item.end-item.begin +1)*151 + (item.end-item.begin)*10) + 'rpx; '
-							 + 'background:' + ((nowWeek>=item.week_begin&&nowWeek<=item.week_end)?colorArrays[index % 10]:'#a0a0a0')">
+							 + 'background:' + (!(!(nowWeek>=item.week_begin&&nowWeek<=item.week_end) || (nowWeek % 2 == 0 && item.odd_or_even == 1) || (nowWeek % 2 == 1 && item.odd_or_even == 2))?colorArrays[index % 10]:'#a0a0a0')">
             <view class="smalltext">
               <view style="margin-top: 2px;">{{ item.name }}</view>
               <view>{{ item.place }}</view>
@@ -63,7 +63,7 @@
               <view>
                 {{ item.week_begin!=item.week_end?(item.week_begin+'-'+item.week_end):item.week_begin }}周
               </view>
-              <view v-if="!(nowWeek>=item.week_begin&&nowWeek<=item.week_end)">非本周</view>
+              <view v-if="(!(nowWeek>=item.week_begin&&nowWeek<=item.week_end) || (nowWeek % 2 == 0 && item.odd_or_even == 1) || (nowWeek % 2 == 1 && item.odd_or_even == 2))">非本周</view>
 			  <view>{{ item.credit }}学分</view>
             </view>
           </view>
