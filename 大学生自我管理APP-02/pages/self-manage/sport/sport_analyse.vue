@@ -1,5 +1,7 @@
 <template>
 	<view>
+		<!-- 日：可以选择查看某一天的记录。记录项目：强度（圆形进度条/百分比柱状图/扇形图）、做了什么运动做了几次一条条列出来、
+		周：近7天的情况（或每7天分一组数据，可以查看不同周的数据）。运动次数柱状图、强度（圆形进度条/百分比柱状图/扇形图）、做了什么运动做了几次一条条列出来、 -->
 		<view class="navbar_box">
 			<view class="back" @click="goback">&lt;</view>
 			<view class="navbar_item_box">

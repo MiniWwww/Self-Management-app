@@ -425,13 +425,13 @@
 					flag_day: false,
 					flag_year: false,
 			};
-			const eventIndex = this.list.findIndex((event => event.title === obj.title)&&(event => event.date === obj.date));
+			const eventIndex = this.list.findIndex(event =>( event.title === obj.title)&&( event.date === obj.date));
 			if (eventIndex == -1) {
 				const eventIndex = this.list.findIndex(event => event.title === obj.title);
 				if (eventIndex !== -1) {
 					this.list.splice(eventIndex,1);
 				}
-				this.list.push(obj);
+				this.list.unshift(obj);
 				
 				this.listAfterSort=this.sort_list();
 			}
@@ -638,47 +638,47 @@
 					var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
 					list_cycles.forEach(v=>{
 						if(new Date().setHours(0, 0, 0, 0)<i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
-													let obj={
-															year: i_year,
-															//date:'01-27',
-															title: v.title,
-															mark: v.mark,
-															select: false,
-															color: v.color,
-															cycletime: v.cycletime,
-															cycles: v.cycles,
-															time: v.time,
-															day: i_date,
-															date: i_year + '-' + (i_month < 10 ? '0' + i_month : i_month) + '-' + (i_day < 10 ? '0' + i_day : i_day) + ' ' + v.time,
-															weekday: i_weekday,
-															flag_day: false,
-															flag_year: false,
-													};
-													if(!list_sort.includes(obj)){
-														list_sort.push(obj);
-													}
-													}
-						                       if(new Date().setHours(0, 0, 0, 0)===i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
-													let obj={
-															year: i_year,
-															//date:'01-27',
-															title: v.title,
-															mark: v.mark,
-															select: v.select,
-															color: v.color,
-															cycletime: v.cycletime,
-															cycles: v.cycles,
-															time: v.time,
-															day: i_date,
-															date: i_year + '-' + (i_month < 10 ? '0' + i_month : i_month) + '-' + (i_day < 10 ? '0' + i_day : i_day) + ' ' + v.time,
-															weekday: i_weekday,
-															flag_day: false,
-															flag_year: false,
-													};
-													if(!list_sort.includes(obj)){
-														list_sort.push(obj);
-													}
-														
+							let obj={
+									year: i_year,
+									//date:'01-27',
+									title: v.title,
+									mark: v.mark,
+									select: false,
+									color: v.color,
+									cycletime: v.cycletime,
+									cycles: v.cycles,
+									time: v.time,
+									day: i_date,
+									date: i_year + '-' + (i_month < 10 ? '0' + i_month : i_month) + '-' + (i_day < 10 ? '0' + i_day : i_day) + ' ' + v.time,
+									weekday: i_weekday,
+									flag_day: false,
+									flag_year: false,
+							};
+							if(!list_sort.includes(obj)){
+								list_sort.push(obj);
+							}
+						}
+						if(new Date().setHours(0, 0, 0, 0)===i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
+							let obj={
+									year: i_year,
+									//date:'01-27',
+									title: v.title,
+									mark: v.mark,
+									select: v.select,
+									color: v.color,
+									cycletime: v.cycletime,
+									cycles: v.cycles,
+									time: v.time,
+									day: i_date,
+									date: i_year + '-' + (i_month < 10 ? '0' + i_month : i_month) + '-' + (i_day < 10 ? '0' + i_day : i_day) + ' ' + v.time,
+									weekday: i_weekday,
+									flag_day: false,
+									flag_year: false,
+							};
+							if(!list_sort.includes(obj)){
+								list_sort.push(obj);
+							}
+								
 						}
 					})
 				}
@@ -791,56 +791,58 @@
 			},
 			childItem(item, index) {
 							
-			// 获取点击事件的名字
-			const eventName = item.title;
-			const eventName_date = item.date;
-			// 遍历 list 数组
-	       this.list.forEach((event, i) => {
-											// 如果找到了名字一样的事件
-											
-											if (event.cycles.length === 0 && event.title === eventName) {
-												// 切换状态
-												event.select = !event.select;
-												// 更新 list 数组
-												this.$set(this, 'list', this.list);
-											    
-												this.listAfterSort = this.sort_list();
-												// 使用 $set 更新 list 数组
-												
-												this.$set(this,'listAfterSort',this.listAfterSort);
-												
-											}
-											this.saveList();
-										});
-			this.listAfterSort.forEach((event, i) => {
-															// 如果找到了名字一样的事件
-					if (event.cycles.length != 0&& event.title === eventName&&new Date(event.date).setHours(0, 0, 0, 0)===new Date().setHours(0, 0, 0, 0) &&event.date===eventName_date ) {
-																// 切换状态
-																event.select = !event.select;
-																// 更新 list 数组
-																this.$set(this.listAfterSort, i, event);
-																const index = this.list.findIndex(item => item.title === eventName);
-																if (index !== -1) {
-																 // 如果找到同名事件，替换
-																this.$set(this.list[index], 'select', event.select);
-																 }
-																this.$set(this, 'list', this.list);
-															}
-															this.saveList();
-															
-															
-					if (event.cycles.length != 0&& event.title === eventName&&!(new Date(item.date).setHours(0, 0, 0, 0)===new Date().setHours(0, 0, 0, 0)) ) {
-																// 提示
-															 uni.showToast({
-															 	title: "周期事件时间还未到，无法标记为完成！",
-															 	icon: "none",
-															 	duration: 2000,
-															 });
-															 }
+				// 获取点击事件的名字
+				const eventName = item.title;
+				const eventName_date = item.date;
+				// 遍历 list 数组
+				this.list.forEach((event, i) => {
+					// 如果找到了名字一样的事件
+				
+					if (event.cycles.length === 0 && event.title === eventName) {
+						// 切换状态
+						event.select = !event.select;
+						// 更新 list 数组
+						this.$set(this, 'list', this.list);
+					
+						this.listAfterSort = this.sort_list();
+						// 使用 $set 更新 list 数组
+					
+						this.$set(this,'listAfterSort',this.listAfterSort);
+					
+					}
+					this.saveList();
+				});
+				this.listAfterSort.forEach((event, i) => {
+					// 如果找到了名字一样的事件
+					if (event.cycles.length != 0&& event.title === eventName
+						&&new Date(event.date).setHours(0, 0, 0, 0)===new Date().setHours(0, 0, 0, 0) 
+						&&event.date===eventName_date ) {
+							// 切换状态
+							event.select = !event.select;
+							// 更新 list 数组
+							this.$set(this.listAfterSort, i, event);
+							const index = this.list.findIndex(item => item.title === eventName);
+							if (index !== -1) {
+							 // 如果找到同名事件，替换
+								this.$set(this.list[index], 'select', event.select);
+							}
+							this.$set(this, 'list', this.list);
+						}
+						this.saveList();
+					
+					if (event.cycles.length != 0&& event.title === eventName
+					&&!(new Date(item.date).setHours(0, 0, 0, 0)===new Date().setHours(0, 0, 0, 0)) ) {
+							// 提示
+							uni.showToast({
+							title: "周期事件时间还未到，无法标记为完成！",
+							icon: "none",
+							duration: 2000,
+							});
+							}
 														
-														});
+					});
 										
-									},
+			},
 			deleteEvent(item, index) {
 				var that=this
 				if(!item.cycles.length!=0){

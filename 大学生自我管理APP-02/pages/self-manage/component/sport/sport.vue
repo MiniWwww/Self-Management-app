@@ -111,13 +111,13 @@
 						selectedIconPath: '/static/addgoalSelected.png',
 						text: '奖励',
 						active: false
-					},/* 
+					},
 					{
 						iconPath: '/static/统计.png',
 						selectedIconPath: '/static/addgoalSelected.png',
 						text: '统计',
 						active: false
-					} */
+					}
 				],
 				list:[{
 						title: '跳绳', 
@@ -173,6 +173,7 @@
 				var that=this;
 				let list=[];
 				that.getNowTime();
+				console.log("change:",this.change);
 				that.activePopUp=false;
 				that.list.forEach(v=>{
 					let flag=0;
@@ -265,6 +266,7 @@
 				let day=time.getDay();
 				
 				let cc=y+'/'+this.addTimes(m)+'/'+this.addTimes(d);
+				console.log(cc);
 				if(this.today!=cc){
 					this.change=true;
 					this.today_weekday=this.week[day];
@@ -273,7 +275,7 @@
 				else{
 					this.change=false;
 				}
-				
+				console.log("change:",this.change);
 				console.log(this.today,this.today_weekday);
 			},
 			tabClick(item, index) {
@@ -300,6 +302,9 @@
 				}
 				else if(e.index == 1){
 					this.to_achieve();
+				}
+				else if(e.index == 2){
+					this.to_analyse();
 				}
 				this.fabcontent[e.index].active = !e.item.active;
 			},
