@@ -29,7 +29,7 @@
 		</view>  
 		
 		<view class="icon">
-			<view class="">
+			<view class="uni-datetime-picker">
 <uni-datetime-picker 
     type="daterange" 
     ref="calendar"  
@@ -38,13 +38,11 @@
     class="calendar" 
     @change="calendar"  
     v-model="calendar_data" 
-	:cleay = "true"
-	@cleay = "onCleay"
-    @close="clearCalendarData">
+	>
 </uni-datetime-picker>
 			
 			</view>
-			<view class="">
+			<view class="uni-data-select">
 				      <uni-data-select
 				        v-model="valueRange"
 				        :localdata="range"
@@ -142,6 +140,12 @@ import { isArray } from 'util';
 		watch:{
 			posts(){
 				this.filteredPosts = this.posts
+			},
+			calendar_data(){
+				if (this.calendar_data.length === 0) {
+				      this.calendar_data = ""
+					  console.log(this.calendar_data)
+				    }
 			}
 		},  
  
@@ -457,17 +461,9 @@ import { isArray } from 'util';
 		},
 
 		methods: { 
-			onCleay(){
-				console.log(this.calendar_data)
-				console.log(2123)
-			},
-			 clearCalendarData() { 
-					console.log(12312)
-			    }, 
 		changeRange() {
 		    const id = this.valueRange; 
 			 const time = this.calendar_data; 
-			console.log(id)
 		    let record = uni.getStorageSync('self-record-posts');
 			this.flag = false
 
@@ -480,12 +476,11 @@ import { isArray } from 'util';
 			}
 
 			const items = [] 
-			if(this.calendar_data !== ""){
+			if(this.calendar_data !== "" || this.calendar_data.length!=0){
 				if(id === 0){
 					record.forEach((item) => {
 					    const timeStamp = new Date(item.timestamp).getTime();
 					    if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
-							console.log(item)
 							items.push(item);  
 					    }
 					});  
@@ -496,7 +491,6 @@ import { isArray } from 'util';
 					    const timeStamp = new Date(item.timestamp).getTime();
 					    if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
 							if(item.username === "系统"){
-								console.log(item)
 								items.push(item);  
 							}
 							
@@ -510,25 +504,51 @@ import { isArray } from 'util';
 					    const timeStamp = new Date(item.timestamp).getTime();
 					    if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
 							if(item.username!== "系统"){
-								console.log(item)
 								items.push(item);  
 							}
 							
 					    }
 					}); 
+					this.filteredPosts = items 
+				}
+			}else{
+				
+				switch(id){
+					case 0 :
+					record.forEach((item)=>{
+						items.push(item)
+					})
+					this.filteredPosts = items;
+					break;
+					case 1 :
+					record.forEach((item)=>{
+						if(item.username === "系统"){
+							items.push(item)
+						} 
+					})
 					this.filteredPosts = items
+					break;
+					default:
+					record.forEach((item)=>{
+						if(item.username !="系统"){
+							items.push(item)
+						}
+					})
+					this.filteredPosts = items
+					break;
 				}
-			}else{ 
-				if (!Array.isArray(record)) { // 检查是否为数组
-				    console.error("Storage data is not an array");
-				    this.filteredPosts = []; // 如果不是数组，则将record赋值为空数组
-				}
+				 
+				 
+				// if (!Array.isArray(record)) { // 检查是否为数组
+				//     console.error("Storage data is not an array");
+				//     this.filteredPosts = []; // 如果不是数组，则将record赋值为空数组
+				// }
 						
-				if (id === 0) {
-				    this.filteredPosts = record; // 如果id为0，直接赋值为record
-				} else {
-				    this.filteredPosts = record.filter(item => item.uid === id); // 否则执行过滤操作
-				}
+				// if (id === 0) {
+				//     this.filteredPosts = record; // 如果id为0，直接赋值为record
+				// } else {
+				//     this.filteredPosts = record.filter(item => item.uid === id); // 否则执行过滤操作
+				// }
 			}
 			
 		},
@@ -539,7 +559,6 @@ import { isArray } from 'util';
 		    const selectedStarted = new Date(time[0]).setHours(0, 0, 0, 0);
 		    const selectedEnd = new Date(time[1]).setHours(23, 59, 59, 999);
 		    this.flag = false;
-		    console.log(this.filteredPosts);
 		 
 		    const items = [];
 		
@@ -547,7 +566,6 @@ import { isArray } from 'util';
 		        record.forEach((item) => {
 		            const timeStamp = new Date(item.timestamp).getTime();
 		            if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
-						console.log(item)
 		                items.push(item);  
 		            }
 		        });
