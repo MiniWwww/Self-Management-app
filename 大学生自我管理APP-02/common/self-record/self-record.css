@@ -206,19 +206,33 @@
 }
 
 .icon{
-	width: 100%;
+	width: 90%;
 	height: 100upx;
+	margin-left: 5%;
 	display: flex;
-	gap: 10%;
-	display: flex;
-	justify-content: space-between;
+	/*gap: 10%;*/
+	/*justify-content: space-between;*/
 	align-items: center;
 }
-
+/*
 .icon view{
 	flex: 1;
 	
 }
+*/
+.uni-datetime-picker{
+	width: 73%;
+}
+.calendar{
+	
+}
+.uni-data-select{
+	width: 24%;
+	margin-left: 3%;
+}
+
+
+
 
 
 #moments .home-pic-base .top-pic {
