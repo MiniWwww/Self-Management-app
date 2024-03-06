@@ -425,19 +425,20 @@
 					flag_day: false,
 					flag_year: false,
 			};
-			const eventIndex = this.list.findIndex(event =>( event.title === obj.title)&&( event.date === obj.date));
-			if (eventIndex == -1) {
-				const eventIndex = this.list.findIndex(event => event.title === obj.title);
-				if (eventIndex !== -1) {
-					this.list.splice(eventIndex,1);
-				}
-				this.list.unshift(obj);
-				
-				
-			}
 			if(this.listAfterSort.length==0){
 				this.listAfterSort=this.sort_list();
 			}
+			const eventIndex = this.listAfterSort.findIndex(event =>( event.title === obj.title)&&( event.date === obj.date));
+			if (eventIndex == -1) {
+				const eventIndex = this.listAfterSort.findIndex(event => event.title === obj.title);
+				if (eventIndex !== -1) {
+					this.listAfterSort.splice(eventIndex,1);
+				}
+				this.listAfterSort.unshift(obj);
+				this.listAfterSort=this.sort_listAfterSort();
+				
+			}
+			
 			
 			
 		},
@@ -607,6 +608,19 @@
 					this.listAfterSort = res
 				}
 			},
+			
+			
+            sort_listAfterSort(){
+				let list_sort=[];	//排序数组
+				// 对新添加的项目按日期进行排序
+				this.listAfterSort.sort((a, b) => {
+				    return (new Date(a.date)).getTime() - (new Date(b.date)).getTime();
+				});
+							
+				// 返回排序后的数组
+				return this.listAfterSort;
+			},
+			
 			sort_list(){
 				var that=this;
 				let list = JSON.parse(JSON.stringify(that.list)); //拷贝对象
@@ -645,7 +659,7 @@
 									//date:'01-27',
 									title: v.title,
 									mark: v.mark,
-									select: select,
+									select: v.select,
 									color: v.color,
 									cycletime: v.cycletime,
 									cycles: v.cycles,
@@ -783,6 +797,7 @@
 						// 切换状态
 						event.select = !event.select;
 						
+						// 使用 $set 更新 list 数组
 					
 						this.$set(this,'listAfterSort',this.listAfterSort);
 					
@@ -791,14 +806,12 @@
 				});
 				this.listAfterSort.forEach((event, i) => {
 					// 如果找到了名字一样的事件
-					if (event.cycles.length != 0&& event.title === eventName
-						&&event.date===eventName_date ) {
+					if (event.cycles.length != 0&& event.title === eventName&&event.date===eventName_date ) {
 							// 切换状态
 							event.select = !event.select;
 							// 更新 list 数组
 							this.$set(this.listAfterSort, i, event);
 							
-						
 						}
 						this.saveList();
 					
@@ -844,7 +857,7 @@
 					            if (res.tapIndex == 0) {
 					                // 用户选择了删除当前项
 					                // 执行删除当前项的逻辑
-									const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title&&event.date === item.date);
+									const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title&&event.date===item.date);
 									if (eventIndex !== -1) {
 										// 从listAfterSort数组中删除该事件
 										that.listAfterSort.splice(eventIndex, 1);
@@ -854,36 +867,53 @@
 									
 									
 									that.saveList();
-					            }  else if (res.tapIndex == 1){
-					          const eventIndex2 = that.list.findIndex(event => event.title === item.title);
-								if (eventIndex2 !== -1) {
-								// 从list数组中删除该事件
-								that.list.splice(eventIndex2, 1);
-								that.listAfterSort = that.sort_list();
-								// 使用 $set 更新 list 数组
-								that.$set(that, 'list', that.list);
+					            } 
+								 else if (res.tapIndex == 1){
+					          that.list = that.list.filter(event => {
+					              
+					              if (event.title === item.title ) {
+					                  return false; // 过滤掉晚于选定时间的同名事件
+					              }
+					              return true; // 保留其他事件
+					          });
+							  that.$set(that, 'list', that.list);
+								that.listAfterSort = that.listAfterSort.filter(event => {
+								    
+								    if (event.title === item.title ) {
+								        return false; // 过滤掉晚于选定时间的同名事件
+								    }
+								    return true; // 保留其他事件
+								});
+																
 								that.$set(that, 'listAfterSort', that.listAfterSort);
-								}
+								
 								that.saveList();
 								 }
-								 else if (res.tapIndex == 2) {
-								     console.log('当前选择的事件时间：', item.date);
-								     const selectedDate = new Date(item.date);
-								     
-								     // 使用 filter 方法过滤出不满足条件的事件
-								     that.listAfterSort = that.listAfterSort.filter(event => {
-								         return !(event.title === item.title && new Date(event.date)>= selectedDate);
-								     });
-								     
-								     that.saveList();
-								 }
-								 
+									
+								 else if (res.tapIndex == 2){
+								const selectedDate = new Date(item.date);
+								
+								// 保留在选定时间之前的事件，同时删除具有相同名称且晚于选定时间的事件
+								that.listAfterSort = that.listAfterSort.filter(event => {
+								    const eventDate = new Date(event.date);
+								    if (event.title === item.title && eventDate >= selectedDate) {
+								        return false; // 过滤掉晚于选定时间的同名事件
+								    }
+								    return true; // 保留其他事件
+								});
+								
+								// 重新设置 list 数组
+								that.$set(that, 'listAfterSort', that.listAfterSort);
+								
+								// 保存更改
+								that.saveList();
 									
 					        
 					    }
-					});
+					}
 					
-				}
+				});
+				}	
 			},
 			Allday(){
 				this.allday_flag=!this.allday_flag
@@ -962,10 +992,23 @@
 				}
 				console.log(obj);
 				this.list.unshift(obj);
-				this.listAfterSort = this.sort_list();
+				if(obj.cycles.length===0){
+				this.listAfterSort.unshift(obj);
+				this.listAfterSort=this.sort_listAfterSort();
+				//this.listAfterSort = this.add_list();
+				
 				console.log(this.listAfterSort);
 				this.saveList()
-
+                 }
+				 if(!obj.cycles.length===0){
+				
+				 this.listAfterSort=this.sort_list();
+				
+				 
+				 console.log(this.listAfterSort);
+				 this.saveList()
+				  }
+				 
 				this.list1[0].selected = false;
 				this.list1[1].selected = false;
 				this.list1[2].selected = false;
