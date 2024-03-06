@@ -234,7 +234,7 @@
 				//day：选择的截止日期(无时间)，date：选择的截止日期时间
 				list: [{
 						year:'2024',
-						date:'',
+						date:'2024-01-26 09:00',
 						title: '学习java',
 						mark: '图书馆',
 						select: false,
@@ -279,7 +279,7 @@
 					},
 					{
 						year:'2024',
-						date:'',
+						date:'2024-01-27 09:00',
 						title: '义工活动',
 						mark: '养老院',
 						select: false,
@@ -425,19 +425,22 @@
 					flag_day: false,
 					flag_year: false,
 			};
-			const eventIndex = this.list.findIndex(event =>( event.title === obj.title)&&( event.date === obj.date));
-			if (eventIndex == -1) {
-				const eventIndex = this.list.findIndex(event => event.title === obj.title);
-				if (eventIndex !== -1) {
-					this.list.splice(eventIndex,1);
-				}
-				this.list.unshift(obj);
-				
-				this.listAfterSort=this.sort_list();
-			}
 			if(this.listAfterSort.length==0){
 				this.listAfterSort=this.sort_list();
 			}
+			const eventIndex = this.listAfterSort.findIndex(event =>( event.title === obj.title)&&( event.date === obj.date));
+			if (eventIndex == -1) {
+				const eventIndex = this.listAfterSort.findIndex(event => event.title === obj.title);
+				if (eventIndex !== -1) {
+					this.listAfterSort.splice(eventIndex,1);
+				}
+				this.listAfterSort.unshift(obj);
+				this.listAfterSort=this.sort_listAfterSort();
+				
+			}
+			
+			
+			
 		},
 		onReady() {
 			var that=this;
@@ -605,6 +608,19 @@
 					this.listAfterSort = res
 				}
 			},
+			
+			
+            sort_listAfterSort(){
+				let list_sort=[];	//排序数组
+				// 对新添加的项目按日期进行排序
+				this.listAfterSort.sort((a, b) => {
+				    return (new Date(a.date)).getTime() - (new Date(b.date)).getTime();
+				});
+							
+				// 返回排序后的数组
+				return this.listAfterSort;
+			},
+			
 			sort_list(){
 				var that=this;
 				let list = JSON.parse(JSON.stringify(that.list)); //拷贝对象
@@ -637,28 +653,7 @@
 					var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
 					var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
 					list_cycles.forEach(v=>{
-						if(new Date().setHours(0, 0, 0, 0)<i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
-							let obj={
-									year: i_year,
-									//date:'01-27',
-									title: v.title,
-									mark: v.mark,
-									select: false,
-									color: v.color,
-									cycletime: v.cycletime,
-									cycles: v.cycles,
-									time: v.time,
-									day: i_date,
-									date: i_year + '-' + (i_month < 10 ? '0' + i_month : i_month) + '-' + (i_day < 10 ? '0' + i_day : i_day) + ' ' + v.time,
-									weekday: i_weekday,
-									flag_day: false,
-									flag_year: false,
-							};
-							if(!list_sort.includes(obj)){
-								list_sort.push(obj);
-							}
-						}
-						if(new Date().setHours(0, 0, 0, 0)===i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
+						if(new Date(v.date).setHours(0, 0, 0, 0)<=i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
 							let obj={
 									year: i_year,
 									//date:'01-27',
@@ -678,8 +673,8 @@
 							if(!list_sort.includes(obj)){
 								list_sort.push(obj);
 							}
-								
 						}
+						
 					})
 				}
 				
@@ -795,16 +790,13 @@
 				const eventName = item.title;
 				const eventName_date = item.date;
 				// 遍历 list 数组
-				this.list.forEach((event, i) => {
+				this.listAfterSort.forEach((event, i) => {
 					// 如果找到了名字一样的事件
 				
 					if (event.cycles.length === 0 && event.title === eventName) {
 						// 切换状态
 						event.select = !event.select;
-						// 更新 list 数组
-						this.$set(this, 'list', this.list);
-					
-						this.listAfterSort = this.sort_list();
+						
 						// 使用 $set 更新 list 数组
 					
 						this.$set(this,'listAfterSort',this.listAfterSort);
@@ -814,31 +806,16 @@
 				});
 				this.listAfterSort.forEach((event, i) => {
 					// 如果找到了名字一样的事件
-					if (event.cycles.length != 0&& event.title === eventName
-						&&new Date(event.date).setHours(0, 0, 0, 0)===new Date().setHours(0, 0, 0, 0) 
-						&&event.date===eventName_date ) {
+					if (event.cycles.length != 0&& event.title === eventName&&event.date===eventName_date ) {
 							// 切换状态
 							event.select = !event.select;
 							// 更新 list 数组
 							this.$set(this.listAfterSort, i, event);
-							const index = this.list.findIndex(item => item.title === eventName);
-							if (index !== -1) {
-							 // 如果找到同名事件，替换
-								this.$set(this.list[index], 'select', event.select);
-							}
-							this.$set(this, 'list', this.list);
+							
 						}
 						this.saveList();
 					
-					if (event.cycles.length != 0&& event.title === eventName
-					&&!(new Date(item.date).setHours(0, 0, 0, 0)===new Date().setHours(0, 0, 0, 0)) ) {
-							// 提示
-							uni.showToast({
-							title: "周期事件时间还未到，无法标记为完成！",
-							icon: "none",
-							duration: 2000,
-							});
-							}
+					
 														
 					});
 										
@@ -874,40 +851,69 @@
 				else{
 					
 					uni.showActionSheet({
-					    itemList: ['删除当前项', '删除所有周期项'],
+					    itemList: ['删除当前项', '删除所有周期项','删除此后所有周期项'],
 					    itemColor: '#007AFF', // 设置选项文本颜色为蓝色
 					    success: function(res) {
 					            if (res.tapIndex == 0) {
 					                // 用户选择了删除当前项
 					                // 执行删除当前项的逻辑
-									const eventIndex = that.list.findIndex(event => event.title === item.title);
+									const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title&&event.date===item.date);
 									if (eventIndex !== -1) {
 										// 从listAfterSort数组中删除该事件
-										that.list.splice(eventIndex, 1);
+										that.listAfterSort.splice(eventIndex, 1);
 										// 使用 $set 更新 list 数组
-										that.$set(that, 'list', that.list);
+										that.$set(that, 'listAfterSort', that.listAfterSort);
 									}
-									that.listAfterSort.splice(index, 1);
-									that.$set(that, 'listAfterSort', that.listAfterSort);
+									
+									
 									that.saveList();
-					            }  else if (res.tapIndex == 1){
-					          const eventIndex2 = that.list.findIndex(event => event.title === item.title);
-								if (eventIndex2 !== -1) {
-								// 从list数组中删除该事件
-								that.list.splice(eventIndex2, 1);
-								that.listAfterSort = that.sort_list();
-								// 使用 $set 更新 list 数组
-								that.$set(that, 'list', that.list);
+					            } 
+								 else if (res.tapIndex == 1){
+					          that.list = that.list.filter(event => {
+					              
+					              if (event.title === item.title ) {
+					                  return false; // 过滤掉晚于选定时间的同名事件
+					              }
+					              return true; // 保留其他事件
+					          });
+							  that.$set(that, 'list', that.list);
+								that.listAfterSort = that.listAfterSort.filter(event => {
+								    
+								    if (event.title === item.title ) {
+								        return false; // 过滤掉晚于选定时间的同名事件
+								    }
+								    return true; // 保留其他事件
+								});
+																
 								that.$set(that, 'listAfterSort', that.listAfterSort);
-								}
+								
 								that.saveList();
 								 }
 									
+								 else if (res.tapIndex == 2){
+								const selectedDate = new Date(item.date);
+								
+								// 保留在选定时间之前的事件，同时删除具有相同名称且晚于选定时间的事件
+								that.listAfterSort = that.listAfterSort.filter(event => {
+								    const eventDate = new Date(event.date);
+								    if (event.title === item.title && eventDate >= selectedDate) {
+								        return false; // 过滤掉晚于选定时间的同名事件
+								    }
+								    return true; // 保留其他事件
+								});
+								
+								// 重新设置 list 数组
+								that.$set(that, 'listAfterSort', that.listAfterSort);
+								
+								// 保存更改
+								that.saveList();
+									
 					        
 					    }
-					});
+					}
 					
-				}
+				});
+				}	
 			},
 			Allday(){
 				this.allday_flag=!this.allday_flag
@@ -986,10 +992,23 @@
 				}
 				console.log(obj);
 				this.list.unshift(obj);
-				this.listAfterSort = this.sort_list();
+				if(obj.cycles.length===0){
+				this.listAfterSort.unshift(obj);
+				this.listAfterSort=this.sort_listAfterSort();
+				//this.listAfterSort = this.add_list();
+				
 				console.log(this.listAfterSort);
 				this.saveList()
-
+                 }
+				 if(!obj.cycles.length===0){
+				
+				 this.listAfterSort=this.sort_list();
+				
+				 
+				 console.log(this.listAfterSort);
+				 this.saveList()
+				  }
+				 
 				this.list1[0].selected = false;
 				this.list1[1].selected = false;
 				this.list1[2].selected = false;
