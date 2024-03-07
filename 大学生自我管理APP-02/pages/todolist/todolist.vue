@@ -436,13 +436,14 @@
 					this.listAfterSort.splice(eventIndex,1);
 				}
 				this.listAfterSort=this.newday_list();
+				//this.listAfterSort=this.sort_list();
 				this.listAfterSort.unshift(obj);
-				
 				this.listAfterSort=this.sort_listAfterSort();
+				
 				
 			}
 			
-			that.$set(that, 'listAfterSort', that.listAfterSort);
+			this.$set(this, 'listAfterSort', this.listAfterSort);
 			
 		},
 		onReady() {
@@ -677,8 +678,11 @@
 									flag_day: false,
 									flag_year: false,
 							};
+							
+						
 							if(!list_sort.includes(obj)){
 								list_sort.push(obj);
+								
 							}
 						}
 						
@@ -738,18 +742,19 @@
 			},
 			newday_list()
 			{
-				
 				var that=this;
-				var today = new Date(); // 获取当前日期时间
-			    let i = new Date().getTime() + 14*86400000 - 1000;//'今天'往后两周
-				var i_year = new Date(i).getFullYear();
-				var i_month = new Date(i).getMonth() + 1;
-				var i_day = new Date(i).getDate();
-				var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
-				var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
+			    let k = new Date().getTime() + 14*86400000 - 1000;//'今天'往后两周
+				let i = new Date().setHours(0,0,0,0);
+				
+				 for( i ; i <= k; i += 86400000){//一天的时间戳为86400秒
+				 var i_year = new Date(i).getFullYear();
+				 var i_month = new Date(i).getMonth() + 1;
+				 var i_day = new Date(i).getDate();
+				 var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
+				 var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
 				  // 遍历周期事件列表
 				 that.list.forEach(v=>{
-				  	if(v.cycles.length!=0&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
+				  	if(v.cycles.includes(i_weekday)||v.cycles.includes("每日")){
 				 
 				   let obj={
 				   		year: i_year,
@@ -767,20 +772,17 @@
 				   		flag_day: false,
 				   		flag_year: false,
 				   };
-				  // 使用 some 方法检查是否已经存在相同的事件对象
-				              const exists = that.listAfterSort.some(event => {
-				                  return event.title === obj.title && event.date === obj.date;
-				              });
-				  
-				              // 如果不存在相同的事件对象，则添加到 listAfterSort 数组中
-				              if (!exists) {
-				                  that.listAfterSort.push(obj);
-				              }
-				          }
-				
+				 const eventIndex = that.listAfterSort.findIndex(event => event.title === obj.title&&event.date === obj.date);
+				 if (eventIndex == -1) {
+				 
+				 that.listAfterSort.push(obj);
+	             }
+
 				    
-				  
-				});
+				  }
+				})
+				}
+				
 				return that.listAfterSort;	
 				
 			},
