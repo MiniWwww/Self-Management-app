@@ -338,6 +338,7 @@
 						flag_year: false,
 					}
 				],
+				
 				//表单输入
 				InputValue: '',
 				remark: '',
@@ -434,12 +435,14 @@
 				if (eventIndex !== -1) {
 					this.listAfterSort.splice(eventIndex,1);
 				}
+				this.listAfterSort=this.newday_list();
 				this.listAfterSort.unshift(obj);
+				
 				this.listAfterSort=this.sort_listAfterSort();
 				
 			}
 			
-			
+			that.$set(that, 'listAfterSort', that.listAfterSort);
 			
 		},
 		onReady() {
@@ -574,6 +577,7 @@
 					key: 'todolist_sorted',
 					data: this.listAfterSort
 				})
+				
 			},
 			getNowTime(){
 				var that = this;
@@ -607,11 +611,13 @@
 					console.log("listAfterSort",res);
 					this.listAfterSort = res
 				}
+				
 			},
 			
 			
             sort_listAfterSort(){
-				let list_sort=[];	//排序数组
+				
+				
 				// 对新添加的项目按日期进行排序
 				this.listAfterSort.sort((a, b) => {
 				    return (new Date(a.date)).getTime() - (new Date(b.date)).getTime();
@@ -645,13 +651,14 @@
 				let i = new Date(date1).setHours(0,0,0,0);
 				let j = new Date(date2).setHours(0,0,0,0) + 86400000 - 1000;//最后一个截止日期那天的23：59：59
 				let k = new Date().getTime() + 14*86400000 - 1000;//'今天'往后两周
-				let last = j>k?j:k;
+				let last =k;
 				for( i ; i <= last; i += 86400000){//一天的时间戳为86400秒
 					var i_year = new Date(i).getFullYear();
 					var i_month = new Date(i).getMonth() + 1;
 					var i_day = new Date(i).getDate();
 					var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
 					var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
+					
 					list_cycles.forEach(v=>{
 						if(new Date(v.date).setHours(0, 0, 0, 0)<=i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
 							let obj={
@@ -680,10 +687,104 @@
 				
 				list_sort.sort((a,b)=>{
 					return (new Date(a.date)).getTime()-(new Date(b.date)).getTime()
-				})
+				});
 				
 				return list_sort;
 			},
+			add_list(){
+				var that=this;
+				var v= that.list[0];
+			let i = new Date(v.date).setHours(0,0,0,0);
+			
+			let k = new Date().getTime() + 14*86400000 - 1000;//'今天'往后两周
+			let last =k;
+			for( i ; i <= last; i += 86400000){//一天的时间戳为86400秒
+				var i_year = new Date(i).getFullYear();
+				var i_month = new Date(i).getMonth() + 1;
+				var i_day = new Date(i).getDate();
+				var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
+				var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
+				
+					if(new Date(v.date).setHours(0, 0, 0, 0)<=i&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
+						let obj={
+								year: i_year,
+								//date:'01-27',
+								title: v.title,
+								mark: v.mark,
+								select: v.select,
+								color: v.color,
+								cycletime: v.cycletime,
+								cycles: v.cycles,
+								time: v.time,
+								day: i_date,
+								date: i_year + '-' + (i_month < 10 ? '0' + i_month : i_month) + '-' + (i_day < 10 ? '0' + i_day : i_day) + ' ' + v.time,
+								weekday: i_weekday,
+								flag_day: false,
+								flag_year: false,
+						};
+						if(!that.listAfterSort.includes(obj)){
+							that.listAfterSort.push(obj);
+							
+						}
+						
+					}
+					
+				
+			}	
+				
+			
+			return that.listAfterSort;	
+				
+			},
+			newday_list()
+			{
+				
+				var that=this;
+				var today = new Date(); // 获取当前日期时间
+			    let i = new Date().getTime() + 14*86400000 - 1000;//'今天'往后两周
+				var i_year = new Date(i).getFullYear();
+				var i_month = new Date(i).getMonth() + 1;
+				var i_day = new Date(i).getDate();
+				var i_date = (i_month < 10 ? '0' + i_month : i_month) + '月' + (i_day < 10 ? '0' + i_day : i_day) + '日';
+				var i_weekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date(i).getDay()];
+				  // 遍历周期事件列表
+				 that.list.forEach(v=>{
+				  	if(v.cycles.length!=0&&(v.cycles.includes(i_weekday)||v.cycles.includes("每日"))){
+				 
+				   let obj={
+				   		year: i_year,
+				   		//date:'01-27',
+				   		title: v.title,
+				   		mark: v.mark,
+				   		select: false,
+				   		color: v.color,
+				   		cycletime: v.cycletime,
+				   		cycles: v.cycles,
+				   		time: v.time,
+				   		day: i_date,
+				   		date: i_year + '-' + (i_month < 10 ? '0' + i_month : i_month) + '-' + (i_day < 10 ? '0' + i_day : i_day) + ' ' + v.time,
+				   		weekday: i_weekday,
+				   		flag_day: false,
+				   		flag_year: false,
+				   };
+				  // 使用 some 方法检查是否已经存在相同的事件对象
+				              const exists = that.listAfterSort.some(event => {
+				                  return event.title === obj.title && event.date === obj.date;
+				              });
+				  
+				              // 如果不存在相同的事件对象，则添加到 listAfterSort 数组中
+				              if (!exists) {
+				                  that.listAfterSort.push(obj);
+				              }
+				          }
+				
+				    
+				  
+				});
+				return that.listAfterSort;	
+				
+			},
+			
 			judge_year_day(list){
 				//判断每一项的年份、日期是否和前一项一样
 				list[0].flag_day=true;
@@ -904,7 +1005,14 @@
 								
 								// 重新设置 list 数组
 								that.$set(that, 'listAfterSort', that.listAfterSort);
-								
+								that.list = that.list.filter(event => {
+								    
+								    if (event.title === item.title ) {
+								        return false; // 过滤掉晚于选定时间的同名事件
+								    }
+								    return true; // 保留其他事件
+								});
+								that.$set(that, 'list', that.list);
 								// 保存更改
 								that.saveList();
 									
@@ -993,19 +1101,23 @@
 				console.log(obj);
 				this.list.unshift(obj);
 				if(obj.cycles.length===0){
+				this.list.unshift(obj);	
 				this.listAfterSort.unshift(obj);
 				this.listAfterSort=this.sort_listAfterSort();
-				//this.listAfterSort = this.add_list();
+				
 				
 				console.log(this.listAfterSort);
 				this.saveList()
                  }
-				 if(!obj.cycles.length===0){
+				if(obj.cycles.length!=0){
 				
-				 this.listAfterSort=this.sort_list();
+				this.list.unshift(obj);
+				
+				this.listAfterSort=this.add_list();
+				this.listAfterSort=this.sort_listAfterSort();
 				
 				 
-				 console.log(this.listAfterSort);
+				
 				 this.saveList()
 				  }
 				 
@@ -1018,9 +1130,10 @@
 				this.list1[6].selected = false;
 				this.creat();
 				this.clear();
-				
-				this.$set(this, 'listAfterSort', this.listAfterSort);
 				this.$set(this, 'list', this.list);
+				this.$set(this, 'listAfterSort', this.listAfterSort);
+				
+				
 			},
 			//清空表单内容
 			clear(){
