@@ -62,10 +62,14 @@
 				sizeTypeIndex: 2,
 				sizeType: ['压缩', '原图', '压缩或原图'],
 				countIndex: 8,
-				count: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+				count: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+				
+				my_saved_Pictures: []  //保存uni.saveFile保存到本地后的返回参数（即图片本地存储路径列表）
 			}
 		},
 		onUnload() {
+			this.my_saved_Pictures = [];
+			
 			this.imageList = [],
 			this.sourceTypeIndex = 2,
 			this.sourceType = ['拍照', '相册', '拍照或相册'],
@@ -85,18 +89,69 @@
 				}
 				
 				uni.showLoading({title:'发布中'});
+
+				/*
+				//临时：查看一下保存到本地的都有什么了
+				uni.getSavedFileList({
+					success:function(res){
+						console.log("看一下目前本地存储的东西有什么：",res.fileList);
+					},
+					fail() {
+						console.log("查看目前本地存储失败！");
+					}
+				});*/
+				
+				console.log("------现在进入publish过程------");
+				console.log("现在的图片列表长度为：" + this.imageList.length);
+				console.log("其内容为：", this.imageList);
 				
 				var images = [];
-				for(var i = 0,len = this.imageList.length; i < len; i++){
+				for(var i = 0,len = this.imageList.length; i < len; i++){  //把imageList内容循环放入images数组
 					//var image_obj = {name:'image-'+i,url:this.imageList[i]};
 					//images.push(image_obj);
 					images.push(this.imageList[i]);
 				}
 				console.log("发布的图片集合",images);
 				
-				this.send(this.input_content,images);
 				
-				//使用uni.uploadFile传输数据到服务器？-----------------------------------------------待考虑
+				
+				//var that = this;
+				
+				//下面准备进行图片路径的本地存储？------------------------------------------------？？？？？
+				for(var j = 0,len = images.length; j < len; j++) {
+					var my_tempFilePath = images[j];
+					console.log("当前j为：" + j + ",当前my_tempFilePath为：" + my_tempFilePath);
+					
+					await this.my_save(my_tempFilePath, j, this.my_saved_Pictures);
+					/*
+					uni.saveFile({
+					     tempFilePath: my_tempFilePath,
+					     success: function (res) {
+							 console.log("发布页图片" + j + "永久保存本地，路径为：" + res.savedFilePath);
+							 
+							 that.my_saved_Pictures[j] = res.savedFilePath;  //把这个保存到本地的图片路径放入数组my_saved_Pictures
+					     }
+					   });
+					*/
+				}
+				//uni.setStorageSync('my_saved_Pictures',that.my_saved_Pictures);  //同步保存背景路径，以便于新发布数据传到父页面后，据此更换其中的图片路径
+				//console.log("看一下保存到本地的发布页图片路径：" + uni.getStorageSync('my_saved_Pictures'));  //看一下…
+				console.log("for循环结束，看一下my_saved_Pictures数组内容：",this.my_saved_Pictures);
+				
+				var that = this;
+				setTimeout( function() {
+					console.log("------下面准备页面间传递数据------");
+					that.send(that.input_content,images);
+				}, 500);
+				
+				
+				
+				/*
+				console.log("------下面准备页面间传递数据------");
+				this.send(this.input_content,images);
+				*/
+				
+				//使用uni.uploadFile传输数据到服务器？-----------------------------------------------不考虑了
 				/*
 				uni.uploadFile({
 					url: 'moment/moments', //上传到的服务器接口地址……
@@ -129,7 +184,34 @@
 				*/
 			},
 			
+			
+			my_save(temp,index,array) {
+				uni.saveFile({
+				     tempFilePath: temp,
+				     success: function (res) {
+						 console.log("发布页图片" + index + "永久保存本地，路径为：" + res.savedFilePath);
+						 
+						 var one_saved = res.savedFilePath;
+						 array.push(one_saved);
+						 console.log("******看一下my_saved_Pictures数组：",array);
+						 //var one_saved = res.savedFilePath;
+						 //var that = this;
+						 //that.my_saved_Pictures.push(one_saved);  //把这个保存到本地的图片路径放入数组my_saved_Pictures
+						 //console.log("******看一下my_saved_Pictures数组：",that.my_saved_Pictures);
+				     },
+					 fail(err) {
+					 	console.log("！！！！！！uni.saveFile失败！！！！！！");
+					 }
+				   });
+			},
+			
+			
+			
 			send(text,images) { //向self-record页面传递数据
+				//-----------------------------------------------------------------!!!!!
+				console.log("看一下my_saved_Pictures数组有没有存好本地存储路径：",this.my_saved_Pictures);//好像可以了！！！
+				let savedImg = this.my_saved_Pictures;//下面把消息内容的图片路径换成本地存储的路径再传送数据
+				
 				let avator = uni.getStorageSync('avator')
 				let userInfo = uni.getStorageSync('userInfo')
 				let usr_data = {
@@ -138,7 +220,8 @@
 					"header_image": avator,
 					"content": {
 						"text": text,
-						"images": images
+						//"images": images
+						"images": savedImg
 					},
 					"islike": 0,
 					"like": [{
@@ -174,22 +257,73 @@
 					}
 				}
 				uni.chooseImage({
-					sourceType: sourceType[this.sourceTypeIndex],
-					sizeType: sizeType[this.sizeTypeIndex],
+					//sourceType: sourceType[this.sourceTypeIndex],
+					//sizeType: sizeType[this.sizeTypeIndex],
+					sourceType:["album", "camera"],
+					sizeType:["compressed"],
 					count: this.imageList.length + this.count[this.countIndex] > 9 ? 9 - this.imageList.length : this.count[this.countIndex],
 					success: (res) => {
-
+						
+						//console.log("发布页，选择的图片数量：",this.imageList.length);//错，此时imageList.length是0，所以下面的循环也不会执行
+						console.log("尚未保存本地，查看选择图片的路径：",res);
+						
+						//this.imageList = res.tempFilePaths;
+						//var my_TempFilePaths = res.tempFilePaths;
+						
+						/*
+						//接下来对选中的每张图片的路径进行保存到本地------------------------------------------？？？
+						var my_TempFilePaths = [];
+						var i = 0;
+						for( ; i<this.imageList.length ; i++ ) {
+							console.log("进入循环，i=" + i);
+							this.imageList[i] = res.tempFilePaths[i];
+							my_TempFilePaths[i] = res.tempFilePaths[i];
+							
+							uni.saveFile({
+								tempFilePath: my_TempFilePaths[i],
+								success: function(res) {
+									console.log("------发布页面所选图片" + i + "已永久保存到本地，路径为：" + res.savedFilePath)
+									
+									//var my_publish_savedFilePath = res.savedFilePath;
+									//选择图片同时保存图片路径到本地 错！ 下面这句如果要的话，待改
+									//uni.setStorageSync("my_publish_savedFilePath",my_publish_savedFilePath);
+								},
+								fail: function(res) {
+									console.log("发布页面图片保存到本地失败！");
+								}
+							});
+						}
+						console.log("啦啦啦------------定位-------------啦啦啦")
+						*/
+						
+						
+						
+					
 						// #ifdef APP-PLUS
 						//提交压缩,因为使用了H5+ Api,所以自定义压缩目前仅支持APP平台
 						var compressd = cp_images=> {
 							this.imageList = this.imageList.concat(cp_images)//压缩后的图片路径
 						}
-						image.compress(res.tempFilePaths,compressd);
+						image.compress(res.tempFilePaths,compressd);//引入了common/image.js，称为image，调用其中的compress函数
+						console.log("原写法，经过压缩，图片路径为：" + this.imageList);//这里在控制台输出的是空的……
+						console.log("原写法，经过压缩，uni.chooseImage返回参数为：" + res.tempFilePaths);//这个有输出
 						// #endif
 						
 						// #ifndef APP-PLUS
-						this.imageList = this.imageList.concat(res.tempFilePaths)//非APP平台不支持自定义压缩,暂时没有处理,可通过uni-app上传组件的sizeType属性压缩
+						this.imageList = this.imageList.concat(res.tempFilePaths);//非APP平台不支持自定义压缩,暂时没有处理,可通过uni-app上传组件的sizeType属性压缩
+						console.log("原写法，没有压缩，图片路径为：" + this.imageList);
+						console.log("原写法，没有压缩，uni.chooseImage返回参数为：" + res.tempFilePaths);
 						// #endif
+						
+						
+						var res_len = res.tempFilePaths.length;
+						console.log("uni.chooseImage返回参数的长度：" + res_len);
+						var list_len = this.imageList.length;
+						console.log("此时imageList长度：" + list_len);
+						
+						
+						
+						
 					}
 				})
 			},
