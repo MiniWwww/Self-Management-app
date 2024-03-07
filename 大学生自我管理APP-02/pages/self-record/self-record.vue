@@ -233,7 +233,7 @@ import { isArray } from 'util';
 							"comment": [{
 									"uid": 1,
 									"username": '系统',
-									"content": "提示：想要删除一条记录，可以点击该记录头像处哦~"
+									"content": "提示：想要删除顶部的背景图片，可以点一下它哦~"
 								},
 								{
 									"uid": 2,
@@ -370,7 +370,8 @@ import { isArray } from 'util';
 			if (this.publish_msg.length) {
 				this.posts.unshift(this.publish_msg[0]);
 				uni.setStorageSync('self-record-posts', this.posts);
-				console.log('发布新记录，保存到本地存储');
+				let record = uni.getStorageSync('self-record-posts');
+				console.log('发布新记录，保存到本地存储：',record);
 				this.publish_msg = [];
 			}
 
@@ -412,6 +413,7 @@ import { isArray } from 'util';
 			var that = this;
 			uni.setStorageSync('self-record-posts', that.posts);
 			uni.setStorageSync('last-system-msg-date', that.last_sys_date);
+			console.log(that.posts)
 			console.log('离开页面时，保存数据到本地存储');
 
 			uni.$off('publish'); //移除监听事件，避免重复监听
@@ -456,6 +458,7 @@ import { isArray } from 'util';
 		
 		created() {
 			this.bg = uni.getStorageSync('bg')
+			console.log("获取顶部背景图",this.bg)
 			let record = uni.getStorageSync('self-record-posts');
 			this.filteredPosts = record
 		},
@@ -587,7 +590,7 @@ import { isArray } from 'util';
 		
 		    this.filteredPosts = items;
 		},
-
+/*
 // calendar() { 
 //     const time = this.calendar_data;
 //     const record = uni.getStorageSync('self-record-posts');
@@ -642,11 +645,11 @@ import { isArray } from 'util';
 // 	 	}
 // 	 })
 //  }
- 
 
 
 // 	this.filteredPosts = items
 // },
+*/
 
 
 
@@ -711,6 +714,12 @@ import { isArray } from 'util';
 				uni.$on('publish', (data) => {
 					this.publish_msg = [];
 					this.publish_msg.unshift(data);
+					
+					//let my_saved_Pictures = uni.getStorageSync('my_saved_Pictures');  //获取发布页缓存的保存到本地的图片路径列表
+					//this.publish_msg.content.images = [].concat(my_saved_Pictures);
+					
+					//for(var n=0; n<9; n++)
+					
 					console.log("监听触发，将用户新发布的记录暂存到publish_msg", this.publish_msg);
 				})
 			},
@@ -847,7 +856,7 @@ import { isArray } from 'util';
 				console.log('更新点赞信息，保存到本地存储');
 			},
 
-			//点击头像删除一条记录
+			//删除一条记录
 			bindClick(index) {
 				const that = this
 				let posts = this.posts;
