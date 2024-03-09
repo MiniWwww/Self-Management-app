@@ -86,6 +86,7 @@
 				item_width: 0,
 				week:["周日","周一","周二","周三","周四","周五","周六"],
 				change: false,		//是否到新的一天
+				update_flag: false,	//是否更新新的一天的列表
 				activePopUp: false,
 				tetxShow: false,//控制打开按钮的动画
 				today:'',
@@ -172,16 +173,10 @@
 			ListData(){
 				var that=this;
 				let list=[];
-				that.getNowTime();
 				//console.log("change:",this.change);
 				that.activePopUp=false;
 				that.list.forEach(v=>{
 					let flag=0;
-					
-					if(that.change){
-						v.finish_times=0;
-						v.finish=false;
-					}
 					if(v.cycle=='每天'||v.period_free){
 						flag=1;
 					}
@@ -209,7 +204,6 @@
 					console.log(that.now_list);
 					return that.list;
 				}
-				
 			}
 		},
 		onBackPress() {
@@ -219,8 +213,7 @@
 			}
 			return false
 		},
-		created() {
-			console.log("这是sport页面的created函数");
+		mounted() {
 			var that=this;
 			uni.getStorage({
 				key:'sportList',
@@ -244,7 +237,25 @@
 					that.finish_list=res.data.finishList;
 				}
 			})
-			
+			that.getNowTime();
+			setTimeout(()=>{
+				if(that.change){
+					that.list.forEach(v=>{
+						v.finish_times=0;
+						v.finish=false;
+					})
+					uni.setStorage({
+						key:'sportList',
+						data:that.list,
+						success() {
+							console.log('运动数组存储成功！');
+						}
+					});
+				}
+			},300)
+		},
+		created() {
+			//console.log("这是sport页面的created函数");
 			// let finishList=uni.getStorageSync('plus_finishTime').finishList
 			// let list=uni.getStorageSync('plus_finishTime').list
 			// if(List){

@@ -53,9 +53,9 @@
 		}, {
 			"path": "pages/self-manage/sport/sport_analyse",
 			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "运动轨迹",
+				"enablePullDownRefresh": false
+				/* "navigationStyle": "custom" */
 			}
 
 		}, {
