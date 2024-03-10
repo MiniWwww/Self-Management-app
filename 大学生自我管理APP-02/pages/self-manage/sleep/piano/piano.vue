@@ -57,29 +57,29 @@
 				],
 				music_list:[
 					{
-						img:'../../../../static/night.png',
-						title:'Good Night Lullaby',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUUkyN2xNbEJnam5PVXlKP2U9YzNBNGFW.mp3',
+						img:'../../../../static/偷月计划.jpg',
+						title:'偷月计划',
+						path:'/static/music/piano/偷月计划.mp3',
 					},
 					{
 						img:'../../../../static/花.png',
 						title:'梦中的婚礼',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUVExcTlwR2g2VmNZWkM3P2U9Z01SZTNu.mp3',
+						path:'/static/music/piano/梦中的婚礼.mp3',
 					},
 					{
 						img:'../../../../static/钢琴.png',
 						title:'卡农',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUWJvdFdpS280YjR2UHdoP2U9Vk81VE1T.mp3',
+						path:'/static/music/piano/卡农.mp3',
 					},
 					{
-						img:'../../../../static/寂静.png',
-						title:'寂静之音',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUWZuLUFTRHl0X200Q2RVP2U9NDdpdXFw.mp3'
+						img:'../../../../static/♫.jpg',
+						title:'♫',
+						path:'/static/music/piano/♫.mp3'
 					},
 					{
 						img:'../../../../static/夏天.png',
 						title:'菊次郎的夏天',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUVVKVmFZWndxRDBYdXNEP2U9QzhjNUpl.mp3',
+						path:'/static/music/piano/菊次郎的夏天.mp3',
 					},
 				]
 			}

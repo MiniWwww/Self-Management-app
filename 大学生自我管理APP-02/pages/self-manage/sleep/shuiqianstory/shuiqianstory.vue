@@ -57,29 +57,122 @@
 				],
 				music_list:[
 					{
-						img:'../../../../static/小王子0.png',
+						img:'../../../../static/小王子/小王子0.png',
 						title:'小王子·序',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUWh2a2pDNi1BYlUxWG85P2U9NmNqV0NO.mp3',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子序章.mp3',
 					},
 					{
-						img:'../../../../static/小王子1.png',
+						img:'../../../../static/小王子/小王子1.png',
 						title:'小王子1',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUWxuV0UyS0R1VEI1ZXNLP2U9TU5mb3lk.mp3',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子01.mp3',
 					},
 					{
-						img:'../../../../static/小王子2.png',
+						img:'../../../../static/小王子/小王子2.png',
 						title:'小王子2',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUW9vUExhbGdnN05JTG9NP2U9MU5Jc2M5.mp3',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子02.mp3',
 					},
 					{
-						img:'../../../../static/小王子3.png',
+						img:'../../../../static/小王子/小王子3.png',
 						title:'小王子3',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUXVrZnFnVHlUX3ZEcTM0P2U9dVM1ZG1l.mp3'
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子03.mp3'
 					},
 					{
-						img:'../../../../static/小王子4.png',
+						img:'../../../../static/小王子/小王子4.png',
 						title:'小王子4',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUXhLdW1ZQW1kbnVuT09wP2U9Q1dLOVJi.mp3',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子04.mp3',
+					},
+					{
+						img:'../../../../static/小王子/小王子5.png',
+						title:'小王子5',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子05.mp3',
+					},{
+						img:'../../../../static/小王子/小王子6.jpg',
+						title:'小王子6',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子06.mp3',
+					},{
+						img:'../../../../static/小王子/小王子7.jpg',
+						title:'小王子7',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子07.mp3',
+					},{
+						img:'../../../../static/小王子/小王子8.jpg',
+						title:'小王子8',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子08.mp3',
+					},{
+						img:'../../../../static/小王子/小王子9.jpg',
+						title:'小王子9',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子09.mp3',
+					},{
+						img:'../../../../static/小王子/小王子10.jpg',
+						title:'小王子10',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子10.mp3',
+					},{
+						img:'../../../../static/小王子/小王子11.jpg',
+						title:'小王子11',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子11.mp3',
+					},{
+						img:'../../../../static/小王子/小王子12.jpg',
+						title:'小王子12',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子12.mp3',
+					},{
+						img:'../../../../static/小王子/小王子13.jpg',
+						title:'小王子13',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子13.mp3',
+					},{
+						img:'../../../../static/小王子/小王子14.jpg',
+						title:'小王子14',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子14.mp3',
+					},{
+						img:'../../../../static/小王子/小王子15.jpg',
+						title:'小王子15',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子15.mp3',
+					},{
+						img:'../../../../static/小王子/小王子16.jpg',
+						title:'小王子16',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子16.mp3',
+					},{
+						img:'../../../../static/小王子/小王子17.png',
+						title:'小王子17',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子17.mp3',
+					},{
+						img:'../../../../static/小王子/小王子18.jpg',
+						title:'小王子18',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子18.mp3',
+					},{
+						img:'../../../../static/小王子/小王子19.jpg',
+						title:'小王子19',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子19.mp3',
+					},{
+						img:'../../../../static/小王子/小王子20.jpg',
+						title:'小王子20',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子20.mp3',
+					},{
+						img:'../../../../static/小王子/小王子21.jpg',
+						title:'小王子21',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子21.mp3',
+					},{
+						img:'../../../../static/小王子/小王子22.jpg',
+						title:'小王子22',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子22.mp3',
+					},{
+						img:'../../../../static/小王子/小王子23.jpg',
+						title:'小王子23',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子23.mp3',
+					},{
+						img:'../../../../static/小王子/小王子24.jpg',
+						title:'小王子24',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子24.mp3',
+					},{
+						img:'../../../../static/小王子/小王子25.jpg',
+						title:'小王子25',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子25.mp3',
+					},{
+						img:'../../../../static/小王子/小王子26.jpg',
+						title:'小王子26',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子26.mp3',
+					},{
+						img:'../../../../static/小王子/小王子27.jpg',
+						title:'小王子27',
+						path:'/static/music/shuiqiangushi/xiaowangzi/小王子27.mp3',
 					},
 				]
 			}

@@ -57,29 +57,29 @@
 				],
 				music_list:[
 					{
-						img:'../../../../static/冥想.png',
-						title:'冥想',		//西藏颂钵冥想音效 许可:CC-BY-NC 作者:the_very_Real_Horst 来源:耳聆网 https://www.ear0.com/sound/16486
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUkhpclh1c1U2WElray1kP2U9NjNQNHJZ.mp3',
+						img:'../../../../static/Aftermath.jpg',
+						title:'Aftermath',
+						path:'/static/music/other/Aftermath.mp3',
 					},
 					{
 						img:'../../../../static/数星星.png',
 						title:'数星星',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUTNVUklub040eXlqX2hDP2U9a2xrSGlU.mp3',
+						path:'/static/music/other/数星星.mp3',
 					},
 					{
 						img:'../../../../static/Suicide Is Painless.jpg',
 						title:'Suicide Is Painless',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUTVSNkl5SnRwU1hQa1B6P2U9QkJGZ1pE.mp3',
+						path:'/static/music/other/Suicide Is Painless.mp3',
 					},
 					{
 						img:'../../../../static/When the Sky Opens.jpg',
 						title:'When the Sky Opens',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUV9xZ2MtUjFPLU5qR1djP2U9UERKTWRT.mp3'
+						path:'/static/music/other/When the Sky Opens.mp3'
 					},
 					{
 						img:'../../../../static/Freehand.jpg',
 						title:'Freehand',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUkNUTFJxSUxSQjFjSG5uP2U9aDFRaWhl.mp3',
+						path:'/static/music/other/Freehand.mp3',
 					},
 				]
 			}

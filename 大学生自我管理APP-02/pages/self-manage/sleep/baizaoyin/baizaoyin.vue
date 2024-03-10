@@ -58,29 +58,29 @@
 				],
 				music_list:[
 					{
-						img:'../../../../static/海.png',
+						img:'../../../../static/海浪与风.jpg',
 						title:'海浪与风',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJmaU5vS3VrRDNiU2JLemc_ZT1qd2ViRlI.mp3',
+						path:'/static/music/baizaoyin/海浪与风.mp3',
 					},
 					{
-						img:'../../../../static/雨.png',
-						title:'细雨沙沙',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJmRXNneEdROWo4ak5DSFE_ZT1xeElyeXk.mp3',
+						img:'../../../../static/雨声.jpg',
+						title:'雨声',
+						path:'/static/music/baizaoyin/雨声.mp3',
 					},
 					{
-						img:'../../../../static/森林.png',
-						title:'鸟儿与林',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUUJvajNlY1hfLW96OG9nP2U9d1NlWWdi.mp3',
+						img:'../../../../static/星夜.png',
+						title:'星夜',
+						path:'/static/music/baizaoyin/星夜.mp3',
 					},
 					{
-						img:'../../../../static/图书馆.png',
-						title:'图书馆',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJmN3owSWFaM0s3aGlkX0E_ZT1kZFViNzg.mp3'
+						img:'../../../../static/午后翻书.jpeg',
+						title:'午后翻书',
+						path:'/static/music/baizaoyin/午后翻书.mp3'
 					},
 					{
-						img:'../../../../static/草丛.png',
-						title:'蛙虫和鸣',
-						path:'https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBa0pxUm1sZGhObmJnUUU1QjFFOVpHQi15X3plP2U9QnJuMHpS.mp3',
+						img:'../../../../static/虫鸣.png',
+						title:'虫鸣',
+						path:'/static/music/baizaoyin/虫鸣.mp3',
 					},
 				]
 			}

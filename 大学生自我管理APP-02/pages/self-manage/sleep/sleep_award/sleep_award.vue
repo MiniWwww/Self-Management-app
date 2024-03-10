@@ -12,12 +12,12 @@
 				<view class="header_right-item" :class="{ 'active-tab': tabIndex == index }" @click="tabClick(item, index)">{{ item }}</view>
 			</view>
 		</view>
-		<view style="height: 50px;"></view>
-		<view v-for="(item, index) in awardList" :key="index" style="z-index: 0;" v-if="all||tabIndex==1"><!--睡&起-->
+		<view style="height: 70px;"></view>
+		<view v-for="(item, index) in awardList" :key="index" class="award_outside" v-if="all||tabIndex==1"><!--睡&起-->
 			<view class="allAward_box" >	
 				
 				<view class="awardContent" style="background: #fff2e5;"><!--奖励内容（可修改-->
-					<image src="../../../static/小红花.png" v-if="item.times<=success_list.length" style="position: absolute; left: 35px; width: 35px; height: 35px; background-color: #fff2e5; " mode="aspectFit"></image>
+					<image src="../../../static/小红花.png" v-if="item.times<=success_list.length" class="doneimage" mode="aspectFit"></image>
 					<view style="margin-left: 7px;" @click="changeAward_content(1,index)">
 						{{item.content}}
 						<image src="../../../static/编辑.png" style="width: 15px; height: 15px; background-color: #fff2e5;" mode="aspectFit"></image>
@@ -30,7 +30,7 @@
 				
 				<view class="achieve_times_box">
 					<view class="achieve_times_item" @click="changeAward_times(1,index)"> <!--目标点赞数（可修改-->
-						<circle-progress-bar :pro="1" :border_back_color="'#cacaca'" :border_color="'#d9f5db'" style="width: 60px;height: 60px;z-index: 0;">
+						<circle-progress-bar :pro="1" :border_back_color="'#ebebeb'" :border_color="'#fff2e5'" style="width: 50px;height: 50px;z-index: 0;">
 							{{item.times}}
 						</circle-progress-bar>
 						<view style="margin-top: 5px;">
@@ -39,16 +39,16 @@
 						</view>
 					</view>
 					<view class="achieve_times_item"> <!--已获得点赞数-->
-						<circle-progress-bar :pro="success_list.length/item.times" :border_back_color="'#cacaca'" :border_color="'#d9f5db'" style="width: 60px;height: 60px;">
+						<circle-progress-bar :pro="success_list.length/item.times" :border_back_color="'#ebebeb'" :border_color="'#fff2e5'" style="width: 50px;height: 50px;">
 							{{success_list.length}}
 						</circle-progress-bar>
 						<view style="margin-top: 5px;">已获得</view>
 					</view>
 					<view class="achieve_times_item"> <!--据获得奖励还差。。。-->
-						<circle-progress-bar :pro="(item.times-success_list.length)/item.times" :border_back_color="'#cacaca'" :border_color="'#d9f5db'" style="width: 60px;height: 60px;">
-							{{item.times-success_list.length}}
+						<circle-progress-bar :pro="(item.times-success_list.length%item.times)/item.times" :border_back_color="'#ebebeb'" :border_color="'#fff2e5'" style="width: 50px;height: 50px;">
+							{{item.times-success_list.length%item.times}}
 						</circle-progress-bar>
-						<view style="margin-top: 5px;">差距</view>
+						<view style="margin-top: 5px;">与下次达成目标差距</view>
 					</view>
 				</view>
 				
@@ -58,11 +58,11 @@
 			</view>
 		</view>
 		
-		<view v-for="(item, index) in getup_awardList" :key="index" style="z-index: 0;" v-if="all||tabIndex==2" ><!--起-->
+		<view v-for="(item, index) in getup_awardList" :key="index" class="award_outside" v-if="all||tabIndex==2" ><!--起-->
 			<view class="allAward_box" >	
 				
 				<view class="awardContent" style="background: #f1ffef;"><!--奖励内容（可修改-->
-					<image src="../../../static/小红花.png" v-if="item.times<=getup_success_list.length" style="position: absolute; left: 35px; width: 35px; height: 35px; background-color: #f1ffef; " mode="aspectFit"></image>
+					<image src="../../../static/小红花.png" v-if="item.times<=getup_success_list.length" class="doneimage" mode="aspectFit"></image>
 					<view style="margin-left: 7px;" @click="changeAward_content(2,index)">
 						{{item.content}}
 						<image src="../../../static/编辑.png" style="width: 15px; height: 15px; background-color: #f1ffef;" mode="aspectFit"></image>
@@ -75,7 +75,7 @@
 				
 				<view class="achieve_times_box">
 					<view class="achieve_times_item" @click="changeAward_times(2,index)"> <!--目标点赞数（可修改-->
-						<circle-progress-bar :pro="1" :border_back_color="'#cacaca'" :border_color="'#e4f5f5'" style="width: 60px;height: 60px;z-index: 0;">
+						<circle-progress-bar :pro="1" :border_back_color="'#ebebeb'" :border_color="'#f1ffef'" style="width: 50px;height: 50px;z-index: 0;">
 							{{item.times}}
 						</circle-progress-bar>
 						<view style="margin-top: 5px;">
@@ -84,16 +84,16 @@
 						</view>
 					</view>
 					<view class="achieve_times_item"> <!--已获得点赞数-->
-						<circle-progress-bar :pro="getup_success_list.length/item.times" :border_back_color="'#cacaca'" :border_color="'#e4f5f5'" style="width: 60px;height: 60px;">
+						<circle-progress-bar :pro="getup_success_list.length/item.times" :border_back_color="'#ebebeb'" :border_color="'#f1ffef'" style="width: 50px;height: 50px;">
 							{{getup_success_list.length}}
 						</circle-progress-bar>
 						<view style="margin-top: 5px;">已获得</view>
 					</view>
 					<view class="achieve_times_item"> <!--据获得奖励还差。。。-->
-						<circle-progress-bar :pro="(item.times-getup_success_list.length)/item.times" :border_back_color="'#cacaca'" :border_color="'#e4f5f5'" style="width: 60px;height: 60px;">
-							{{item.times-getup_success_list.length}}
+						<circle-progress-bar :pro="(item.times-getup_success_list.length%item.times)/item.times" :border_back_color="'#ebebeb'" :border_color="'#f1ffef'" style="width: 50px;height: 50px;">
+							{{item.times-getup_success_list.length%item.times}}
 						</circle-progress-bar>
-						<view style="margin-top: 5px;">差距</view>
+						<view style="margin-top: 5px;">与下次达成目标差距</view>
 					</view>
 				</view>
 				
@@ -103,11 +103,11 @@
 			</view>
 		</view>
 		
-		<view v-for="(item, index) in sleep_awardList" :key="index" style="z-index: 0;" v-if="all||tabIndex==3" ><!--睡-->
+		<view v-for="(item, index) in sleep_awardList" :key="index" class="award_outside" v-if="all||tabIndex==3" ><!--睡-->
 			<view class="allAward_box" >	
 				
 				<view class="awardContent" style="background: #fff2f4;"><!--奖励内容（可修改-->
-					<image src="../../../static/小红花.png" v-if="item.times<=sleep_success_list.length" style="position: absolute; left: 35px; width: 35px; height: 35px; background-color: #fff2f4; " mode="aspectFit"></image>
+					<image src="../../../static/小红花.png" v-if="item.times<=sleep_success_list.length" class="doneimage" mode="aspectFit"></image>
 					<view style="margin-left: 7px;" @click="changeAward_content(3,index)">
 						{{item.content}}
 						<image src="../../../static/编辑.png" style="width: 15px; height: 15px; background-color: #fff2f4;" mode="aspectFit"></image>
@@ -120,7 +120,7 @@
 				
 				<view class="achieve_times_box">
 					<view class="achieve_times_item" @click="changeAward_times(3,index)"> <!--目标点赞数（可修改-->
-						<circle-progress-bar :pro="1" :border_back_color="'#cacaca'" :border_color="'#ecebf5'" style="width: 60px;height: 60px;z-index: 0;" @error="ShowError">
+						<circle-progress-bar :pro="1" :border_back_color="'#ebebeb'" :border_color="'#fff2f4'" style="width: 50px;height: 50px;z-index: 0;" @error="ShowError">
 							{{item.times}}
 						</circle-progress-bar>
 						<view style="margin-top: 5px;">
@@ -129,16 +129,16 @@
 						</view>
 					</view>
 					<view class="achieve_times_item"> <!--已获得点赞数-->
-						<circle-progress-bar :pro="sleep_success_list.length/item.times" :border_back_color="'#cacaca'" :border_color="'#ecebf5'" style="width: 60px;height: 60px;">
+						<circle-progress-bar :pro="sleep_success_list.length/item.times" :border_back_color="'#ebebeb'" :border_color="'#fff2f4'" style="width: 50px;height: 50px;">
 							{{sleep_success_list.length}}
 						</circle-progress-bar>
 						<view style="margin-top: 5px;">已获得</view>
 					</view>
 					<view class="achieve_times_item"> <!--据获得奖励还差。。。-->
-						<circle-progress-bar :pro="(item.times-sleep_success_list.length)/item.times" :border_back_color="'#cacaca'" :border_color="'#ecebf5'" style="width: 60px;height: 60px;">
-							{{item.times-sleep_success_list.length}}
+						<circle-progress-bar :pro="(item.times-sleep_success_list.length%item.times)/item.times" :border_back_color="'#ebebeb'" :border_color="'#fff2f4'" style="width: 50px;height: 50px;">
+							{{item.times-sleep_success_list.length%item.times}}
 						</circle-progress-bar>
-						<view style="margin-top: 5px;">差距</view>
+						<view style="margin-top: 5px;">与下次达成目标差距</view>
 					</view>
 				</view>
 				
@@ -150,13 +150,13 @@
 		<!--创建新项-->
 		<view class="create" @click="creat"><text class="iconhao" :class="{ 'create-active': tetxShow }"></text></view>
 		<!-- 输入框 -->
-		<view class="create-content" style="z-index: 1" v-if="activeInput" :class="{ 'create-show': tetxShow }">
+		<view class="create-content" style="z-index: 100" v-if="activeInput" :class="{ 'create-show': tetxShow }">
 			<view class="create-content-box">
 				<view class="content-input"><input type="text" v-model="content" placeholder="请输入奖励内容" /></view>
 			    <view class="numbers-input"><input type="number" v-model="numbers" placeholder="请输入目标赞数" /></view>
 			
 				<view>
-					<view style="margin-bottom: 7px;">请选择奖励所属目标：</view>
+					<view style="margin-bottom: 10px;">请选择奖励所属目标：</view>
 					
 					<view class="tab-box" v-for="(item, index) in optionList" :key="index">
 						<view :class="{ active: option == item }" @click="switchOption(item,index)">{{item}}</view>
@@ -235,7 +235,16 @@
 		},
 		onShow() {
 			var that=this;
-			
+			uni.getStorage({
+				key:'Award',
+				success(res) {
+					console.log('onShow前当前睡眠奖励列表',that.awardList)
+					console.log('onShow获取睡眠奖励列表成功', res.data);
+					that.awardList= res.data.awardList;
+					console.log('onShow后当前睡眠奖励列表',that.awardList)
+				}
+				
+			});
 			uni.getStorage({
 				key:'SleepAward',
 				success(res) {
@@ -258,7 +267,7 @@
 			});
 			
 			
-			uni.getStorage({
+			/* uni.getStorage({
 				key: 'getup_success_list',
 				success(res) {
 					console.log('onshow获取前getup_success_list：', that.getup_success_list);
@@ -277,7 +286,7 @@
 					that.sleep_success_list=res.data;
 					console.log('onshow获取后sleep_success_list：', that.sleep_success_list);
 				}
-			});
+			}); */
 		},
 		computed:{
 			ListData(){
@@ -330,6 +339,7 @@
 				switch(that.listIndex){
 					case 1:
 						that.awardList[that.clickidnex].content=e;
+						that.saveAwardList();
 						break;
 					case 2:
 						that.getup_awardList[that.clickidnex].content=e;
@@ -364,6 +374,7 @@
 				switch(that.listIndex){
 					case 1:
 						that.awardList[that.clickidnex].times=e;
+						that.saveAwardList();
 						break;
 					case 2:
 						that.getup_awardList[that.clickidnex].times=e;
@@ -390,6 +401,7 @@
 				if(that.listIndex==1){
 					list1=that.awardList;
 					that.awardList=that.deleteL(list1,item);
+					that.saveAwardList();
 				}
 				if(that.listIndex==2){
 					list1=that.getup_awardList;
@@ -442,6 +454,7 @@
 				}
 				if(that.optionIndex==0){
 					that.awardList.push(obj)
+					that.saveAwardList();
 				}
 				if(that.optionIndex==1){
 					that.getup_awardList.push(obj)
@@ -454,6 +467,18 @@
 				this.activeInput = false;
 				this.content='';
 				this.numbers=Number;
+			},
+			saveAwardList(){
+				var that=this;
+				uni.setStorage({ //存入Storage
+					key: 'Award', //自己取个名字
+					data: { //存的数据可以是很多条
+						awardList:that.awardList,
+					},
+					success() {
+						console.log('Award睡&起奖励储存成功');
+					}
+				});
 			},
 			saveSleepAwardList(){
 				var that=this;
@@ -516,7 +541,7 @@
 	}
 	.active-text {
 		font-size: 14px;
-		color: #3ebf69;
+		color: #009688;
 		padding-right: 10px;
 		font-weight: bold;
 	}
@@ -528,7 +553,7 @@
 		padding: 0 5px;
 	}
 	.active-tab {
-		color: #3ebf69;
+		color: #009688;
 		font-weight: bold;
 		font-size: 18px;
 	}
@@ -536,10 +561,19 @@
 		margin-right:3px;
 		font-size: 20px;
 	}
-	.allAward_box{
+	.award_outside{
 		z-index: 0;
-		width: 90%;
-		margin: 10px 15px 15px 15px;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	.allAward_box{
+		position: relative;
+		z-index: 0;
+		width: 80%;
+		margin: 15px 0;
 		border-radius: 10px;
 		height: 200px;
 		/* background: #fff2e5; */
@@ -552,9 +586,20 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 25px;
-		
+		font-size: 20px;
+		background: #fff2e5;
 		/* background: #f1fdf2; */
+	}
+	.doneimage {
+		position: absolute;
+		left: -20px;
+		top: -25px;
+		width: 75px;
+		height: 75px;
+		filter: alpha(opacity=80);
+		-moz-opacity: 0.85;
+		-khtml-opacity: 0.85;
+		opacity: 0.85;	
 	}
 	.achieve_times_box{
 		/* position: absolute; */
@@ -606,23 +651,23 @@
 		height: 40px;
 	}
 	.create {
-	  display: flex;
-	  align-items: center;
-	  justify-content: center;
-	  position: fixed;
-	  bottom: 50px;
-	  right: 20px;
-	  margin: 0 auto;
-	  width: 50px;
-	  height: 50px;
-	  line-height: 90rpx;
-	  text-align: center;
-	  border-radius: 50%;
-	  background-color: #b1b2f5;
-	  color: #fff;
-	  font-size: 70rpx;
-	  z-index: 999997;
-	  box-shadow: 0px 5px 10px rgba(177, 178, 245, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		bottom: 50px;
+		right: 20px;
+		margin: 0 auto;
+		width: 50px;
+		height: 50px;
+		line-height: 90rpx;
+		text-align: center;
+		border-radius: 50%;
+		background-color: #009688;
+		color: #fff;
+		font-size: 70rpx;
+		z-index: 999997;
+		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
 	}
 	.create-active {
 		padding-top: 100px;
@@ -649,58 +694,61 @@
 		transform: scale(1) translateY(0);
 	}
 	.create-content-box {
-	   width: 80%;
-	  padding: 40rpx;
+		width: 80%;
+		padding: 40rpx;
 	  
-	  border-radius: 20rpx;
-	  background: #ffffff;
-	  box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
-	  z-index: 2;
+		border-radius: 20rpx;
+		background: #ffffff;
+		box-shadow: -1px 1px 5px 2px rgba(0, 0, 0, 0.1), -1px 1px 1px 0 rgba(255, 255, 255) inset;
+		z-index: 2;
 	}
 	.content-input {
-	  margin-bottom: 40rpx;
+		margin-bottom: 50rpx;
 	}
 	.numbers-input {
-	  margin-bottom: 40rpx;
+		margin-bottom: 50rpx;
 	}
 	.tab-box {
-	  display: flex;
-	  margin-bottom: 20rpx;
+		display: flex;
+		margin-bottom: 20rpx;
 	}
 	.tab-box > view {
-	  flex: 1;
-	  text-align: center;
-	  color: #666;
-	  font-size: 28rpx;
-	  padding: 20rpx;
-	  border: 1rpx solid #ccc;
-	  border-radius: 10rpx;
-	  margin-right: 20rpx;
-	
+		flex: 1;
+		text-align: center;
+		color: #666;
+		font-size: 28rpx;
+		padding: 20rpx;
+		border: 1rpx solid #ccc;
+		border-radius: 10rpx;
+		margin: 5px 20px 5px 0;
 	  /* 默认情况下，设置为非选中状态 */
-	  background-color: #f3f3f3;
+		background-color: #f3f3f3;
 	}
 	
 	/* 选中状态 */
 	.tab-box > view.active {
-	  color: #fff;
-	  background-color: #b1b2f5;
-	  border-color: #b1b2f5;
+		color: #fff;
+		background-color: #009688;
+		border-color: #009688;
 	}
 	.creat-button {
-	  display: flex;
-	  justify-content: center;
-	  align-items: center;
-	  height: 80rpx;
-	  line-height: 80rpx;
-	  font-size: 32rpx;
-	  background-color: #b1b2f5;
-	  color: #fff;
-	  border-radius: 50px;
-	  box-shadow: 0px 5px 10px rgba(177, 178, 245, 0.4);
-	  margin-left: auto;
-	  margin-right: auto;
-	  margin-top: 40rpx;
-	  width: 80%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 32rpx;
+		background-color: #009688;
+		color: #fff;
+		border-radius: 50px;
+		box-shadow: 0px 5px 10px rgba(0, 150, 136, 0.4);
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 60rpx;
+		margin-bottom: 50rpx;
+		width: 80%;
+	}
+	.br{/*留空*/
+		height: 150px;
 	}
 </style>
