@@ -1,7 +1,7 @@
 <template>
 	<view id="moments" :class="{ 'hidden': cover }">
 
-<view class="home-pic" @click="show()" :style="{ backgroundImage: 'url(' + bg + ')' }">
+		<view class="home-pic" @click="show()" :style="{ backgroundImage: 'url(' + bg + ')' }">
 			<!-- <image src='../../static/self-record/index/test/bgi02.jpg'></image> -->
 			<!-- <div class="cover" v-if="showCover"></div> --> 
 			<view class="mask" v-if="cover">
@@ -23,57 +23,30 @@
 					<image class="header" mode="aspectFill" :src="userhead"></image> 
 				</view>
 				<view class="top-name">{{username}}</view>  
-				<view class="top-sig">{{userMotto}}</view> 
-			 
-			</view>    
-		</view>  
-		
-		<view class="icon">
-			<view class="uni-datetime-picker">
-<uni-datetime-picker 
-    type="daterange" 
-    ref="calendar"  
-    :start="calendarStart" 
-    :end="calendarEnd" 
-    class="calendar" 
-    @change="calendar"  
-    v-model="calendar_data" 
-	>
-</uni-datetime-picker>
-			
-			</view>
-			<view class="uni-data-select">
-				      <uni-data-select
-				        v-model="valueRange"
-				        :localdata="range"
-				        @change="changeRange"
-						style="background-color: white;"
-				      ></uni-data-select>
-			</view>
-			
+				<view class="top-sig">{{userMotto}}</view>
+			</view>  
 		</view> 
  
 		<!-- 记录数据posts -->
-		<!-- <view class="moments__post" v-for="(post,index) in (filteredPosts.length > 0 ? filteredPosts : posts)" :key="index" :id="'post-'+index"> -->
-<!-- <view class="moments__post" v-if="filteredPosts.length > 0" v-for="(post,index) in filteredPosts" :key="index" :id="'post-'+index">		 -->
-<view class="moments__post" v-for="(post,index) in currentPosts" :key="index" :id="'post-'+index" v-if="filteredPosts.length>0">	
+		<view class="moments__post" v-for="(post,index) in posts" :key="index" :id="'post-'+index" >
+
 			<view class="post-top-outside">
-				<view class="post-top"> 
+				<view class="post-top">
 					<view class="post-left">
 						<!-- 发布该条记录的用户头像 -->
-						<image class="post_header" mode="aspectFill" :src="post.header_image" @click="maskClick"></image>
+						<image class="post_header" mode="aspectFill" :src="post.header_image"></image>
 					</view>
 
 					<view class="post_right">
 						<!-- 用户名及文本内容 -->
 						<text class="post-username">{{post.username}}</text>
 						<view class="timestamp">{{post.timestamp}}</view>
-					</view> 
+					</view>
 				</view>
 				<uni-icons type="trash" size="22" color="white" class="trash" @click="bindClick(index)"></uni-icons>
 			</view>
 			<view class="post_content">
-				<!--内容--> 
+				<!--内容-->
 				<view id="paragraph" class="paragraph">{{post.content.text}}</view>
 				<!-- 图片 -->
 				<view class="thumbnails">
@@ -111,15 +84,13 @@
 				</view>
 			</view>
 		</view>
-		
-		<view v-if="filteredPosts.length<1" class="null"> 动态空空如也~~~ </view>
 
 		<!-- 结束posts -->
 
 		<view class="foot" v-show="showInput">
 			<chat-input @send-message="send_comment" @blur="blur" :focus="focus"
 				:placeholder="input_placeholder"></chat-input>
-		</view> 
+		</view>
 
 		<view class="uni-loadmore" v-if="showLoadMore">{{loadMoreText}}</view>
 	</view>
@@ -130,38 +101,15 @@
 	import chatInput from './component/chatinput/chatinput.vue'; //评论区的input框
 	import sysMsg from '../../common/self-record/system-courage.js'; //系统发送的鼓励的话
 	import mytime from './mytime.js'; //得到所需的时间格式
-import { isArray } from 'util';
+  
 	export default {
 
 		components: {
-			chatInput,
+			chatInput
 		},
-		  
-		watch:{
-			posts(){
-				this.filteredPosts = this.posts
-			},
-			calendar_data(){
-				if (this.calendar_data.length === 0) {
-				      this.calendar_data = ""
-					  console.log(this.calendar_data)
-				    }
-			}
-		},  
- 
+
 		data() {
 			return {
-				valueRange:0,
-				flag : true,
-				     range: [
-						 { value: 0, text: "全部" },
-				        { value: 1, text: "系统" },
-				        { value: 2, text: "我" },
-						],
-				calendarStart : "",
-				calendarEnd : "",
-				calendar_data : "",
-				showCalendar : false,
 				bg_lis : [
 					{ id : 0, src: 'bg_0.jpg' },
 					{ id : 1, src: 'bg_1.jpg' },
@@ -172,7 +120,7 @@ import { isArray } from 'util';
 					{ id : 6, src: 'bg_6.jpg' }, 
 					{ id : 7, src: 'bg_7.png' },
 					{ id : 8, src: 'bg_8.jpg' }, 
-					{ id : 9, src: 'bg_9.jpg' }, 
+					{ id : 9, src: 'bg_9.jpg' },
 					{ id : 10, src: 'bg_10.jpg' },
 					{ id : 11, src: 'bg_11.jpg' },
 				], 
@@ -233,7 +181,7 @@ import { isArray } from 'util';
 							"comment": [{
 									"uid": 1,
 									"username": '系统',
-									"content": "提示：想要删除顶部的背景图片，可以点一下它哦~"
+									"content": "提示：想要删除一条记录，可以点击该记录头像处哦~"
 								},
 								{
 									"uid": 2,
@@ -267,10 +215,9 @@ import { isArray } from 'util';
 				windowHeight: '', //可用窗口高度(不计入软键盘)
 
 				loadMoreText: "加载中...",
-				showLoadMore: false,
-				filteredPosts : []
-			} 
-		}, 
+				showLoadMore: false
+			}
+		},
 
 		onLoad() { 
 			uni.getSystemInfo({ //获取设备信息
@@ -302,7 +249,6 @@ import { isArray } from 'util';
 					}
 				}
 			});
-			
 
 			//获取本地存储的数据
 			let res1 = [];
@@ -370,8 +316,7 @@ import { isArray } from 'util';
 			if (this.publish_msg.length) {
 				this.posts.unshift(this.publish_msg[0]);
 				uni.setStorageSync('self-record-posts', this.posts);
-				let record = uni.getStorageSync('self-record-posts');
-				console.log('发布新记录，保存到本地存储：',record);
+				console.log('发布新记录，保存到本地存储');
 				this.publish_msg = [];
 			}
 
@@ -413,7 +358,6 @@ import { isArray } from 'util';
 			var that = this;
 			uni.setStorageSync('self-record-posts', that.posts);
 			uni.setStorageSync('last-system-msg-date', that.last_sys_date);
-			console.log(that.posts)
 			console.log('离开页面时，保存数据到本地存储');
 
 			uni.$off('publish'); //移除监听事件，避免重复监听
@@ -451,211 +395,15 @@ import { isArray } from 'util';
 		},
 
 		computed: {
-		        currentPosts() {
-		            return this.filteredPosts.length > 0 ? this.filteredPosts : this.posts;
-		        }
-		    },
+
+		},
 		
 		created() {
 			this.bg = uni.getStorageSync('bg')
-			console.log("获取顶部背景图",this.bg)
-			let record = uni.getStorageSync('self-record-posts');
-			this.filteredPosts = record
+			console.log("背景为:",uni.getStorageSync('bg'))
 		},
 
-		methods: { 
-		changeRange() {
-		    const id = this.valueRange; 
-			 const time = this.calendar_data; 
-		    let record = uni.getStorageSync('self-record-posts');
-			this.flag = false
-
-			const selectedStarted = new Date(time[0]).setHours(0, 0, 0, 0);
-			const selectedEnd = new Date(time[1]).setHours(23, 59, 59, 999);
-			
-			if(!Array.isArray(record)){
-				this.filteredPosts = []
-				return 
-			}
-
-			const items = [] 
-			if(this.calendar_data !== "" || this.calendar_data.length!=0){
-				if(id === 0){
-					record.forEach((item) => {
-					    const timeStamp = new Date(item.timestamp).getTime();
-					    if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
-							items.push(item);  
-					    }
-					});  
-					this.filteredPosts = items
-				}else if(id === 1){
-
-					record.forEach((item) => {
-					    const timeStamp = new Date(item.timestamp).getTime();
-					    if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
-							if(item.username === "系统"){
-								items.push(item);  
-							}
-							
-					    }
-					}); 
-					this.filteredPosts = items
-				}else if(id === 2){
-
-					
-					record.forEach((item) => {
-					    const timeStamp = new Date(item.timestamp).getTime();
-					    if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
-							if(item.username!== "系统"){
-								items.push(item);  
-							}
-							
-					    }
-					}); 
-					this.filteredPosts = items 
-				}
-			}else{
-				
-				switch(id){
-					case 0 :
-					record.forEach((item)=>{
-						items.push(item)
-					})
-					this.filteredPosts = items;
-					break;
-					case 1 :
-					record.forEach((item)=>{
-						if(item.username === "系统"){
-							items.push(item)
-						} 
-					})
-					this.filteredPosts = items
-					break;
-					default:
-					record.forEach((item)=>{
-						if(item.username !="系统"){
-							items.push(item)
-						}
-					})
-					this.filteredPosts = items
-					break;
-				}
-				 
-				 
-				// if (!Array.isArray(record)) { // 检查是否为数组
-				//     console.error("Storage data is not an array");
-				//     this.filteredPosts = []; // 如果不是数组，则将record赋值为空数组
-				// }
-						
-				// if (id === 0) {
-				//     this.filteredPosts = record; // 如果id为0，直接赋值为record
-				// } else {
-				//     this.filteredPosts = record.filter(item => item.uid === id); // 否则执行过滤操作
-				// }
-			}
-			
-		},
-		
-		calendar() { 
-		    const time = this.calendar_data;
-		    const record = uni.getStorageSync('self-record-posts');
-		    const selectedStarted = new Date(time[0]).setHours(0, 0, 0, 0);
-		    const selectedEnd = new Date(time[1]).setHours(23, 59, 59, 999);
-		    this.flag = false;
-		 
-		    const items = [];
-		
-		    if(this.valueRange === 0){ 
-		        record.forEach((item) => {
-		            const timeStamp = new Date(item.timestamp).getTime();
-		            if (timeStamp >= selectedStarted && timeStamp <= selectedEnd) {
-		                items.push(item);  
-		            }
-		        });
-		    } else if(this.valueRange === 1){
-		        record.forEach((item) => {
-		            const timeStamp = new Date(item.timestamp).getTime();
-		            if (timeStamp >= selectedStarted && timeStamp <= selectedEnd && item.username === "系统") {
-		                items.push(item);  
-		            }
-		        });
-		    } else if(this.valueRange === 2){
-		        record.forEach((item) => {
-		            const timeStamp = new Date(item.timestamp).getTime();
-		            if (timeStamp >= selectedStarted && timeStamp <= selectedEnd && item.username !== "系统") {
-		                items.push(item);  
-		            }
-		        });
-		    }
-		
-		    this.filteredPosts = items;
-		},
-/*
-// calendar() { 
-//     const time = this.calendar_data;
-//     const record = uni.getStorageSync('self-record-posts');
-//     // const started = new Date(time[0]).getTime(); // 开始时间转换为时间戳
-//     // const end = new Date(time[1]).getTime(); // 结束时间转换为时间戳 
-// 	const selectedStarted = new Date(time[0]).getTime()
-// 	const selectedTimestamp = new Date(time[1]).getTime();
-// 	const started = new Date(selectedTimestamp).setHours(0,0,0,0);
-// 	const end = new Date(selectedTimestamp).setHours(23, 59, 59, 999);
-// 	this.flag = false
-// 	console.log(this.filteredPosts)
- 
-//     // 存放筛选后的记录
-//     const items = [];  
-
- 
-//  if(this.valueRange === 0){
-// 	record.map((item) => {
-// 	    const timeStamp = new Date(item.timestamp).getTime();
-// 		console.log("开始时间：",started)
-// 		console.log("结束时间",end)
-// 		console.log("时间",timeStamp)
-// 		// 时间大于等于开始时间并且小于等于结束时间
-// 	    if (timeStamp >= started && timeStamp <= end) {
-// 	        items.push(item);  
-// 	    }
-// 	}); 
-//  }else if(this.valueRange === 1){
-	
-// 	record.map((item)=>{
-		
-// 		const timeStamp = new Date(item.timestamp).getTime();
-// 		console.log("开始时间：",started)
-// 		console.log("结束时间",end)
-// 		console.log("时间",timeStamp)
-// 		if (timeStamp >= started && timeStamp <= end) {
-// 		    if(this.range[this.valueRange].text === item.username){
-// 				items.push(item);  
-// 			}
-// 		}
-// 	})
-//  }else if(this.valueRange === 2){
-// 	 record.map((item)=>{
-// 	 	const timeStamp = new Date(item.timestamp).getTime();
-// 		console.log("开始时间：",started)
-// 		console.log("结束时间",end)
-// 		console.log("时间",timeStamp)
-// 	 	if (timeStamp >= started && timeStamp <= end) {
-// 	 	    if(item.username !="系统"){
-// 	 			items.push(item);  
-// 	 		}
-// 	 	}
-// 	 })
-//  }
-
-
-// 	this.filteredPosts = items
-// },
-*/
-
-
-
-
-
-
+		methods: {
 				show(){
 				    uni.chooseImage({
 				        count:1,
@@ -714,12 +462,6 @@ import { isArray } from 'util';
 				uni.$on('publish', (data) => {
 					this.publish_msg = [];
 					this.publish_msg.unshift(data);
-					
-					//let my_saved_Pictures = uni.getStorageSync('my_saved_Pictures');  //获取发布页缓存的保存到本地的图片路径列表
-					//this.publish_msg.content.images = [].concat(my_saved_Pictures);
-					
-					//for(var n=0; n<9; n++)
-					
 					console.log("监听触发，将用户新发布的记录暂存到publish_msg", this.publish_msg);
 				})
 			},
@@ -856,9 +598,8 @@ import { isArray } from 'util';
 				console.log('更新点赞信息，保存到本地存储');
 			},
 
-			//删除一条记录
+			//点击头像删除一条记录
 			bindClick(index) {
-				const that = this
 				let posts = this.posts;
 				uni.showModal({
 					title: '提示',
@@ -867,18 +608,15 @@ import { isArray } from 'util';
 						if (res.confirm) {
 							posts.splice(index, 1);
 							console.log('删除记录');
-							uni.setStorageSync('self-record-posts', that.posts);
-							this.filteredPosts = uni.getStorageSync("self-record-posts")
-							console.log(that.filteredPosts)
+							uni.setStorageSync('self-record-posts', this.posts);
 							console.log('删除了记录，更新本地存储');
-							this.filteredPosts = this.posts
 						} else if (res.cancel) {
 							console.log('取消删除记录');
 						}
 					}
 				});
 			},
- 
+
 			//新的一天第一次打开时，系统发送鼓励消息
 			system_send(e) {
 				//生成[0,10)的随机整数，取系统鼓励的话
@@ -970,7 +708,7 @@ import { isArray } from 'util';
 			// todolist事件的提醒
 			todoRemind() {
 				// 读取todolist
-				let list = uni.getStorageSync('todolist')
+				let list = uni.getStorageSync('todolist_sorted')
 				console.log(list);
 				if (list.length != 0) {
 					list.forEach(event => {
@@ -1009,16 +747,29 @@ import { isArray } from 'util';
 					for (let item of playContent) {
 						let now = new Date()
 						if (item.timetype0 && (item.timetype1 == false)) {
-							let content = '恭喜你！目标： ' + item.title + ` 已完成`
+							let content = '恭喜你！目标： ' + item.title + " 已完成\n\n";
+							
+							// 如果item.content有内容，则追加到content字符串中
+							if (item.content && item.content.trim() !== '') {
+							    content += '   目标详情：' + item.content;
+							}
 							this.system_remind(now.getTime(), content);
+							//标记本次已发完，防止下一次又发了上一次的
+							uni.setStorageSync('playActionDone', true);
 							// 清除，否则一直刷新一直发
 							uni.removeStorageSync('playGoalSuccess')
 						} else if (item.timetype1 && (item.timetype0 == false)) {
 							console.log('playContent.isdone==', item.isdone)
 
 							if (item.isdone == false) {
-								let content = '恭喜你！完成一次目标： ' + item.title
+								let content = '恭喜你！完成一次目标： ' + item.title;
+								// 如果item.content有内容，则追加到content字符串中
+								if (item.content && item.content.trim() !== '') {
+								    content += '   目标详情：' + item.content;
+								}
 								this.system_remind(now.getTime(), content);
+								//标记本次已发完，防止下一次又发了上一次的
+								uni.setStorageSync('playActionDone', true);
 								// 清除，否则一直刷新一直发
 								uni.removeStorageSync('playGoalSuccess')
 							} else if (item.isdone == true) {
@@ -1043,14 +794,25 @@ import { isArray } from 'util';
 
 				let sportContent = uni.getStorageSync('sportGoalSuccess')
 				console.log(sportContent);
-				if (sportContent.content != null) {
-					let now = new Date()
-					let content = '恭喜你！完成一次' + sportContent.content
-
-					this.system_remind(now.getTime(), content);
+				if (sportContent.contentList) {
+					
+					 // 遍历contentList中的每个content
+					 let now = new Date()
+					        sportContent.contentList.forEach((content) => {
+					            // 构造提醒内容
+					            let remindContent = '恭喜你！完成一次' + content;
+					            // 发出系统提醒
+					            this.system_remind(now.getTime(), remindContent);
+					        });
+						 // 在遍历完之后存储一个标记
+						        uni.setStorageSync('sportActionDone', true);
 					// 清除，否则一直刷新一直发
 					uni.removeStorageSync('sportGoalSuccess')
+					
+					
 				}
+				
+				
 			},
 
 			// 起床睡眠成就达成时
@@ -1080,14 +842,28 @@ import { isArray } from 'util';
 
 				console.log(Sportdata);
 				if (Sportdata.content != null) {
-
 					let now = new Date()
+					if(Sportdata.differnumber>0){
+
 					let content = '还差' + Sportdata.differnumber + '个就达成' + Sportdata.timesForAward + '个' + Sportdata
 						.content + '的运动目标了，加油噢！'
 
 					this.system_remind(now.getTime(), content);
 					// 清除，否则一直刷新一直发
 					uni.removeStorageSync('GoingToAchieveGoal')
+					}else if(Sportdata.differnumber==0){
+						
+						let content = '太棒了！' + Sportdata.content + '的运动目标已完成'
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('GoingToAchieveGoal')
+					}else if(Sportdata.differnumber<0){
+						let content = '已经超额完成' +(-Sportdata.differnumber)+'个'+ Sportdata.content + '的运动目标了哦'
+						this.system_remind(now.getTime(), content);
+						// 清除，否则一直刷新一直发
+						uni.removeStorageSync('GoingToAchieveGoal')
+					}
+					
 				}
 			},
 			SleepGoingtoAchiveRemind() {
