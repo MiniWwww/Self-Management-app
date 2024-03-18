@@ -125,7 +125,7 @@
 				},
 				item: {
 					title: '',
-					Today: this.getDate(new Date()),
+					Today: this.getDateTime(new Date()),
 					iconUrl:'',
 					TodaystartTime: '',
 					TodayendTime: '',
@@ -211,9 +211,12 @@
 				return this.hideSecond ? `${this.addZero(hour)}:${this.addZero(minute)}` :
 					`${this.addZero(hour)}:${this.addZero(minute)}:${this.addZero(second)}`
 			},
+			
 			getDateTime(date) {
 				return `${this.getDate(date)} ${this.getTime(date)}`
 			},
+			
+			
 			// 2023-10-24添加结束
 			// swapTimeFormat(time){
 			// 	let dayjs=this.dayjs;
