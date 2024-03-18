@@ -80,7 +80,7 @@
 
 					</view>
 					<view class="content-content" v-if="item.content">
-						<text>畅想：{{item.content}}</text>
+						<text style="color: gray;">畅想：{{item.content}}</text>
 					</view>
 				</view>
 				
@@ -179,7 +179,7 @@
 								url: '/static/c22.png',
 								text: '打游戏',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 1,
@@ -193,49 +193,49 @@
 								url: '/static/c20.png',
 								text: 'k歌',
 								badge: '0',
-								type: "warning"
+								type: "success"
 							},
 							{
 								listindex: 3,
 								url: '/static/c24.png',
 								text: '游园',
 								badge: '0',
-								type: "error" //type是角标的类型，比如errors红色的
+								type: "success" //type是角标的类型，比如errors红色的
 							},
 							{
 								listindex: 4,
 								url: '/static/c25.png',
 								text: '摄影',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 5,
 								url: '/static/c27.png',
 								text: '看展',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 6,
 								url: '/static/c26.png',
 								text: '团建',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 7,
 								url: '/static/密室预订.png',
 								text: '密室逃脱',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 8,
 								url: '/static/旅游.png',
 								text: '旅游',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							}
 						]
 					},
@@ -248,7 +248,7 @@
 								url: '/static/综合素质评价.png',
 								text: '素拓',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 1,
@@ -262,49 +262,49 @@
 								url: '/static/读小说.png',
 								text: '看小说',
 								badge: '0',
-								type: "warning"
+								type: "success"
 							},
 							{
 								listindex: 3,
 								url: '/static/电影.png',
 								text: '看电影',
 								badge: '0',
-								type: "error" //type是角标的类型，比如errors红色的
+								type: "success" //type是角标的类型，比如errors红色的
 							},
 							{
 								listindex: 4,
 								url: '/static/购物车空.png',
 								text: '购物',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 5,
 								url: '/static/画画.png',
 								text: '画画',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 6,
 								url: '/static/美食.png',
 								text: '品尝美食',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 7,
 								url: '/static/跳舞.png',
 								text: '跳舞',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 8,
 								url: '/static/桌球.png',
 								text: '桌球',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							}
 						],
 					},
@@ -317,7 +317,7 @@
 								url: '/static/爬山.png',
 								text: '爬山',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 1,
@@ -330,14 +330,14 @@
 								url: '/static/射击射箭.png',
 								text: '射击射箭',
 								badge: '0',
-								type: "warning"
+								type: "success"
 							},
 							{
 								listindex: 3,
 								url: '/static/弹钢琴.png',
 								text: '弹钢琴',
 								badge: '0',
-								type: "primary"
+								type: "success"
 							},
 							{
 								listindex: 4,
@@ -350,14 +350,14 @@
 								url: '/static/看话剧.png',
 								text: '看话剧',
 								badge: '0',
-								type: "warning"
+								type: "success"
 							},
 							{
 								listindex: 6,
 								url: '/static/DIY手工.png',
 								text: 'DIY手工',
 								badge: '0',
-								type: "primary"
+								type: "success"
 
 							},
 							{
@@ -365,14 +365,14 @@
 								url: '/static/玩手机.png',
 								text: '玩手机',
 								badge: '0',
-								type: "primary"
+								type: "success"
 
 							}, {
 								listindex: 8,
 								url: '/static/演出.png',
 								text: '演出',
 								badge: '0',
-								type: "primary"
+								type: "success"
 
 							},
 						],
@@ -760,6 +760,7 @@
 							console.log('用户点击确定本周继续执行该目标');
 							item.currentWeekDone = false; // 重置当前周完成状态
 							item.isdone = false; // 目标继续，未完成
+							item.askedForNextWeek = true;
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 							item.currentWeekDone = true; // 标记当前周完成
@@ -1311,7 +1312,7 @@
 							// url: `/static/c6.png`,
 							text: this.value,
 							badge: '0',
-							type: "primary",
+							type: "success",
 
 
 						});
