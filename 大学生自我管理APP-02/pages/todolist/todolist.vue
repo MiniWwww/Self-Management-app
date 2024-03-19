@@ -591,7 +591,7 @@
 				const today = (month < 10 ? '0' + month : month) + '月' + (day < 10 ? '0' + day : day) + '日';
 				const todayWeekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date().getDay()];
 				const nowtime_day = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
-				const time = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute)
+				const time = "00:00";
 				const nowtime = nowtime_day + ' ' + time;
 				that.today_year=year;
 				that.today_day=today;
@@ -1122,7 +1122,6 @@
 				
 				 this.saveList()
 				  }
-				 
 				this.list1[0].selected = false;
 				this.list1[1].selected = false;
 				this.list1[2].selected = false;
@@ -1134,7 +1133,7 @@
 				this.clear();
 				this.$set(this, 'list', this.list);
 				this.$set(this, 'listAfterSort', this.listAfterSort);
-				
+				this.$refs.myPicker.newdate();
 				
 			},
 			//清空表单内容
