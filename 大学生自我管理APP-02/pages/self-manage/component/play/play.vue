@@ -537,7 +537,8 @@
 							checkbox2: [],
 							weeklyDone: [], //用于记录该目标在当前周已完成的天数
 							askedForNextWeek: false,
-							weeklyDoneWeek: Number, //记录weeklyDone对应的周数，以便识别新的一周并重置状态
+							asked:false,//是否询问过
+							weeklyDoneWeek: that.getWeekNumber(new Date())-1, //记录weeklyDone对应的周数，以便识别新的一周并重置状态
 							completedWeeks: [], //完成的周数以及内容
 							pop_flag: false,
 						},
@@ -574,7 +575,8 @@
 							checkbox2: ["每周一", "每周二", "每周三"],
 							weeklyDone: [],
 							askedForNextWeek: false,
-							weeklyDoneWeek: Number,
+							asked:false,//是否询问过
+							weeklyDoneWeek: that.getWeekNumber(new Date())-1,
 							completedWeeks: [], //完成的周数以及内容
 							pop_flag: false,
 						}
@@ -688,7 +690,7 @@
 						let currentWeek = this.getWeekNumber(new Date());
 						// console.log('当前周', currentWeek)
 						// 如果已经询问过用户，用户确认下周继续则跳过
-						if (item.askedForNextWeek && item.weeklyDoneWeek === currentWeek) continue;
+						// if (item.askedForNextWeek && item.weeklyDoneWeek === currentWeek) continue;
 						let todayDay = (new Date()).getDay();
 						let todayWeekDay = weekDays[todayDay];
 						//重设isToday的状态
@@ -697,42 +699,49 @@
 						if (item.checkbox2.includes(weekDays[todayDay]) && (item
 								.isdone == false) && ((item
 								.isTodayDone == false))) {
+									console.log("当前目标"+item.title+"的item.asked:",item.asked);
+							// if(!item.asked){//如果没询问过
 							// 如果这是新的一周，重置weeklyDone和askedForNextWeek
-							if (item.weeklyDoneWeek !== currentWeek) {
-								// 如果上周没有达到预定次数，提示用户本周未完成
-								if (item.checkbox2.length !== item.weeklyDone.length) {
-									console.log(`目标"${item.title}"上周未完成。`);
-									let content = '目标' + item.title + '上周未完成'
-									this.judgeGoOn(item, content)
-								} else if (item.checkbox2.length === item.weeklyDone.length && !item.askedForNextWeek) {
-									// 如果上周达到预定次数且未询问过用户是否继续
-									console.log(`目标"${item.title}"上周已完成。`);
-									let content = '目标' + item.title + '上周已完成'
-									// 记录完成情况
-									if (!item.completedWeeks) {
-										item.completedWeeks = [];
+								if (item.weeklyDoneWeek !== currentWeek) {
+									// 如果上周没有达到预定次数，提示用户本周未完成
+									if (item.checkbox2.length !== item.weeklyDone.length) {
+										console.log(`目标"${item.title}"上周未完成。`);
+										let content = '目标' + item.title + '上周未完成'
+										this.judgeGoOn(item, content)
+									} else if (item.checkbox2.length === item.weeklyDone.length && !item.askedForNextWeek) {
+										// 如果上周达到预定次数且未询问过用户是否继续
+										console.log(`目标"${item.title}"上周已完成。`);
+										let content = '目标' + item.title + '上周已完成'
+										// 记录完成情况
+										if (!item.completedWeeks) {
+											item.completedWeeks = [];
+										}
+										item.completedWeeks.push({
+											week: currentWeek - 1,
+											days: item.weeklyDone.slice(), //浅拷贝
+										}); // 记录上周完成的周数和天数
+										this.judgeGoOn(item, content)
 									}
-									item.completedWeeks.push({
-										week: currentWeek - 1,
-										days: item.weeklyDone.slice(), //浅拷贝
-									}); // 记录上周完成的周数和天数
-									this.judgeGoOn(item, content)
+									//重置状态
+									item.weeklyDone = [];
+									item.askedForNextWeek=false;
+									item.weeklyDoneWeek = currentWeek;
+									item.currentWeekDone = false; // 新的一周开始，重置当前周完成状态
+									
+									console.log('新的一周，已经重置')
 								}
-								//重置状态
-								item.weeklyDone = [];
-								item.askedForNextWeek = false;
-								item.weeklyDoneWeek = currentWeek;
-								item.currentWeekDone = false; // 新的一周开始，重置当前周完成状态
-								console.log('新的一周，已经重置')
-							}
+							// }
 							item.istargetDate = true;
+							this.savePlayGoalList();
 							// console.log('周期性istargetDate已经设置为true')
 
 
 
 						}
 					}
+					
 				}
+				this.savePlayGoalList();
 
 			},
 			resetDailyStatus(item) {
@@ -760,11 +769,18 @@
 							console.log('用户点击确定本周继续执行该目标');
 							item.currentWeekDone = false; // 重置当前周完成状态
 							item.isdone = false; // 目标继续，未完成
+							item.asked=true;//已经问过
+							console.log(item.title,"的item.asked:",item.asked);
 							item.askedForNextWeek = true;
+							that.savePlayGoalList();
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 							item.currentWeekDone = true; // 标记当前周完成
 							item.isdone = true; // 目标不再继续，完成
+							item.asked=true;//已经问过
+							console.log(item.title,"的item.asked:",item.asked);
+							item.askedForNextWeek = false;
+							that.savePlayGoalList();
 							console.log(
 								`完成的周数：${item.completedWeeks.length}周，执行日：${item.completedWeeks.map(w => `第${w.week}周: ${w.days.join(", ")}`).join("; ")}`
 							);
@@ -916,9 +932,12 @@
 											console.log('用户点击确定下一周继续执行该目标');
 											item.isdone = false; //目标未结束，继续
 											item.askedForNextWeek = true;
+											item.asked=true;//已经问过
 											// that.saveGoalSuccess(item);
+											that.savePlayGoalList();
 										} else if (res.cancel) {
 											console.log('用户点击取消');
+											item.asked=true;//已经问过
 											item.isdone = true; //目标结束
 											console.log('that.swipeList[index].isdone:', that.swipeList[index]
 												.isdone)
@@ -933,6 +952,8 @@
 											console.log(
 												`完成的周数：${item.completedWeeks.length}周，执行日：${item.completedWeeks.map(w => `第${w.week}周: ${w.days.join(", ")}`).join("; ")}`
 											);
+											// that.savePlayGoalList();
+											that.savePlayGoalList();
 											let weekDoneobj = {
 												title: item.title,
 												doneWeekCount: item.completedWeeks.length,
@@ -1056,6 +1077,7 @@
 												isNotStart: false,
 												weeklyDone: [],//当前周有具体几天是做的
 												askedForNextWeek: false,
+												asked:false,///是否询问过
 												weeklyDoneWeek: currentWeek,//当前要做的周
 												completedWeeks: [], //完成的周数以及内容
 												pop_flag: false,
