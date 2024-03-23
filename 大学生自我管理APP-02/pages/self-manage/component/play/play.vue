@@ -1,7 +1,7 @@
 <template>
 	<view style="overflow-y: auto; min-height: 100vh;" @touchstart="closePop">
 		<view class="header">
-			<view class="header-text">今天玩了什么呢</view>
+			<view class="header-text">娱乐汇</view>
 			<view class="wenhao">?</view>
 		</view>
 
