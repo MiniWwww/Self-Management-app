@@ -98,7 +98,7 @@ export default {
     
          //return new Date();
 		 const now = new Date();
-		   now.setHours(0);
+		   now.setHours(9);
 		   now.setMinutes(0);
 		   now.setSeconds(0);
 		   now.setMilliseconds(0);
