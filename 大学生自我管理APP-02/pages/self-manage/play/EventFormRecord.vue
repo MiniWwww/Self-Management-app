@@ -36,10 +36,26 @@
 							<view class="decoration"></view>
 						</template>
 					</uni-section>
-					<view class="time-picker">
+					<!-- <view class="time-picker">
 						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至"
 						:end="item.Today"  hide-second="true"/>
-					</view>
+					</view> -->
+					
+					<!-- <view class="time-picker">
+						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" rangeSeparator="至"
+							 :end="item.Today" :picker-options="pickerOptions" hide-second="true" style="width: 255px;"/>
+					</view> -->
+					
+							<view class="time-picker">
+								<uni-datetime-picker type="datetime" v-model="startTime" 
+								placeholder ="开始时间" hide-second="true" :end="item.Today" style="width: 255px;"/>
+							</view>
+							<view class="time-picker">
+								<uni-datetime-picker type="datetime" v-model="endTime" 
+								placeholder ="结束时间" hide-second="true" :end="item.Today" style="width: 255px;"/>
+							</view>
+					
+					
 					
 				</view>
 				
@@ -104,6 +120,8 @@
 				// datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 *
 				// 	3600000)],
 				datetimeRange: [],
+				startTime:[],
+				endTime:[],
 				// 2023-10-24添加结束
 				pickerOptions: {
 					disableDate(time) {
@@ -226,15 +244,36 @@
 			// 		 return newTime;
 			// },
 			// 2023-7-30添加
+			compareTimes(time1, time2) {
+			    const date1 = new Date(time1);
+			    const date2 = new Date(time2);
+			
+			    return date1.getTime() < date2.getTime();
+			},
 			SubmitEvent() {
 				var that = this;
-				if(that.datetimeRange.length === 0){
-					console.log('未选择时间')
+				// if(that.datetimeRange.length === 0)
+				if(that.startTime.length === 0){
+					console.log('未选择开始时间')
 					uni.showModal({
 						// title:'注意',
-						content:'未选择时间'
+						content:'未选择开始时间'
 					});
-				}else{
+				}else if(that.endTime.length === 0){
+					console.log('未选择结束时间')
+					uni.showModal({
+						// title:'注意',
+						content:'未选择结束时间'
+					});
+					
+				}else if(!that.compareTimes(that.startTime, that.endTime)){
+					console.log('开始时间大于结束时间')
+					uni.showModal({
+						// title:'注意',
+						content:'开始时间大于结束时间'
+					});
+					
+				}else if(that.compareTimes(that.startTime, that.endTime)){
 				uni.showModal({
 					title: '提示',
 					content: `您确认要提交吗？`,
@@ -265,8 +304,10 @@
 								title: that.item.title,
 								iconUrl:that.item.iconUrl,
 								Today: that.item.Today,
-								TodaystartTime: that.datetimeRange[0],
-								TodayendTime: that.datetimeRange[1],
+								// TodaystartTime: that.datetimeRange[0],
+								TodaystartTime: that.startTime,
+								// TodayendTime: that.datetimeRange[1],
+								TodayendTime: that.endTime,
 								event_description: that.item.event_description,
 								rank: that.item.rank,
 

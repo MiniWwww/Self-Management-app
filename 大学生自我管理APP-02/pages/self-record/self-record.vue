@@ -1027,7 +1027,7 @@ import { isArray } from 'util';
 								let content = '恭喜你！完成一次目标： ' + item.title;
 								// 如果item.content有内容，则追加到content字符串中
 								if (item.content && item.content.trim() !== '') {
-								    content += '   目标详情：' + item.content;
+								    content += '   畅想：' + item.content;
 								}
 								this.system_remind(now.getTime(), content);
 								//标记本次已发完，防止下一次又发了上一次的
