@@ -70,10 +70,6 @@ export default {
       type: Array,
       default: () => [true, true, true, true, true, false],
     },
-    timeInit: {
-      type: Number,
-      default: new Date().valueOf(),
-    },
   },
 
   data() {
@@ -93,12 +89,22 @@ export default {
       second: "",
       value: [0, 0, 0, 0, 0, 0],
       done: false,
+	  
     };
   },
 
   computed: {
     currentDatetime() {
-      return new Date(this.timeInit);
+    
+         //return new Date();
+		 const now = new Date();
+		   now.setHours(9);
+		   now.setMinutes(0);
+		   now.setSeconds(0);
+		   now.setMilliseconds(0);
+		   return now;
+      
+
     },
   },
 
@@ -113,16 +119,16 @@ export default {
   },
 
   methods: {
-    init() {
-      this.initYears();
-      this.initMonths();
-      this.initDays();
-      this.initHours();
-      this.initMinutes();
-      this.initSeconds();
-      this.setSelectValue();
-      this.done = true;
-    },
+   init() { 
+	
+	this.initYears(); 
+	this.initMonths(); 
+	this.initDays();
+	this.initHours();
+	this.initMinutes();
+	this.setSelectValue();
+	this.done=true;
+	 },
 
     initYears() {
       const years = [];
@@ -196,10 +202,12 @@ export default {
 
     show() {
       this.open = true;
+	  this.init();
     },
 
     hide() {
       this.open = false;
+	  
     },
 
     _onChange(e) {
@@ -217,7 +225,10 @@ export default {
       this.minute = this.minutes[v[4]];
       this.second = this.seconds[v[5]];
     },
-
+    newdate(){
+		this.done=false;
+		
+	},
     _onSubmit() {
       const {
         year,
@@ -238,9 +249,9 @@ export default {
         minute: timeHide[4] ? formatNum(minute) : "",
         second: timeHide[5] ? formatNum(second) : "",
       };
-
       this.$emit("submit", result);
       this.hide();
+	  
     },
 
     formatNum(num) {

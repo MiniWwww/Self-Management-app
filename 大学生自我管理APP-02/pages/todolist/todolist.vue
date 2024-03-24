@@ -128,9 +128,10 @@
 						<uni-icons type="calendar" size="25"></uni-icons>
 						<view class="allday">
 							<text>全天</text>
-							<switch color="#009688" class="allday_switch" @change="Allday"/>
+							<switch color="#009688" class="allday_switch" @change="Allday" v-bind:checked="allday_flag" />
 						</view>
 					</view>
+
 					<!-- 截止时间选择 -->
 					<view class="create_time-picker_outside">
 						<text>时间</text>
@@ -147,7 +148,7 @@
 						<uni-icons type="loop" size="25"></uni-icons>
 						<view class="create-cycle">
 							<text>重复</text>
-							<radio value="cycle" color="#009688" :checked="cycle" @click="cycleSwitch" />
+							<radio value="cycle" color="#009688" v-bind:checked="cycle" @click="cycleSwitch" />
 						</view>
 						
 					</view>
@@ -591,7 +592,7 @@
 				const today = (month < 10 ? '0' + month : month) + '月' + (day < 10 ? '0' + day : day) + '日';
 				const todayWeekday = '周' + ['日', '一', '二', '三', '四', '五', '六'][new Date().getDay()];
 				const nowtime_day = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
-				const time = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute)
+				const time = "09:00";
 				const nowtime = nowtime_day + ' ' + time;
 				that.today_year=year;
 				that.today_day=today;
@@ -1122,7 +1123,6 @@
 				
 				 this.saveList()
 				  }
-				 
 				this.list1[0].selected = false;
 				this.list1[1].selected = false;
 				this.list1[2].selected = false;
@@ -1134,7 +1134,7 @@
 				this.clear();
 				this.$set(this, 'list', this.list);
 				this.$set(this, 'listAfterSort', this.listAfterSort);
-				
+				this.$refs.myPicker.newdate();
 				
 			},
 			//清空表单内容
@@ -1144,12 +1144,14 @@
 				this.remark = "";
 				this.selectedDate = "";
 				this.day = "";
-				this.time = "";
+				this.time = "09:00";
 				this.selectList = "";
 				this.selectId = [];
 				this.eventTypeIndex = -1;
-				this.time = "";
-				this.type = "类型"
+				this.type = "类型";
+				this.allday_flag=false;
+			    this.cycle=false;
+				
 			},
 			// 处理选择时间事件
 			handleSubmit_dayAndTime(e) {//非全天
