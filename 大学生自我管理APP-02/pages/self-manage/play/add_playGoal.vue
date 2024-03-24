@@ -30,7 +30,11 @@
 				<view class="form-item_content">
 					<uni-data-checkbox v-model="baseFormData.time" :localdata="time_type" @change="choosetimetype" selectedColor="#009688" />
 					<view v-if="item.timetype0" class="time-picker">
-						<uni-datetime-picker v-model="datetimeRange" type="datetimerange" start-placeholder="开始时间" rangeSeparator="至" end-placeholder="结束时间" hide-second="true" style="width: 240px;" />
+						<!-- <uni-datetime-picker v-model="datetimeRange" type="datetimerange" start-placeholder="开始时间" rangeSeparator="至" end-placeholder="结束时间" hide-second="true" /> -->
+							<uni-datetime-picker type="datetime" v-model="startTime" 
+							placeholder ="开始时间" hide-second="true"  style="width: 255px;"/>
+							<uni-datetime-picker type="datetime" v-model="endTime" 
+							placeholder ="结束时间" hide-second="true"  style="width: 255px;"/>					
 					</view>
 					<!-- 2023-10-24添加结束 -->
 					<!-- 周期时间选择器 -->				
@@ -62,6 +66,8 @@
 				// 2023-10-24添加
 				// datetimeRange: [this.getDateTime(Date.now() - 5 * 24 * 3600000), this.getDateTime(Date.now() + 5 * 24 * 3600000)],
 				datetimeRange: [],
+				startTime:[],
+				endTime:[],
 				// 2023-10-24添加结束
 				TodayDate:this.getDate(new Date()),
 				weeks: [{
@@ -196,85 +202,120 @@
 				console.log('结束时间' + e.range.after);
 				console.log('确认日期 返回:', e)
 			},
+			compareTimes(time1, time2) {
+				
+					const date1 = new Date(time1);
+					const date2 = new Date(time2);
+					return  date1.getTime() <= date2.getTime();
+				
+			},
 			SubmitEvent() {
 				var that = this
-				if(that.item.timetype0){
-				console.log('选择的开始时间',that.datetimeRange[0]);
-				console.log('选择的结束时间',that.datetimeRange[1]);
-				if(that.datetimeRange[0]===that.datetimeRange[1]){
-					console.log("时间相等")
-					// 分离日期和时间
-					var datePart = that.datetimeRange[0].split(' ')[0]; // 2024-02-26
-					var timePart = that.datetimeRange[0].split(' ')[1]; // 23:09
-					
-					// 修改时间部分
-					timePart = '00:00'; // 将时间修改为00:00
-					
-					// 更新datetimeRange[0]
-					that.datetimeRange[0] = datePart + ' ' + timePart;
-					
-					// 同样的操作修改结束时间的时间部分
-					var endDatePart = that.datetimeRange[1].split(' ')[0];
-					var endTimePart = that.datetimeRange[1].split(' ')[1];
-					endTimePart = '23:59';
-					that.datetimeRange[1] = endDatePart + ' ' + endTimePart;
-					console.log('修改后的开始时间',that.datetimeRange[0]);
-					console.log('修改后的结束时间',that.datetimeRange[1]);
-				}
-				}
-				uni.showModal({
-					title: '提示',
-					content: `您确认要提交吗？`,
-					success: function(res) {
-						if (res.confirm) {
-							console.log('用户点击确定')
-							// if(that.selectIndex.length==7){
-							// 	that.item.checkbox2.push('每天');
-							// }
-							// else{
-							// 	that.selectIndex.forEach(v=>{
-							// 		that.item.checkbox2.push(that.weeks[v].value)
-							// 	})
-							// }
+				 if(that.item.timetype0&&(!that.compareTimes(that.startTime,that.endTime))){
+					 
+					if(that.startTime.length === 0){
+						console.log('未选择开始时间')
+						uni.showModal({
+							// title:'注意',
+							content:'未选择开始时间'
+						});
+					}else if(that.endTime.length === 0){
+						console.log('未选择结束时间')
+						uni.showModal({
+							// title:'注意',
+							content:'未选择结束时间'
+						});
 						
-							that.selectIndex.forEach(v=>{
-								that.item.checkbox2.push(that.weeks[v].value)
-							})
-							
-							
-							const eventChannel = that.getOpenerEventChannel();
-							
-							let EventObj={
-								timetype0: that.item.timetype0,
-								timetype1: that.item.timetype1,
-								title: that.item.title,
-								startDate: that.datetimeRange[0],
-								endDate: that.datetimeRange[1],
-								daterange:that.item.daterange,
-								checkbox2: that.item.checkbox2,
-								content: that.item.content,
-								
-							}
-							{
-								eventChannel.emit('addplayGoal', EventObj);
-								console.log('add_playGoal界面成功返回数据给play!', EventObj);
-								that.item = {
-									timetype0: false,
-									timetype1: false,
-									title: '',
-									startDate: '',
-									endDate: '',
-									checkbox2: [],
-								};
-
-								uni.navigateBack();
-							}
-
-						} else if (res.cancel) {
-							console.log('用户点击取消')
-						}
 					}
-				})
+					const date1 = new Date(that.startTime);
+					const date2 = new Date(that.endTime);
+					if(  date1.getTime() >= date2.getTime()){
+						console.log('开始时间大于结束时间')
+						uni.showModal({
+							// title:'注意',
+							content:'开始时间大于结束时间'
+						});
+					}
+					
+					
+					
+				}else if(that.item.timetype1||(that.item.timetype0&&(that.compareTimes(that.startTime,that.endTime)))){
+					if(that.startTime===that.endTime){
+						console.log("时间相等")
+						// 分离日期和时间
+						var datePart = that.startTime.split(' ')[0]; // 2024-02-26
+						var timePart = that.endTime.split(' ')[1]; // 23:09
+						
+						// 修改时间部分
+						timePart = '00:00'; // 将时间修改为00:00
+						
+						// 更新datetimeRange[0]
+						that.startTime = datePart + ' ' + timePart;
+						
+						// 同样的操作修改结束时间的时间部分
+						var endDatePart = that.endTime.split(' ')[0];
+						var endTimePart = that.endTime.split(' ')[1];
+						endTimePart = '23:59';
+						that.endTime = endDatePart + ' ' + endTimePart;
+						console.log('修改后的开始时间',that.startTime);
+						console.log('修改后的结束时间',that.endTime);
+					}
+					uni.showModal({
+						title: '提示',
+						content: `您确认要提交吗？`,
+						success: function(res) {
+							if (res.confirm) {
+								console.log('用户点击确定')
+								// if(that.selectIndex.length==7){
+								// 	that.item.checkbox2.push('每天');
+								// }
+								// else{
+								// 	that.selectIndex.forEach(v=>{
+								// 		that.item.checkbox2.push(that.weeks[v].value)
+								// 	})
+								// }
+							
+								that.selectIndex.forEach(v=>{
+									that.item.checkbox2.push(that.weeks[v].value)
+								})
+								
+								
+								const eventChannel = that.getOpenerEventChannel();
+								
+								let EventObj={
+									timetype0: that.item.timetype0,
+									timetype1: that.item.timetype1,
+									title: that.item.title,
+									// startDate: that.datetimeRange[0],
+									// endDate: that.datetimeRange[1],
+									startDate: that.startTime,
+									endDate: that.endTime,
+									daterange:that.item.daterange,
+									checkbox2: that.item.checkbox2,
+									content: that.item.content,
+									
+								}
+								{
+									eventChannel.emit('addplayGoal', EventObj);
+									console.log('add_playGoal界面成功返回数据给play!', EventObj);
+									that.item = {
+										timetype0: false,
+										timetype1: false,
+										title: '',
+										startDate: '',
+										endDate: '',
+										checkbox2: [],
+									};
+
+									uni.navigateBack();
+								}
+
+							} else if (res.cancel) {
+								console.log('用户点击取消')
+							}
+						}
+					})
+				}
 			},
 			formReset: function(e) {
 				console.log('清空数据')
