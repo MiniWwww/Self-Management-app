@@ -299,31 +299,7 @@
 	];
 	const timeColor = '#000000';
 
-	const courseList = ref([{
-			id: 1000,
-			begin: 2,
-			end: 4,
-			week: 2,
-			name: '面向对象-JAVA实践教学',
-			week_begin: 8,
-			week_end: 8, //只在第8周有课
-			place: '理泽楼314',
-			teacher: '陆师',
-			credit: 3
-		},
-		{
-			id: 1001,
-			begin: 1,
-			end: 3,
-			week: 4,
-			name: '计算机网络（双语）',
-			week_begin: 1,
-			week_end: 16, //在第1-到第16周有课
-			place: '理泽楼315',
-			teacher: '刘师',
-			credit: 3
-		}
-	]);
+	const courseList = ref([]);
 
 	onMounted(() => {
 		if (!db.isOpen()) {

@@ -268,7 +268,8 @@ import { isArray } from 'util';
 
 				loadMoreText: "加载中...",
 				showLoadMore: false,
-				filteredPosts : []
+				filteredPosts : [],
+				todayTodoList: []
 			} 
 		}, 
 
@@ -380,7 +381,7 @@ import { isArray } from 'util';
 			const today = new Date().toISOString().split('T')[0]; // 获取当前日期，格式为"YYYY-MM-DD"
 			const lastExecuted = uni.getStorageSync('lastExecutedDate')
 			console.log(today + " " + lastExecuted);
-			if (lastExecuted !== today) {
+			if (lastExecuted != today) {
 				// 如果函数今天尚未执行，则执行它
 				this.todoRemind();
 
@@ -969,29 +970,41 @@ import { isArray } from 'util';
 			},
 			// todolist事件的提醒
 			todoRemind() {
+				this.todayTodoList = [];
 				// 读取todolist
-				let list = uni.getStorageSync('todolist_sorted')
-				console.log(list);
+				let list_old = uni.getStorageSync('todolist_sorted')
+				// 使用 reduce 函数去重
+				let list = list_old.reduce((acc, obj) => {
+				    // 检查临时对象中是否已存在相同 content 属性的对象
+				    let found = acc.find(item => item.content === obj.content);
+				    // 如果不存在，则将当前对象添加到临时对象中
+				    if (!found) {
+				        acc.push(obj);
+				    }
+				    return acc;
+				}, []);
+
+				console.log("当前代办有：" + list);
 				if (list.length != 0) {
+					let now = new Date()
 					list.forEach(event => {
 						if (event.cycles != null) {
-							let now = new Date()
 							let nowDay = now.getDay()
 							if (event.cycles[0] == '每日' || event.cycles.indexOf(this.days[nowDay]) > 0) {
-								let content = '今天也要' + event.title + ' ' + event.mark + '噢~'
-								this.system_remind(now.getTime(), content)
+								let content = event.title + ' ' + event.mark
+								this.todayTodoList.push(content)
 							}
 						}
 						if (event.date != null) {
 							let ddl = new Date(event.date)
-							let now = new Date()
 							let days = this.daysBetween(now, ddl)
 							if (days == 7 || days == 5 || days == 3 || days == 0) {
 								let content = '待办提醒：' + event.title + ' ' + event.mark + ` 还有${days}天`
-								this.system_remind(now.getTime(), content)
+								this.todayTodoList.push(content)
 							}
 						}
 					})
+					this.system_remind(now.getTime(), "今日待办：" + this.todayTodoList.join("\n"))
 				}
 			},
 

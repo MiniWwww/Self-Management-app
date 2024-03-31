@@ -49,7 +49,7 @@
             :style="'margin-left:' + (index == 0 ? 0 : (index * (width - (width / 8 - 14))) / 7) + 'px;' +'height:'+(time.length*160)+'rpx;' "
             class="sx"></view>
         </view>
-        <view v-for="(item, index) in courseList" :key="item.id">
+        <view v-for="(item, index) in courseList.filter(item => !(!(nowWeek>=item.week_begin&&nowWeek<=item.week_end) || (nowWeek % 2 == 0 && item.odd_or_even == 1) || (nowWeek % 2 == 1 && item.odd_or_even == 2)))" :key="item.id">
           <view @click="getCourse(item)" class="kcb-item text-center" :style="'margin-left:' +
 			                (((item.week - 1) * (width - (width / 8 - 14))) / 7 + 2) + 'px; margin-top:' +
 			                ((item.begin - 1) * 160 + 5) + 'rpx; width:' +
@@ -63,7 +63,7 @@
               <view>
                 {{ item.week_begin!=item.week_end?(item.week_begin+'-'+item.week_end):item.week_begin }}周
               </view>
-              <view v-if="(!(nowWeek>=item.week_begin&&nowWeek<=item.week_end) || (nowWeek % 2 == 0 && item.odd_or_even == 1) || (nowWeek % 2 == 1 && item.odd_or_even == 2))">非本周</view>
+              <!-- <view v-if="(!(nowWeek>=item.week_begin&&nowWeek<=item.week_end) || (nowWeek % 2 == 0 && item.odd_or_even == 1) || (nowWeek % 2 == 1 && item.odd_or_even == 2))">非本周</view> -->
 			  <view>{{ item.credit }}学分</view>
             </view>
           </view>
