@@ -667,16 +667,19 @@
 						console.log('currenTime',currenTime)
 						// 检查今天的日期是否在开始和结束日期之间
 						if ((item.isdone == false) && (currenTime >= startDate && currenTime <= endDate)) {
+								// 待完成
 							item.istargetDate = true
 							item.isNotStart = false;
 							item.isoverdue = false;
 							// console.log('范围性目标' + item.title + 'istargetDate已经设置为true')
 						} else if ((item.isdone == false) && currenTime > endDate) {
+							// 已过期
 							item.isoverdue = true;
 							item.isNotStart = false;
 							item.istargetDate = false;
 							// console.log('范围性目标' + item.title + 'isoverdue已经设置为true')
 						} else if ((item.isdone == false) && currenTime < startDate) {
+							// 未开始
 							item.isNotStart = true;
 							item.isoverdue = false;
 							item.istargetDate = false;

@@ -889,40 +889,22 @@
 				this.clear();
 			},
 			childItem(item, index) {
-							
-				// 获取点击事件的名字
-				const eventName = item.title;
-				const eventName_date = item.date;
-				// 遍历 list 数组
-				this.listAfterSort.forEach((event, i) => {
-					// 如果找到了名字一样的事件
-				
-					if (event.cycles.length === 0 && event.title === eventName) {
-						// 切换状态
-						event.select = !event.select;
 						
-						// 使用 $set 更新 list 数组
-					
-						this.$set(this,'listAfterSort',this.listAfterSort);
-					
-					}
-					this.saveList();
-				});
 				this.listAfterSort.forEach((event, i) => {
 					// 如果找到了名字一样的事件
-					if (event.cycles.length != 0&& event.title === eventName&&event.date===eventName_date ) {
+					if ( (event.title === item.title)
+					                                &&(event.color === item.color)
+													&& (event.date === item.date)
+													&& (event.cycletime === item.cycletime)
+													) {
 							// 切换状态
 							event.select = !event.select;
 							// 更新 list 数组
 							this.$set(this.listAfterSort, i, event);
 							
 						}
-						this.saveList();
-					
-					
-														
-					});
-										
+						this.saveList();							
+					});			
 			},
 			deleteEvent(item, index) {
 				var that=this
@@ -933,14 +915,20 @@
 						success: function(res) {
 						     if (res.tapIndex == 0) {
 								// 找到需要删除的事件
-								const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title);
+								const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title
+					                                &&(event.color === item.color)
+													&& (event.date === item.date)
+													);
 								if (eventIndex !== -1) {
 								// 从listAfterSort数组中删除该事件
 								that.listAfterSort.splice(eventIndex, 1);
 								// 使用 $set 更新 list 数组
 								that.$set(that, 'listAfterSort', that.listAfterSort);
 								}
-								const eventIndex2 = that.list.findIndex(event => event.title === item.title);
+								const eventIndex2 = that.list.findIndex(event => event.title === item.title
+					                                &&(event.color === item.color)
+													&& (event.date === item.date)
+													);
 								if (eventIndex2 !== -1) {
 								// 从list数组中删除该事件
 								that.list.splice(eventIndex2, 1);
@@ -961,7 +949,9 @@
 					            if (res.tapIndex == 0) {
 					                // 用户选择了删除当前项
 					                // 执行删除当前项的逻辑
-									const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title&&event.date===item.date);
+									const eventIndex = that.listAfterSort.findIndex(event => event.title === item.title&&event.date===item.date
+					                                &&(event.color === item.color)
+													&& (event.cycletime === item.cycletime));
 									if (eventIndex !== -1) {
 										// 从listAfterSort数组中删除该事件
 										that.listAfterSort.splice(eventIndex, 1);
@@ -975,15 +965,19 @@
 								 else if (res.tapIndex == 1){
 					          that.list = that.list.filter(event => {
 					              
-					              if (event.title === item.title ) {
-					                  return false; // 过滤掉晚于选定时间的同名事件
+					              if (event.title === item.title
+					                                &&(event.color === item.color)
+													&& (event.cycletime === item.cycletime) ) {
+					                  return false; // 过滤掉事件
 					              }
 					              return true; // 保留其他事件
 					          });
 							  that.$set(that, 'list', that.list);
 								that.listAfterSort = that.listAfterSort.filter(event => {
 								    
-								    if (event.title === item.title ) {
+								    if (event.title === item.title
+					                                &&(event.color === item.color)
+													&& (event.cycletime === item.cycletime) ) {
 								        return false; // 过滤掉晚于选定时间的同名事件
 								    }
 								    return true; // 保留其他事件
@@ -1000,7 +994,9 @@
 								// 保留在选定时间之前的事件，同时删除具有相同名称且晚于选定时间的事件
 								that.listAfterSort = that.listAfterSort.filter(event => {
 								    const eventDate = new Date(event.date);
-								    if (event.title === item.title && eventDate >= selectedDate) {
+								    if (event.title === item.title && eventDate >= selectedDate
+					                                &&(event.color === item.color)
+													&& (event.cycletime === item.cycletime)) {
 								        return false; // 过滤掉晚于选定时间的同名事件
 								    }
 								    return true; // 保留其他事件
@@ -1010,7 +1006,9 @@
 								that.$set(that, 'listAfterSort', that.listAfterSort);
 								that.list = that.list.filter(event => {
 								    
-								    if (event.title === item.title ) {
+								    if (event.title === item.title
+					                                &&(event.color === item.color)
+													&& (event.cycletime === item.cycletime) ) {
 								        return false; // 过滤掉晚于选定时间的同名事件
 								    }
 								    return true; // 保留其他事件
