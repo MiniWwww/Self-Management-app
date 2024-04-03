@@ -138,7 +138,6 @@
 					console.log("获取到起床睡眠目标",res.data);
 					that.getup_goal=res.data.getup_goal;
 					that.sleep_goal=res.data.sleep_goal;
-					
 				}
 			})
 			uni.getStorage({
@@ -147,7 +146,8 @@
 					console.log("获取到睡眠/起床状态",res.data);
 					that.getup=res.data.getup;
 					that.sleep=res.data.sleep;
-					
+					that.getup_time=res.data.getup_time;
+					that.sleep_time=res.data.sleep_time;
 				}
 			})
 		},
@@ -283,7 +283,9 @@
 									key:'getup_sleep_state',
 									data:{
 										getup:that.getup,
-										sleep:that.sleep
+										sleep:that.sleep,
+										getup_time:that.getup_time,
+										sleep_time:that.sleep_time,
 									},
 									success() {
 										console.log('睡眠/起床状态存储成功！')
@@ -429,7 +431,9 @@
 									key:'getup_sleep_state',
 									data:{
 										getup:that.getup,
-										sleep:that.sleep
+										sleep:that.sleep,
+										getup_time:that.getup_time,
+										sleep_time:that.sleep_time,
 									},
 									success() {
 										console.log('睡眠/起床状态存储成功！')
@@ -456,7 +460,9 @@
 								key:'getup_sleep_state',
 								data:{
 									getup:that.getup,
-									sleep:that.sleep
+									sleep:that.sleep,
+									getup_time:that.getup_time,
+									sleep_time:that.sleep_time,
 								},
 								success() {
 									console.log('睡眠/起床状态存储成功！')
