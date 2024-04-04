@@ -381,7 +381,7 @@ import { isArray } from 'util';
 			const today = new Date().toISOString().split('T')[0]; // 获取当前日期，格式为"YYYY-MM-DD"
 			const lastExecuted = uni.getStorageSync('lastExecutedDate')
 			console.log(today + " " + lastExecuted);
-			if (lastExecuted == today) {
+			if (lastExecuted != today) {
 				// 如果函数今天尚未执行，则执行它
 				this.todoRemind();
 
