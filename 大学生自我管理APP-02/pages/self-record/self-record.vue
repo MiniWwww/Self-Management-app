@@ -377,8 +377,8 @@ import { isArray } from 'util';
 			}
 
 			// todoRemind一天只执行一次
-
-			const today = new Date().toISOString().split('T')[0]; // 获取当前日期，格式为"YYYY-MM-DD"
+			console.log(new Date().toLocaleDateString())
+			const today = new Date().toLocaleDateString(); // 获取当前日期，格式为"YYYY-MM-DD"
 			const lastExecuted = uni.getStorageSync('lastExecutedDate')
 			console.log(today + " " + lastExecuted);
 			if (lastExecuted != today) {
@@ -978,7 +978,7 @@ import { isArray } from 'util';
 					let now = new Date()
 					list.forEach(event => {
 						let eventDate = new Date(event.date)
-						if (eventDate.getDay() == now.getDay()) {
+						if (eventDate.getDate() == now.getDate()) {
 							let content = event.title + ' ' + event.mark
 							if (!this.todayTodoList.includes(content)) {
 								this.todayTodoList.push(content)
